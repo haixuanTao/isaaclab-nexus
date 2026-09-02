@@ -71,6 +71,12 @@ class NexusCfg(PhysicsCfg):
     loop, so the scene must have settled first -- a robot still crumpling onto terrain grows
     the contact buffers and would be replayed with the old, too-small ones."""
 
+    collisions_resize_policy: str = "grow"
+    """Engine collision-buffer resize policy: ``"grow"`` (engine default -- grows to 1.5x on ANY
+    env's spike and never shrinks, so one transient crumple permanently enlarges every
+    capacity-gridded kernel launch for the whole batch), ``"fit"`` (grow and shrink), or
+    ``"fixed"`` (never resize; pairs past ``collisions_capacity`` are dropped)."""
+
     collisions_capacity: int = 256
     """Rigid contact-manifold capacity per env. Nexus's default (4096) costs ~11 MiB/env;
     a humanoid on terrain uses well under 256, which costs ~0.8 MiB/env."""

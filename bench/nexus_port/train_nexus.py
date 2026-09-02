@@ -20,7 +20,20 @@ if pre:
 env = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)
 log_dir = os.path.abspath(os.path.join("/workspace/bench/nexus_port/logs", time.strftime("%Y-%m-%d_%H-%M-%S") + "_nexus"))
 runner = make_rsl_rl_runner(env, agent_cfg, log_dir=log_dir, device=agent_cfg.device)
-t0 = time.perf_counter(); runner.learn(num_learning_iterations=ITERS, init_at_random_ep_len=True); el = time.perf_counter() - t0
+t0 = time.perf_counter()
+CHUNK = int(os.environ.get("NEXUS_STATS_EVERY", "0") or 0)          # >0: learn in chunks and log allocator/engine stats between them
+if CHUNK:
+    from isaaclab_nexus.physics.nexus_manager import NexusManager
+    done = 0
+    while done < ITERS:
+        n = min(CHUNK, ITERS - done); runner.learn(num_learning_iterations=n, init_at_random_ep_len=(done == 0)); done += n
+        ms = torch.cuda.memory_stats(); st = NexusManager._state.rbd_resize_stats() if hasattr(NexusManager._state, "rbd_resize_stats") else {}
+        print(f"[nexus-stats] iter {done} | {(time.perf_counter()-t0)/done*1000:.0f} ms/iter avg | torch alloc {ms['allocated_bytes.all.current']/2**30:.2f} GiB "
+              f"reserved {ms['reserved_bytes.all.current']/2**30:.2f} GiB retries {ms['num_alloc_retries']} ooms {ms['num_ooms']} "
+              f"| engine cap/batch {st.get('capacity_per_batch')} pairs {st.get('pairs_len')} max_colors {st.get('max_colors')} peak_pairs {NexusManager._pairs_peak}", flush=True)
+else:
+    runner.learn(num_learning_iterations=ITERS, init_at_random_ep_len=True)
+el = time.perf_counter() - t0
 steps = ITERS * agent_cfg.num_steps_per_env * NENV
 print(f"[nexus] {ITERS} PPO iterations x {agent_cfg.num_steps_per_env} steps x {NENV} envs in {el:.1f}s -> {el/ITERS*1000:.0f} ms/iter, {steps/el:.0f} env-steps/s | log {log_dir}")
 print("TRAIN ON NEXUS OK"); env.close(); app.close()

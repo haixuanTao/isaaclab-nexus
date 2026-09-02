@@ -771,3 +771,30 @@ registers no render data — wiring that is the cleaner long-term route.
 log `bench/results/train_nexus_10k_HeightTracking-G1-v0_n4096.log`, checkpoints every 250
 iterations under `bench/nexus_port/logs/<timestamp>_nexus/`. Expected ~7 h at 2.45 s/iter.
 Note `/workspace` is not a volume on this instance: copy checkpoints off-box.
+
+## The long run slowed 1.9x at iteration 73 — what it was not, and the restart
+`train_nexus.py 4096 10000` ran flat at 2.4-2.5 s/iter, then at iteration 73 the PPO update
+spiked (0.32 -> 1.33 s), iteration 74's collection took 12.5 s, and every iteration after sat
+at 4.4-4.7 s with GPU memory up 12.2 -> 16.3 GB — a one-time step, not a trend, and no task
+metric moved (episode length, curricula, rewards all continuous).
+
+First suspect was the engine's collision-buffer ratchet (`auto_resize_buffers`, default policy
+`Grow`: any single env's pair spike reallocates nine buffers to 1.5x and never shrinks, and
+with fixed-grid dispatch every capacity-gridded kernel then launches over the larger capacity).
+To test it I exposed the knobs — `NexusState.set_rbd_resize_policy("grow"|"fit"|"fixed")`,
+`NexusState.rbd_resize_stats()`, `NexusCfg.collisions_resize_policy` — and rolled the run's
+`model_250` checkpoint with them (`probe_resize_ratchet.py`). **Falsified**: `pairs_len` stays
+0, capacity stays 256, `rb_contacts_inert == True` — in a robot-only scene the rigid-body pair
+readback never runs, so that ratchet cannot fire here. The knobs stay (they are the right
+interface, and Zealot pre-sizes and fixes for the same reason), and the backend now warns if
+capacity or `max_colors` ever changes mid-run.
+
+The dataset is pre-collected and fixed, GPU memory did not keep growing, and the timing of the
+onset coincides with the video render + ffmpeg encode I launched in the same command as the run
+(CPU-saturating for ~3 min). Learn-time-first, then one huge collection, then a permanent
+plateau with +4 GB reserved is the fingerprint of the CUDA caching allocator fragmenting after a
+transient. Cause not proven — the decisive test is the restart: `PYTORCH_CUDA_ALLOC_CONF=
+expandable_segments:True`, no concurrent jobs, `NEXUS_STATS_EVERY=250` logging torch allocator
+stats (`num_alloc_retries`, reserved) and engine resize stats every 250 iterations, and a watch
+that flags any iteration over 3.5 s. Started 2026-09-02 18:20 UTC as
+`train_nexus_10k_v2_HeightTracking-G1-v0_n4096.log`; the first run's `model_250.pt` is kept.

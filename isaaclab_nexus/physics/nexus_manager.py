@@ -91,6 +91,8 @@ class NexusManager(PhysicsManager):
             cls._graph = False                                  # graph lost; fall back
         cls._pipeline.simulate_headless(cls._backend, cls._state, None)
         cls._steps += 1
+        if cls._steps % 200 == 0 and hasattr(cls._state, "rbd_resize_stats"):
+            cls._log_resize_ratchet()
         warmup = int(getattr(PhysicsManager._cfg, "cuda_graph_warmup", 0) or 0)
         if warmup and cls._steps >= warmup and not cls._graph and hasattr(cls._pipeline, "capture_cuda_graph_headless"):
             try:
@@ -104,6 +106,23 @@ class NexusManager(PhysicsManager):
                 cls._graph = False
                 PhysicsManager._cfg.cuda_graph_warmup = 0
         PhysicsManager._sim_time += cls.get_physics_dt()
+
+    _resize_seen: ClassVar[tuple] = ()
+    _pairs_peak: ClassVar[int] = 0
+
+    @classmethod
+    def _log_resize_ratchet(cls) -> None:
+        """Every 200 physics steps: record the peak read-back pair count and warn when the
+        engine grew its collision buffers or its colour count (both are permanent under the
+        default policies and each one slows every later step)."""
+        st = cls._state.rbd_resize_stats()
+        cls._pairs_peak = max(cls._pairs_peak, int(st.get("pairs_len", 0)))
+        key = (int(st.get("capacity_per_batch", 0)), int(st.get("max_colors", 0)))
+        if cls._resize_seen and key != cls._resize_seen:
+            warnings.warn(f"[nexus] buffer ratchet at physics step {cls._steps}: capacity/batch "
+                          f"{cls._resize_seen[0]} -> {key[0]}, max_colors {cls._resize_seen[1]} -> {key[1]} "
+                          f"(peak pairs/batch so far {cls._pairs_peak})")
+        cls._resize_seen = key
 
     @classmethod
     def close(cls) -> None:
@@ -187,6 +206,8 @@ class NexusManager(PhysicsManager):
             substeps = int(getattr(PhysicsManager._cfg, "substeps", 1))
             cap = int(getattr(PhysicsManager._cfg, "collisions_capacity", 256))
             cls._state.set_rbd_collisions_capacity(cap)
+            if hasattr(cls._state, "set_rbd_resize_policy"):
+                cls._state.set_rbd_resize_policy(str(getattr(PhysicsManager._cfg, "collisions_resize_policy", "grow")))
             cls._state.set_rbd_solver_iterations(int(getattr(PhysicsManager._cfg, "solver_iterations", 4)))
             cls._state.set_rbd_dt(dt / max(substeps, 1))
             cls._state.set_rbd_steps_per_frame(max(substeps, 1))
