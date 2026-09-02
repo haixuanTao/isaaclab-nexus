@@ -32,9 +32,13 @@ class NexusTerrain:
 
     def __init__(self, terrain_generator_cfg, num_envs: int, tiles: list[tuple[int, int]] | None = None,
                  tile: tuple[int, int] = (0, 0), grid_res: float = 0.05, floor_half: float = 50.0,
-                 device: str = "cuda", collider_res: float | None = 0.25, friction: float | None = None):
+                 device: str = "cuda", collider_res: float | None = None, friction: float | None = None):
+        import os
         from isaaclab.terrains import TerrainGenerator
         import nexus3d, trimesh
+
+        if collider_res is None:                       # NEXUS_TERRAIN_RES overrides the default
+            collider_res = float(os.environ.get("NEXUS_TERRAIN_RES", 0.25))
 
         self.num_envs = int(num_envs); self.device = device
         self.gen = TerrainGenerator(cfg=terrain_generator_cfg, device=device)

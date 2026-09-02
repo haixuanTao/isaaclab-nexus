@@ -627,3 +627,40 @@ stand-up task **spawns robots fallen** — lying on the mesh is the steady state
 case. Note also that no GPU heightfield exists (`TypedShape::HeightField => todo!()` in
 `src_rbd/shapes/shape.rs`), so terrain must be a trimesh; a heightfield collider would be the
 structural fix for the narrow phase.
+
+## Is it the FFI? No — measured three ways
+1. **CUDA graph replay removes all host encoding for the physics step, and changes nothing.**
+   Before the substep/hull fixes: 356.9 ms/control step with the graph active vs 355.9 without.
+   After them, at the corrected config: identical again. If per-step FFI or dispatch encoding
+   were on the critical path, replaying a recorded graph would have shown it.
+2. **Compilation is fully optimized.** Cubins: `opt -passes=default<O3>` -> `llc -mcpu=sm_120 -O3
+   -fp-contract=fast` -> `ptxas -arch=sm_120 -O3`, built `--release` with
+   `unsafe_remove_boundchecks`, and **embedded at build time** by `khal-builder`'s build script
+   (`cargo:rerun-if-env-changed=CUDA_OXIDE_SHADERS_PTX_*`) — so processes that never set those
+   env vars still run the optimized cubins. Host extension: `maturin develop --release`.
+   The one gap is that the fork declares no `[profile.release]` (stock `codegen-units=16`, no
+   LTO); that is a host-side knob, and the host is not the bottleneck.
+3. **After the fixes the trace is no longer GPU-saturated**: GPU busy fell 93.9% -> **35.2%**,
+   but the idle is dominated by two multi-second gaps during scene build/settle, and the
+   remaining per-step idle sits in Isaac Lab's own manager layer between physics steps — not
+   inside `NexusPipeline.simulate`, which is what a graph covers.
+
+## Why Zealot looks so much faster: it is a different workload
+From Zealot's own `docs/benchmarks.md` (same RTX 5090):
+
+| N envs | Zealot (native CUDA + cuTile) | Isaac / PhysX 5 |
+|---:|---:|---:|
+| 4,096 | 91.4 k | **126 k** |
+| 8,192 | 99.5 k | **201 k** |
+
+That benchmark is the **LeRobot bipedal: `NUM_JOINTS = 12`** (18 DOF with the free root) on the
+**flat** `VelocityFlatTask`. This port runs the **G1: 29 joints / 35 DOF on rough terrain**, in
+AGILE's stand-up task, which *spawns robots fallen* — the contact-heavy regime.
+
+Two things follow. First, on Zealot's own numbers Nexus runs at **0.5-0.7x PhysX**, the same
+ratio measured here on the G1 task (12,668 vs 24,638 = 0.51x) — Nexus is not behaving
+differently in Isaac Lab than in Zealot. Second, the remaining cost is exactly what that DOF
+difference predicts: after the fixes the top kernel is `gpu_mb_compute_dynamics_pre` at
+**60.3% of GPU time, 18.7 ms per physics step** — the articulated-body dynamics pre-pass, not
+contacts. It scales with DOF^2..DOF^3, and 35 DOF vs 18 is 3.8-7.3x per multibody. Nothing in
+`isaaclab_nexus` reaches it.
