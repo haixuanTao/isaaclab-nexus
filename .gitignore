@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+
+# Profiler captures and recordings — regenerate with bench/scripts/run_nsys.sh
+# and bench/scripts/record_*.sh; far too large to track.
+traces/
+video/
+*.nsys-rep
+*.sqlite
+
+# Training checkpoints and TensorBoard event files.
+logs/
+*.pt
+events.out.tfevents.*
