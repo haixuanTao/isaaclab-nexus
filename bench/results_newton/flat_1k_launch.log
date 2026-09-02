@@ -1,0 +1,5 @@
+=== [15:59:34] newton-implicit-implicitfast-sub1_train1000_n4096_155934 ===
+    exit=0 -> /workspace/bench/results_newton/train_newton-implicit-implicitfast-sub1_train1000_n4096_155934.log
+                          Learning iteration 998/1000                            
+                          Learning iteration 999/1000                            
+    NaN hits: 0

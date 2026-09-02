@@ -21,6 +21,7 @@ parser.add_argument("--task", type=str, default="HeightTracking-G1-v0")
 parser.add_argument("--num_envs", type=int, default=9)
 parser.add_argument("--seconds", type=float, default=12.0)
 parser.add_argument("--checkpoint", type=str, required=True)
+parser.add_argument("--keep-assist", action="store_true", help="keep the training-only lift/harness actions (default: removed, as in eval.py)")
 parser.add_argument("--out", type=str, required=True)
 parser.add_argument("--width", type=int, default=1280)
 parser.add_argument("--height", type=int, default=720)
@@ -47,6 +48,11 @@ from isaaclab_tasks.utils import parse_env_cfg  # noqa: E402
 
 def main():
     env_cfg = parse_env_cfg(args_cli.task, num_envs=args_cli.num_envs)
+    if not args_cli.keep_assist:
+        from agile.rl_env.rsl_rl.export_pruning import prepare_training_only_actions_for_evaluation
+        _removed, _held = prepare_training_only_actions_for_evaluation(env_cfg)
+        print(f"[assist] removed training-only actions {_removed}; held at default {_held}", flush=True)
+
     env_cfg.seed = 42
     env = gym.make(args_cli.task, cfg=env_cfg)
     unwrapped = env.unwrapped
