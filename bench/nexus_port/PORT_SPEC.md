@@ -703,3 +703,19 @@ Zealot's benchmark table stands for *that* configuration of the engine; this one
 
 What CUDA graphs did NOT do still holds (measured at every stage: identical with and without),
 and `deterministic_contacts` still costs only 1.4% and stays on.
+
+## Final scaling table (shipped defaults: 1 substep, explicit Coriolis, 64-vertex hulls, contact reduction)
+Same task, same box, rsl_rl's own timers, median of steady iterations (Nexus 5..9, PhysX 5..29):
+
+| envs | PhysX iter | Nexus iter | PhysX env-steps/s | Nexus env-steps/s | Nexus / PhysX |
+|---:|---:|---:|---:|---:|---:|
+| 1024 | 2.160 s | **1.360 s** | 11,378 | **18,071** | **1.59x** |
+| 2048 | 2.810 s | **1.750 s** | 17,492 | **28,087** | **1.61x** |
+| 4096 | 3.990 s | **2.450 s** | 24,638 | **40,124** | **1.63x** |
+
+Nexus now scales better with batch size than PhysX does on this task (the PhysX row flattens
+toward its 8192-env broadphase wall documented in `bench/results/FINDINGS.md`).
+
+Fidelity check of the shipped mode (`check_contact_sensor_env.py`, 512 envs, robots at rest on
+the terrain after 3 s): summed contact-sensor normal force / body weight = **0.996 median**
+(p10 0.988, p90 1.127) — the per-step impulse readout is correctly scaled under explicit Coriolis.
