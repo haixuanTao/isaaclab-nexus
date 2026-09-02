@@ -719,3 +719,25 @@ toward its 8192-env broadphase wall documented in `bench/results/FINDINGS.md`).
 Fidelity check of the shipped mode (`check_contact_sensor_env.py`, 512 envs, robots at rest on
 the terrain after 3 s): summed contact-sensor normal force / body weight = **0.996 median**
 (p10 0.988, p90 1.127) — the per-step impulse readout is correctly scaled under explicit Coriolis.
+
+## Does the step get cheaper as the policy learns? Measured over 100 iterations — no, it is flat
+`train_nexus.py 4096 100`, shipped config, per-10-iteration means:
+
+| iters | iter time | env-steps/s | reward | episode length |
+|---|---:|---:|---:|---:|
+| 0-9 | 2.69 s | 36,504 | -286 | 124 |
+| 10-19 | 3.11 s | 31,568 | -778 | 363 |
+| 20-29 | 2.44 s | 40,371 | -1207 | 603 |
+| 30-39 | 2.43 s | 40,421 | -1414 | 749 |
+| 50-59 | 2.42 s | 40,588 | -1180 | 750 |
+| 70-79 | 2.41 s | 40,739 | -951 | 750 |
+| 90-99 | 2.57 s | 38,206 | -664 | 750 |
+
+Like-for-like with PhysX's own 5..29 median: **2.45 s vs 3.99 s, 1.63x** (unchanged). Steady
+state (iters 50-99): **2.42 s, 40,621 env-steps/s**. The policy is learning (reward bottoms at
+-1414 and climbs to -664; episodes reach the full 750 steps) but the step cost does not follow
+it. That is the expected shape *after* the fixes: this morning the iteration time GREW within a
+run (11.2 -> 16.1 s) because the contact path dominated and crumpled robots emit more contacts;
+now the narrow phase is 8% of GPU time and the remaining cost (articulated-body dynamics, even
+explicit) is per-link and state-independent. A cheaper step from "the robots stand up" would
+need the contact path to matter again, and it no longer does.
