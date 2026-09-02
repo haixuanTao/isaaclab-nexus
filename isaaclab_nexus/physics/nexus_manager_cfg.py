@@ -54,6 +54,12 @@ class NexusCfg(PhysicsCfg):
     manifold before the solvers. Off in the engine by default; needed on terrain, where
     a foot touches many triangles and each emits its own manifold."""
 
+    cuda_graph_warmup: int = 0
+    """Capture one physics step into a CUDA graph after this many normal steps, then replay it
+    (0 = off). Replay skips the engine's buffer auto-resize and freezes the solver's coloring
+    loop, so the scene must have settled first -- a robot still crumpling onto terrain grows
+    the contact buffers and would be replayed with the old, too-small ones."""
+
     collisions_capacity: int = 256
     """Rigid contact-manifold capacity per env. Nexus's default (4096) costs ~11 MiB/env;
     a humanoid on terrain uses well under 256, which costs ~0.8 MiB/env."""

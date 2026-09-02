@@ -7,6 +7,8 @@ Lifecycle mirrors the base class: ``initialize`` -> ``reset`` -> ``step``* ->
 
 from __future__ import annotations
 
+import warnings
+
 from typing import TYPE_CHECKING, Any, ClassVar
 
 from isaaclab.physics import PhysicsManager
@@ -43,6 +45,8 @@ class NexusManager(PhysicsManager):
     _scene_data: ClassVar[NexusSceneDataBackend | None] = None
     _assets: ClassVar[dict[str, Any]] = {}     # prim_path prefix -> Articulation
     _terrain: ClassVar[Any] = None
+    _graph: ClassVar[bool] = False   # a CUDA graph of one physics step has been captured
+    _steps: ClassVar[int] = 0
 
     # ------------------------------------------------------------------ lifecycle
     @classmethod
@@ -56,6 +60,8 @@ class NexusManager(PhysicsManager):
         cls._pipeline = nexus3d.NexusPipeline()
         cls._num_envs = 0
         cls._finalized = False
+        cls._graph = False
+        cls._steps = 0
         cls._scene_data = NexusSceneDataBackend()
 
     @classmethod
@@ -73,7 +79,30 @@ class NexusManager(PhysicsManager):
     def step(cls) -> None:
         if not cls._finalized:
             cls.finalize()
+        # One physics step as a replayed CUDA graph, once the scene has settled.
+        # Capture freezes buffer addresses and the solver's coloring loop and
+        # skips `auto_resize_buffers`, so it only happens after `warmup` normal
+        # steps -- and never before the contact/coloring buffers have stopped
+        # growing (`cuda_graph_warmup` in NexusCfg).
+        if cls._graph:
+            if cls._pipeline.replay_cuda_graph():
+                PhysicsManager._sim_time += cls.get_physics_dt()
+                return
+            cls._graph = False                                  # graph lost; fall back
         cls._pipeline.simulate_headless(cls._backend, cls._state, None)
+        cls._steps += 1
+        warmup = int(getattr(PhysicsManager._cfg, "cuda_graph_warmup", 0) or 0)
+        if warmup and cls._steps >= warmup and not cls._graph and hasattr(cls._pipeline, "capture_cuda_graph_headless"):
+            try:
+                cls._graph = bool(cls._pipeline.capture_cuda_graph_headless(cls._backend, cls._state))
+            except RuntimeError as e:
+                # Capture fails on anything that allocates or reads back inside the step.
+                # Known case: the deterministic contact sort re-creates a 4-byte tensor
+                # every step (its cache key holds the contact count), so capture needs
+                # NEXUS_DETERMINISTIC=0. Not fatal -- keep re-encoding each step.
+                warnings.warn(f"Nexus CUDA-graph capture failed, staying on the encoded path: {e}")
+                cls._graph = False
+                PhysicsManager._cfg.cuda_graph_warmup = 0
         PhysicsManager._sim_time += cls.get_physics_dt()
 
     @classmethod

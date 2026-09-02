@@ -523,3 +523,33 @@ Two consequences:
 `train_nexus_final_HeightTracking-G1-v0_n4096.log`: 15.48 s/iter median (iters 5-9),
 **6,350 env-steps/s**, PPO update 0.32 s. Against the same run without either fix
 (16.13 s, 6,094 env-steps/s) that is +4.2%; against PhysX's 3.99 s / 24,638 it is 0.26x.
+
+## CUDA graphs: wired up, measured, and worth nothing here
+The backend was calling `simulate_headless` every step — no graph capture, no replay. The
+engine has `capture_rbd_graph`, but its Python binding took a `NexusViewer`, so the headless
+path had no way in. Added `NexusPipeline.capture_cuda_graph_headless(backend, state)` and
+`NexusCfg.cuda_graph_warmup` (capture after N settled steps, then replay; 0 = off, default).
+
+**Capture fails as-is**: `CUDA_ERROR_STREAM_CAPTURE_INVALIDATED`. `KHAL_CUDA_ALLOC_TRACE=1`
+names it — `RadixSort::dispatch` → `TensorBuilder::build_init::<u32>`, a 4-byte allocation
+*inside* the step, because the sort's uniform cache key holds `total_n` (the contact count),
+which changes every step. That sort is the deterministic contact-order pass, so today
+**bit-exact reruns and CUDA graphs are mutually exclusive** in the engine. The fix is to make
+`n_sort_flat` a persistent buffer written per step instead of re-created.
+
+**With `NEXUS_DETERMINISTIC=0` capture succeeds — and buys nothing** (4096 envs, 30 control
+steps, median):
+
+| configuration | ms / control step | env-steps/s |
+|---|---:|---:|
+| deterministic sort on, no graph (shipped default) | 596.0 | 6,872 |
+| deterministic sort off, no graph | 587.8 | 6,969 |
+| deterministic sort off, **graph replayed** | 589.9 | 6,944 |
+
+Determinism costs 1.4%; the graph is inside the noise. That is what 93.9% GPU busy already
+said: this workload is kernel-bound, not launch-bound, so removing host encoding removes
+nothing from the critical path. The other CUDA-specific optimization *is* already on —
+`KHAL_TRACE_INDIRECT=1` prints nothing, so fixed-grid dispatch is active and no dispatch is
+paying the indirect-dispatch stream drain.
+
+Capture failure is non-fatal in the backend (warn, drop back to the encoded path).
