@@ -858,3 +858,7 @@ consistent with the earlier finding that after the hull/Coriolis fixes the step 
 state-independent articulated dynamics, not contacts. Extrapolated to an idle GPU that is
 ~2.57 s/iter (~38 k env-steps/s) against PhysX's 3.99 s — but that stays an extrapolation until
 measured with the GPU idle.
+**Confirmation from training itself (v3, iteration 500):** `Episode_Reward/completely_airborne`
+went from -1.53 under the bug to **-0.36** with the fix — the "robots in free fall / on the
+backstop" signal is gone — and mean reward at 500 is -205 vs the buggy run's -175 at the same
+point: the corrected task is harder, as a rough-terrain stand-up should be.
