@@ -1,1 +1,4 @@
 === [16:52:46] newton-physfix_train1000_n4096_165246 ===
+    exit=0 -> /workspace/bench/results_newton/train_newton-physfix_train1000_n4096_165246.log
+                           Learning iteration 5/1000                             
+    NaN hits: 1
