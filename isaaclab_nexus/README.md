@@ -69,15 +69,26 @@ It also installs a scene dispatch so `ManagerBasedEnv` builds a `NexusScene`
 | `sensors/contact_sensor/` | `ContactSensor` — per-link normal impulse from the engine's contact-sensor kernel |
 | `envs.py` | `nexusify()` / `install()` |
 
-## Config knobs (`NexusCfg`)
+## Config knobs (`NexusCfg`) — and why the defaults are not the engine's
 
 | field | default | meaning |
 |---|---|---|
 | `backend_kind` | `"cuda"` | `"cuda"` (zero-copy views) or `"webgpu"` (staging copies) |
 | `substeps` | 1 | physics substeps per `step()` (Isaac's `decimation` sits above this) |
-| `solver_iterations` | 4 | multibody solver iterations per substep |
-| `contact_reduction` | `True` | merge a collider pair's manifolds into one deepest-point manifold (needed on terrain) |
+| `solver_iterations` | **1** | *substeps* inside the engine (it divides `dt` by this and runs that many full integrate + dynamics passes — not PGS iterations). Engine default 4 = 800 Hz for a 200 Hz `dt`; 1 matches PhysX's integration rate. 2.15x |
+| `implicit_coriolis` | **False** | engine default True rebuilds the mass matrix with a dt·C term (the dominant kernel, and a damping artefact that scales with substeps). False = one Coriolis linearization per step, as MuJoCo/PhysX/Genesis/Zealot. 2.3x |
+| `contact_reduction` | `True` | merge a collider pair's manifolds into one deepest-point manifold (engine default off). +7% |
 | `collisions_capacity` | 256 | contact-manifold capacity per env (~0.8 MiB/env; the engine default 4096 costs ~11 MiB/env) |
+| `cuda_graph_warmup` | 0 | capture one physics step into a CUDA graph after N steps and replay it. Measured: no gain at any stage (kernel-bound); needs `NEXUS_DETERMINISTIC=0` to capture |
+
+And one thing that is not a knob but matters as much: **cap the robot's convex hulls at 64
+vertices** (PhysX's default `convexHullVertexLimit`). The unitree G1 MJCF collides its full
+visual STLs (mean hull 1,087 vertices, pelvis 5,583); `bench/nexus_port/make_convex_mjcf.py 64`
+writes a copy with support-mapped hulls. 1.32x.
+
+Net effect on AGILE's `HeightTracking-G1-v0` at 4096 envs on an RTX 5090: 15.48 -> 2.45 s per
+PPO iteration (6,350 -> 40,124 env-steps/s), against 3.99 s / 24,638 for PhysX, with an
+identical reward curve at every step. Numbers and method in `bench/nexus_port/PORT_SPEC.md`.
 
 ## Known limitations
 

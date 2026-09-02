@@ -41,9 +41,9 @@ def install() -> None:
     _installed = True
 
 
-def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, cuda_graph_warmup: int = 0, drop_terms: set[str] | None = None):
+def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, implicit_coriolis: bool = False, cuda_graph_warmup: int = 0, drop_terms: set[str] | None = None):
     install()
-    env_cfg.sim.physics = NexusCfg(collisions_capacity=collisions_capacity, solver_iterations=solver_iterations, contact_reduction=contact_reduction, cuda_graph_warmup=cuda_graph_warmup)
+    env_cfg.sim.physics = NexusCfg(collisions_capacity=collisions_capacity, solver_iterations=solver_iterations, contact_reduction=contact_reduction, implicit_coriolis=implicit_coriolis, cuda_graph_warmup=cuda_graph_warmup)
     scene = env_cfg.scene
     for name in list(vars(scene)):
         if name.startswith("_"):

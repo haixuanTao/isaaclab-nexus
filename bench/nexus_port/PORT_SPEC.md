@@ -664,3 +664,42 @@ difference predicts: after the fixes the top kernel is `gpu_mb_compute_dynamics_
 **60.3% of GPU time, 18.7 ms per physics step** — the articulated-body dynamics pre-pass, not
 contacts. It scales with DOF^2..DOF^3, and 35 DOF vs 18 is 3.8-7.3x per multibody. Nothing in
 `isaaclab_nexus` reaches it.
+
+## The third engine default: implicit Coriolis — and the number that flips the comparison
+After the substep and hull fixes the trace put **60.3% of GPU time in `gpu_mb_compute_dynamics_pre`**
+(18.7 ms per physics step). That kernel's cost is a *mode*: the engine defaults to
+`implicit_coriolis = true`, rebuilding the mass matrix WITH a dt·C Coriolis term (extra
+`gemm_inertia_lhs_par` / `gemm_skew_*` / `gemm_tr_par` chains per link, and under multiple
+substeps a full M/LU rebuild per substep). Zealot's own `biped_env_nexus.rs` switches it OFF and
+says why: it over/under-damps with substep count (the sim-to-real foot-slip bug), MuJoCo's
+`implicitfast`, Genesis, PhysX and Bullet all linearize Coriolis once per step, and with it on
+"compute_dynamics_pre + gravity_and_lu were 51% of ALL GPU time". The setter already existed in
+the Python binding; this backend never called it. `NexusCfg.implicit_coriolis` now defaults to
+`False`.
+
+Plain step loop, 4096 envs, 64-vertex hulls, 1 substep (same process conditions):
+
+| Coriolis | physics ms/ctrl step | env-steps/s | foot-terrain gap p05/p50 |
+|---|---:|---:|---|
+| implicit (engine default) | 94.1 | 28,970 | 0.016 / 0.030 |
+| **explicit** | **40.6** | **46,613** | 0.016 / 0.030 |
+
+## Final: the same task, 4096 envs, rsl_rl's own timers (median of iterations 5..9)
+
+| configuration | iter | collect | learn | env-steps/s | rewards, iters 0-5 |
+|---|---:|---:|---:|---:|---|
+| this morning: 4 substeps, full hulls, implicit Coriolis | 15.48 s | 15.16 | 0.32 | 6,350 | -46 -102 -157 -216 -269 -322 |
+| 1 substep | 11.32 s | 10.80 | 0.47 | 8,684 | -46 -100 -154 -212 -265 -315 |
+| + 64-vertex hulls | 7.76 s | 7.18 | 0.59 | 12,668 | -46 -101 -154 -212 -264 -315 |
+| **+ explicit Coriolis (shipped default)** | **2.45 s** | **2.14** | 0.32 | **40,124** | -46 -101 -154 -212 -262 -314 |
+| PhysX / AGILE baseline | 3.99 s | 3.75 | 0.23 | 24,638 | |
+
+**6.3x since this morning; 1.63x faster than PhysX on AGILE's own G1 task**, with the reward
+curve unchanged across every configuration. None of the three changes touched the port's own
+code path in a way that alters physics semantics the task asked for — each was an engine default
+(800 Hz integration nobody requested, unlimited hull vertices, per-substep implicit Coriolis) that
+Zealot, MuJoCo and PhysX all set differently. The earlier "Nexus is 0.5-0.7x PhysX" reading of
+Zealot's benchmark table stands for *that* configuration of the engine; this one is not it.
+
+What CUDA graphs did NOT do still holds (measured at every stage: identical with and without),
+and `deterministic_contacts` still costs only 1.4% and stays on.

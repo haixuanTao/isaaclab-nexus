@@ -54,6 +54,12 @@ class NexusCfg(PhysicsCfg):
     The engine's contact sensor reports a per-iteration impulse, so the backend scales the
     sensor readout by this value."""
 
+    implicit_coriolis: bool = False
+    """Engine default is True: the multibody mass matrix is rebuilt WITH a dt*C Coriolis term
+    (`gpu_mb_compute_dynamics_pre` with the coriolis gemms), which is both the dominant kernel
+    and a fidelity problem (over/under-damps with substep count; Zealot turns it off, MuJoCo
+    and PhysX linearize once per step). False = explicit Coriolis, the MuJoCo/PhysX-like mode."""
+
     contact_reduction: bool = True
     """Merge every collider pair's manifolds into one deepest-``MAX_MANIFOLD_POINTS``
     manifold before the solvers. Off in the engine by default; needed on terrain, where

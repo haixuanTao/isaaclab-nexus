@@ -191,6 +191,8 @@ class NexusManager(PhysicsManager):
             cls._state.set_rbd_dt(dt / max(substeps, 1))
             cls._state.set_rbd_steps_per_frame(max(substeps, 1))
             cls._state.finalize_headless(cls._backend)
+            if hasattr(cls._state, "set_implicit_coriolis"):          # needs the finalized rbd state
+                cls._state.set_implicit_coriolis(bool(getattr(PhysicsManager._cfg, "implicit_coriolis", False)))
             if getattr(PhysicsManager._cfg, "contact_reduction", False) and hasattr(cls._pipeline, "set_contact_reduction"):
                 cls._pipeline.set_contact_reduction(cls._backend, True)
             g = getattr(sim_cfg, "gravity", (0.0, 0.0, -9.81))

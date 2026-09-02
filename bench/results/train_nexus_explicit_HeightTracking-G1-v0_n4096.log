@@ -1,0 +1,883 @@
+Loading user config located at: '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
+2026-09-02T16:36:42Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788367002.866828   60813 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788367002.866854   60813 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-02T16:36:43Z [373ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-02T16:36:43Z [392ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-02T16:36:43Z [418ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T16:36:43Z [419ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T16:36:43Z [420ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T16:36:43Z [985ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-09-02T16:36:43Z [985ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+[ISAACLAB] AppLauncher initialization complete
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.agents.rsl_rl_ppo_cfg:G1HeightTrackingPpoRunnerCfg
+/workspace/isaaclab_nexus/envs.py:68: UserWarning: nexusify dropped terms without a Nexus implementation: events.randomize_physics_material (randomize_rigid_body_material), events.randomize_base_com (randomize_rigid_body_com)
+  warnings.warn("nexusify dropped terms without a Nexus implementation: " + ", ".join(dropped))
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO] Generating terrains based on curriculum took Last: 0.255347 s
+[INFO]: Registered backend 'nexus' for factory Articulation.
+[INFO]: Registered backend 'nexus' for factory ContactSensor.
+[INFO]: Registered backend 'nexus' for factory RayCaster.
+[INFO]: Time taken for scene creation Last: 7.230213 s, Mean: 7.230213 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  NexusScene(num_envs=4096, entities=['robot', 'contact_forces', 'height_measurement_sensor', 'terrain'])
+[INFO]: Time taken for simulation start Last: 0.005147 s, Mean: 0.005147 s, Std: 0.000000 s, N: 1
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++--------------------------------------+
+|         Active Command Terms         |
++-------+--------+---------------------+
+| Index | Name   |         Type        |
++-------+--------+---------------------+
+|   0   | height | SmoothHeightCommand |
++-------+--------+---------------------+
+
+[INFO] Event Manager:  <EventManager> contains 3 active terms.
++----------------------------------------+
+| Active Event Terms in Mode: 'startup'  |
++--------+-------------------------------+
+| Index  | Name                          |
++--------+-------------------------------+
+|   0    | randomize_actuator_gains      |
+|   1    | randomize_bodies_mass         |
+|   2    | randomize_base_mass           |
++--------+-------------------------------+
++---------------------------------------------------------------------------+
+|                   Active Event Terms in Mode: 'interval'                  |
++-------+-----------------------------------------+-------------------------+
+| Index | Name                                    | Interval time range (s) |
++-------+-----------------------------------------+-------------------------+
+|   0   | push_robot                              |       (0.0, 10.0)       |
+|   1   | apply_external_force_torque             |       (0.0, 10.0)       |
+|   2   | apply_external_force_torque_extremities |       (0.0, 10.0)       |
++-------+-----------------------------------------+-------------------------+
++----------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+---------------------+
+|   Index    | Name                |
++------------+---------------------+
+|     0      | reset_base          |
++------------+---------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO]: Resolved joint names for the action term JointPositionAction: ['left_hip_pitch_joint', 'left_hip_roll_joint', 'left_hip_yaw_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint', 'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_yaw_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint', 'waist_yaw_joint', 'waist_roll_joint', 'waist_pitch_joint', 'left_shoulder_pitch_joint', 'left_shoulder_roll_joint', 'left_shoulder_yaw_joint', 'left_elbow_joint', 'left_wrist_roll_joint', 'left_wrist_pitch_joint', 'left_wrist_yaw_joint', 'right_shoulder_pitch_joint', 'right_shoulder_roll_joint', 'right_shoulder_yaw_joint', 'right_elbow_joint', 'right_wrist_roll_joint', 'right_wrist_pitch_joint', 'right_wrist_yaw_joint'] [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]]
+[INFO] Action Manager:  <ActionManager> contains 2 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 29)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          29 |
+|   1    | lift        |           0 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++----------------------------------------------+
+| Active Observation Terms in Group: 'policy'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | base_ang_vel           |   (5, 3)  |
+|    1    | projected_gravity      |   (5, 3)  |
+|    2    | joint_pos              |  (5, 29)  |
+|    3    | joint_vel              |  (5, 29)  |
+|    4    | actions                |  (5, 29)  |
+|    5    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
++----------------------------------------------+
+| Active Observation Terms in Group: 'critic'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | projected_gravity      |   (5, 3)  |
+|    1    | base_lin_vel           |   (5, 3)  |
+|    2    | base_ang_vel           |   (5, 3)  |
+|    3    | joint_pos              |  (5, 29)  |
+|    4    | joint_vel              |  (5, 29)  |
+|    5    | actions                |  (5, 29)  |
+|    6    | contact_forces         |  (5, 30)  |
+|    7    | base_height            |   (5, 1)  |
+|    8    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++----------------------------------+
+|     Active Termination Terms     |
++-------+---------------+----------+
+| Index | Name          | Time Out |
++-------+---------------+----------+
+|   0   | time_out      |   True   |
+|   1   | invalid_state |  False   |
++-------+---------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 32 active terms.
++--------------------------------------------+
+|            Active Reward Terms             |
++-------+-------------------------+----------+
+| Index | Name                    |   Weight |
++-------+-------------------------+----------+
+|   0   | joint_torques_l2        |   -5e-05 |
+|   1   | torque_limits           |    -0.01 |
+|   2   | joint_acc_l2            | -2.5e-08 |
+|   3   | joint_pos_limits        |     -0.1 |
+|   4   | joint_vel_limits        |    -0.01 |
+|   5   | action_rate             |     -1.0 |
+|   6   | action_rate_rate        |    -0.15 |
+|   7   | joint_vel_l2            |   -0.001 |
+|   8   | joint_tracking_error    |     -0.5 |
+|   9   | base_height_rough       |      4.0 |
+|   10  | base_height_medium      |      8.0 |
+|   11  | base_height_fine        |     16.0 |
+|   12  | relaxation              |     -1.0 |
+|   13  | joint_deviation_l1      |     -0.5 |
+|   14  | joint_deviation_l1_arms |     -0.5 |
+|   15  | ankle_torques           |   -0.001 |
+|   16  | not_moving              |     -1.0 |
+|   17  | torso_upright           |     -1.0 |
+|   18  | severely_tilted         |     -5.0 |
+|   19  | torso_roll              |     -5.0 |
+|   20  | forward_pitch           |    -10.0 |
+|   21  | illegal_contacts        |     -2.0 |
+|   22  | feet_distance           |     -5.0 |
+|   23  | feet_distance_standing  |    -10.0 |
+|   24  | ground_unloaded         |     -2.0 |
+|   25  | flat_feet               |     -1.0 |
+|   26  | feet_slide              |     -1.0 |
+|   27  | feet_yaw_mean           |     -2.0 |
+|   28  | completely_airborne     |    -50.0 |
+|   29  | body_velocity           |     -0.1 |
+|   30  | ground_slam             |     -1.0 |
+|   31  | torso_slam              |     -5.0 |
++-------+-------------------------+----------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 8 active terms.
++---------------------------------+
+|     Active Curriculum Terms     |
++-------+-------------------------+
+| Index | Name                    |
++-------+-------------------------+
+|   0   | adaptive_lift           |
+|   1   | terrain_levels          |
+|   2   | polish_action_rate_rate |
+|   3   | polish_ground_slam      |
+|   4   | polish_torso_slam       |
+|   5   | polish_not_moving       |
+|   6   | polish_joint_vel_l2     |
+|   7   | random_fallen_states    |
++-------+-------------------------+
+
+[INFO]: Completed setting up the environment...
+[nexus] env built in 7.4s
+[nexus] pre_learn (fallen-state dataset) done in 0.0s
+/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:220: UserWarning: The observation configuration dictionary 'obs_groups' is empty and thus likely not configured. Consider configuring the 'obs_groups' dictionary explicitly
+  warnings.warn(
+/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'actor' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'actor' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:243: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'critic' key. As an observation group with the name 'critic' was found, this is assumed to be the appropriate observation. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['policy']
+	 critic :  ['critic']
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): Identity()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=470, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=29, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): Identity()
+  (mlp): MLP(
+    (0): Linear(in_features=640, out_features=512, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=512, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+Storing git diff for 'WBC-AGILE' in: /workspace/bench/nexus_port/logs/2026-09-02_16-36-59_nexus/git/WBC-AGILE.diff
+################################################################################
+[1m                            Learning iteration 0/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 98304 
+                       Steps per second: 30084 
+                        Collection time: 2.865s 
+                          Learning time: 0.403s 
+                        Mean value loss: 6.2762
+                    Mean surrogate loss: 0.0345
+                      Mean entropy loss: 41.1032
+                     Mean symmetry loss: 0.0028
+                   Mean l2c2_actor loss: 0.0012
+                  Mean l2c2_critic loss: 0.0080
+                            Mean reward: -46.24
+                    Mean episode length: 15.90
+                        Mean action std: 1.00
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.0181
+           Episode_Reward/feet_distance: -0.0029
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -0.4011
+        Episode_Reward/illegal_contacts: -0.0009
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.0157
+        Episode_Reward/joint_torques_l2: -0.0157
+           Episode_Reward/forward_pitch: -0.0028
+         Episode_Reward/ground_unloaded: -0.0198
+           Episode_Reward/feet_yaw_mean: -0.0050
+ Episode_Reward/joint_deviation_l1_arms: -0.0032
+       Episode_Reward/base_height_rough: 0.0221
+              Episode_Reward/torso_slam: -0.0033
+              Episode_Reward/relaxation: -0.1126
+     Episode_Reward/completely_airborne: -0.7399
+           Episode_Reward/torso_upright: 0.0000
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0027
+           Episode_Termination/time_out: 0.0187
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0001
+            Episode_Reward/joint_acc_l2: -0.0031
+              Episode_Reward/feet_slide: -0.0014
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.0171
+      Episode_Reward/base_height_medium: 0.0281
+        Episode_Reward/base_height_fine: 0.0400
+             Episode_Reward/ground_slam: -0.0062
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0036
+             Episode_Reward/action_rate: -0.9327
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 1.0000
+            Metrics/height/height_error: 0.0000
+           Episode_Reward/body_velocity: -0.0849
+        Episode_Reward/joint_vel_limits: -0.0000
+               Episode_Reward/flat_feet: -0.0315
+      Episode_Reward/joint_deviation_l1: -0.0117
+    Episode_Reward/joint_tracking_error: -0.0501
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.0193
+         Episode_Reward/severely_tilted: -0.0009
+--------------------------------------------------------------------------------
+                         Iteration time: 3.27s
+                           Time elapsed: 0:00:03
+                                    ETA: 0:00:29
+
+################################################################################
+[1m                            Learning iteration 1/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 196608 
+                       Steps per second: 41728 
+                        Collection time: 2.041s 
+                          Learning time: 0.315s 
+                        Mean value loss: 4.1231
+                    Mean surrogate loss: 0.0053
+                      Mean entropy loss: 41.0486
+                     Mean symmetry loss: 0.0016
+                   Mean l2c2_actor loss: 0.0011
+                  Mean l2c2_critic loss: 0.0277
+                            Mean reward: -100.62
+                    Mean episode length: 38.08
+                        Mean action std: 0.99
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.0660
+           Episode_Reward/feet_distance: -0.0164
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -1.2467
+        Episode_Reward/illegal_contacts: -0.0258
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.0494
+        Episode_Reward/joint_torques_l2: -0.0472
+           Episode_Reward/forward_pitch: -0.0327
+         Episode_Reward/ground_unloaded: -0.0526
+           Episode_Reward/feet_yaw_mean: -0.0169
+ Episode_Reward/joint_deviation_l1_arms: -0.0068
+       Episode_Reward/base_height_rough: 0.0720
+              Episode_Reward/torso_slam: -0.0358
+              Episode_Reward/relaxation: -0.3865
+     Episode_Reward/completely_airborne: -1.2084
+           Episode_Reward/torso_upright: 0.0000
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0050
+           Episode_Termination/time_out: 0.0523
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0002
+            Episode_Reward/joint_acc_l2: -0.0092
+              Episode_Reward/feet_slide: -0.0153
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.0506
+      Episode_Reward/base_height_medium: 0.0915
+        Episode_Reward/base_height_fine: 0.1258
+             Episode_Reward/ground_slam: -0.0735
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0115
+             Episode_Reward/action_rate: -2.8046
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9999
+            Metrics/height/height_error: 0.0000
+           Episode_Reward/body_velocity: -0.2515
+        Episode_Reward/joint_vel_limits: -0.0001
+               Episode_Reward/flat_feet: -0.1040
+      Episode_Reward/joint_deviation_l1: -0.0202
+    Episode_Reward/joint_tracking_error: -0.1507
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.0547
+         Episode_Reward/severely_tilted: -0.0087
+--------------------------------------------------------------------------------
+                         Iteration time: 2.36s
+                           Time elapsed: 0:00:05
+                                    ETA: 0:00:22
+
+################################################################################
+[1m                            Learning iteration 2/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 294912 
+                       Steps per second: 40489 
+                        Collection time: 2.113s 
+                          Learning time: 0.315s 
+                        Mean value loss: 3.8365
+                    Mean surrogate loss: -0.0084
+                      Mean entropy loss: 40.7752
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0013
+                  Mean l2c2_critic loss: 0.0332
+                            Mean reward: -154.47
+                    Mean episode length: 62.52
+                        Mean action std: 0.99
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.1007
+           Episode_Reward/feet_distance: -0.0272
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -2.0561
+        Episode_Reward/illegal_contacts: -0.0660
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.0501
+        Episode_Reward/joint_torques_l2: -0.0724
+           Episode_Reward/forward_pitch: -0.0951
+         Episode_Reward/ground_unloaded: -0.0871
+           Episode_Reward/feet_yaw_mean: -0.0277
+ Episode_Reward/joint_deviation_l1_arms: -0.0068
+       Episode_Reward/base_height_rough: 0.1023
+              Episode_Reward/torso_slam: -0.0445
+              Episode_Reward/relaxation: -0.5587
+     Episode_Reward/completely_airborne: -1.4238
+           Episode_Reward/torso_upright: -0.0001
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0055
+           Episode_Termination/time_out: 0.0814
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0003
+            Episode_Reward/joint_acc_l2: -0.0125
+              Episode_Reward/feet_slide: -0.0272
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.0825
+      Episode_Reward/base_height_medium: 0.1160
+        Episode_Reward/base_height_fine: 0.1445
+             Episode_Reward/ground_slam: -0.1130
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0173
+             Episode_Reward/action_rate: -4.6108
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9984
+            Metrics/height/height_error: 0.0000
+           Episode_Reward/body_velocity: -0.3061
+        Episode_Reward/joint_vel_limits: -0.0001
+               Episode_Reward/flat_feet: -0.2109
+      Episode_Reward/joint_deviation_l1: -0.0208
+    Episode_Reward/joint_tracking_error: -0.2498
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.0855
+         Episode_Reward/severely_tilted: -0.0147
+--------------------------------------------------------------------------------
+                         Iteration time: 2.43s
+                           Time elapsed: 0:00:08
+                                    ETA: 0:00:18
+
+################################################################################
+[1m                            Learning iteration 3/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 393216 
+                       Steps per second: 40150 
+                        Collection time: 2.133s 
+                          Learning time: 0.315s 
+                        Mean value loss: 3.7386
+                    Mean surrogate loss: -0.0096
+                      Mean entropy loss: 40.6421
+                     Mean symmetry loss: 0.0004
+                   Mean l2c2_actor loss: 0.0014
+                  Mean l2c2_critic loss: 0.0358
+                            Mean reward: -211.77
+                    Mean episode length: 88.74
+                        Mean action std: 0.98
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.1361
+           Episode_Reward/feet_distance: -0.0427
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -2.8775
+        Episode_Reward/illegal_contacts: -0.1196
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.0692
+        Episode_Reward/joint_torques_l2: -0.1039
+           Episode_Reward/forward_pitch: -0.1214
+         Episode_Reward/ground_unloaded: -0.1279
+           Episode_Reward/feet_yaw_mean: -0.0379
+ Episode_Reward/joint_deviation_l1_arms: -0.0064
+       Episode_Reward/base_height_rough: 0.1360
+              Episode_Reward/torso_slam: -0.0620
+              Episode_Reward/relaxation: -0.7252
+     Episode_Reward/completely_airborne: -1.5367
+           Episode_Reward/torso_upright: 0.0000
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0066
+           Episode_Termination/time_out: 0.1105
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0004
+            Episode_Reward/joint_acc_l2: -0.0191
+              Episode_Reward/feet_slide: -0.0393
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.1120
+      Episode_Reward/base_height_medium: 0.1554
+        Episode_Reward/base_height_fine: 0.1989
+             Episode_Reward/ground_slam: -0.1601
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0266
+             Episode_Reward/action_rate: -6.4413
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9960
+            Metrics/height/height_error: 0.0000
+           Episode_Reward/body_velocity: -0.3245
+        Episode_Reward/joint_vel_limits: -0.0001
+               Episode_Reward/flat_feet: -0.3286
+      Episode_Reward/joint_deviation_l1: -0.0191
+    Episode_Reward/joint_tracking_error: -0.3511
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.1161
+         Episode_Reward/severely_tilted: -0.0106
+--------------------------------------------------------------------------------
+                         Iteration time: 2.45s
+                           Time elapsed: 0:00:10
+                                    ETA: 0:00:15
+
+################################################################################
+[1m                            Learning iteration 4/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 491520 
+                       Steps per second: 39970 
+                        Collection time: 2.145s 
+                          Learning time: 0.315s 
+                        Mean value loss: 3.6110
+                    Mean surrogate loss: -0.0114
+                      Mean entropy loss: 40.4246
+                     Mean symmetry loss: 0.0005
+                   Mean l2c2_actor loss: 0.0017
+                  Mean l2c2_critic loss: 0.0169
+                            Mean reward: -261.64
+                    Mean episode length: 110.34
+                        Mean action std: 0.98
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.1578
+           Episode_Reward/feet_distance: -0.0474
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -3.6914
+        Episode_Reward/illegal_contacts: -0.1684
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.0544
+        Episode_Reward/joint_torques_l2: -0.1397
+           Episode_Reward/forward_pitch: -0.1968
+         Episode_Reward/ground_unloaded: -0.1597
+           Episode_Reward/feet_yaw_mean: -0.0471
+ Episode_Reward/joint_deviation_l1_arms: -0.0063
+       Episode_Reward/base_height_rough: 0.1556
+              Episode_Reward/torso_slam: -0.0671
+              Episode_Reward/relaxation: -1.1175
+     Episode_Reward/completely_airborne: -1.6174
+           Episode_Reward/torso_upright: -0.0001
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0066
+           Episode_Termination/time_out: 0.1441
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0005
+            Episode_Reward/joint_acc_l2: -0.0274
+              Episode_Reward/feet_slide: -0.0521
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.1369
+      Episode_Reward/base_height_medium: 0.1537
+        Episode_Reward/base_height_fine: 0.1780
+             Episode_Reward/ground_slam: -0.1941
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0350
+             Episode_Reward/action_rate: -8.2472
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9941
+            Metrics/height/height_error: 0.4724
+           Episode_Reward/body_velocity: -0.3418
+        Episode_Reward/joint_vel_limits: -0.0001
+               Episode_Reward/flat_feet: -0.4318
+      Episode_Reward/joint_deviation_l1: -0.0196
+    Episode_Reward/joint_tracking_error: -0.4500
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.1547
+         Episode_Reward/severely_tilted: -0.0060
+--------------------------------------------------------------------------------
+                         Iteration time: 2.46s
+                           Time elapsed: 0:00:12
+                                    ETA: 0:00:12
+
+################################################################################
+[1m                            Learning iteration 5/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 589824 
+                       Steps per second: 40116 
+                        Collection time: 2.136s 
+                          Learning time: 0.314s 
+                        Mean value loss: 3.4068
+                    Mean surrogate loss: -0.0108
+                      Mean entropy loss: 40.2866
+                     Mean symmetry loss: 0.0005
+                   Mean l2c2_actor loss: 0.0019
+                  Mean l2c2_critic loss: 0.0091
+                            Mean reward: -313.67
+                    Mean episode length: 135.82
+                        Mean action std: 0.97
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.1816
+           Episode_Reward/feet_distance: -0.0663
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -4.4577
+        Episode_Reward/illegal_contacts: -0.2128
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.0766
+        Episode_Reward/joint_torques_l2: -0.1693
+           Episode_Reward/forward_pitch: -0.2771
+         Episode_Reward/ground_unloaded: -0.2083
+           Episode_Reward/feet_yaw_mean: -0.0597
+ Episode_Reward/joint_deviation_l1_arms: -0.0074
+       Episode_Reward/base_height_rough: 0.1960
+              Episode_Reward/torso_slam: -0.0894
+              Episode_Reward/relaxation: -1.1711
+     Episode_Reward/completely_airborne: -1.8406
+           Episode_Reward/torso_upright: -0.0001
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0074
+           Episode_Termination/time_out: 0.1744
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0006
+            Episode_Reward/joint_acc_l2: -0.0336
+              Episode_Reward/feet_slide: -0.0677
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.1666
+      Episode_Reward/base_height_medium: 0.2066
+        Episode_Reward/base_height_fine: 0.2466
+             Episode_Reward/ground_slam: -0.2404
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0374
+             Episode_Reward/action_rate: -9.9660
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9939
+            Metrics/height/height_error: 0.6344
+           Episode_Reward/body_velocity: -0.3653
+        Episode_Reward/joint_vel_limits: -0.0002
+               Episode_Reward/flat_feet: -0.5684
+      Episode_Reward/joint_deviation_l1: -0.0218
+    Episode_Reward/joint_tracking_error: -0.5403
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.1918
+         Episode_Reward/severely_tilted: -0.0061
+--------------------------------------------------------------------------------
+                         Iteration time: 2.45s
+                           Time elapsed: 0:00:15
+                                    ETA: 0:00:10
+
+################################################################################
+[1m                            Learning iteration 6/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 688128 
+                       Steps per second: 40089 
+                        Collection time: 2.137s 
+                          Learning time: 0.315s 
+                        Mean value loss: 3.2804
+                    Mean surrogate loss: -0.0108
+                      Mean entropy loss: 40.1047
+                     Mean symmetry loss: 0.0005
+                   Mean l2c2_actor loss: 0.0022
+                  Mean l2c2_critic loss: 0.0056
+                            Mean reward: -370.78
+                    Mean episode length: 160.36
+                        Mean action std: 0.96
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.2182
+           Episode_Reward/feet_distance: -0.0743
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -5.2148
+        Episode_Reward/illegal_contacts: -0.2464
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.0814
+        Episode_Reward/joint_torques_l2: -0.1833
+           Episode_Reward/forward_pitch: -0.4174
+         Episode_Reward/ground_unloaded: -0.2074
+           Episode_Reward/feet_yaw_mean: -0.0713
+ Episode_Reward/joint_deviation_l1_arms: -0.0061
+       Episode_Reward/base_height_rough: 0.2560
+              Episode_Reward/torso_slam: -0.0959
+              Episode_Reward/relaxation: -1.6906
+     Episode_Reward/completely_airborne: -2.0535
+           Episode_Reward/torso_upright: 0.0000
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0055
+           Episode_Termination/time_out: 0.2099
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0007
+            Episode_Reward/joint_acc_l2: -0.0327
+              Episode_Reward/feet_slide: -0.0787
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.2033
+      Episode_Reward/base_height_medium: 0.2515
+        Episode_Reward/base_height_fine: 0.2741
+             Episode_Reward/ground_slam: -0.2714
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0456
+             Episode_Reward/action_rate: -11.6737
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9939
+            Metrics/height/height_error: 0.5070
+           Episode_Reward/body_velocity: -0.3886
+        Episode_Reward/joint_vel_limits: -0.0002
+               Episode_Reward/flat_feet: -0.7000
+      Episode_Reward/joint_deviation_l1: -0.0195
+    Episode_Reward/joint_tracking_error: -0.6343
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.2074
+         Episode_Reward/severely_tilted: -0.0097
+--------------------------------------------------------------------------------
+                         Iteration time: 2.45s
+                           Time elapsed: 0:00:17
+                                    ETA: 0:00:07
+
+################################################################################
+[1m                            Learning iteration 7/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 786432 
+                       Steps per second: 39542 
+                        Collection time: 2.171s 
+                          Learning time: 0.315s 
+                        Mean value loss: 3.1526
+                    Mean surrogate loss: -0.0118
+                      Mean entropy loss: 39.9151
+                     Mean symmetry loss: 0.0005
+                   Mean l2c2_actor loss: 0.0024
+                  Mean l2c2_critic loss: 0.0033
+                            Mean reward: -410.86
+                    Mean episode length: 183.12
+                        Mean action std: 0.96
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.2372
+           Episode_Reward/feet_distance: -0.0819
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -5.9755
+        Episode_Reward/illegal_contacts: -0.2833
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.1156
+        Episode_Reward/joint_torques_l2: -0.2124
+           Episode_Reward/forward_pitch: -0.5330
+         Episode_Reward/ground_unloaded: -0.2908
+           Episode_Reward/feet_yaw_mean: -0.0812
+ Episode_Reward/joint_deviation_l1_arms: -0.0069
+       Episode_Reward/base_height_rough: 0.2418
+              Episode_Reward/torso_slam: -0.1213
+              Episode_Reward/relaxation: -1.4052
+     Episode_Reward/completely_airborne: -2.1597
+           Episode_Reward/torso_upright: -0.0001
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0069
+           Episode_Termination/time_out: 0.2439
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0008
+            Episode_Reward/joint_acc_l2: -0.0377
+              Episode_Reward/feet_slide: -0.0925
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.2257
+      Episode_Reward/base_height_medium: 0.2467
+        Episode_Reward/base_height_fine: 0.3119
+             Episode_Reward/ground_slam: -0.3211
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0509
+             Episode_Reward/action_rate: -13.3736
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9939
+            Metrics/height/height_error: 0.7111
+           Episode_Reward/body_velocity: -0.4006
+        Episode_Reward/joint_vel_limits: -0.0002
+               Episode_Reward/flat_feet: -0.8351
+      Episode_Reward/joint_deviation_l1: -0.0213
+    Episode_Reward/joint_tracking_error: -0.7199
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.2443
+         Episode_Reward/severely_tilted: -0.0074
+--------------------------------------------------------------------------------
+                         Iteration time: 2.49s
+                           Time elapsed: 0:00:20
+                                    ETA: 0:00:05
+
+################################################################################
+[1m                            Learning iteration 8/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 884736 
+                       Steps per second: 40132 
+                        Collection time: 2.135s 
+                          Learning time: 0.315s 
+                        Mean value loss: 3.0542
+                    Mean surrogate loss: -0.0107
+                      Mean entropy loss: 39.7244
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0027
+                  Mean l2c2_critic loss: 0.0024
+                            Mean reward: -474.82
+                    Mean episode length: 208.44
+                        Mean action std: 0.95
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.2644
+           Episode_Reward/feet_distance: -0.0885
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -6.7297
+        Episode_Reward/illegal_contacts: -0.3364
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.1117
+        Episode_Reward/joint_torques_l2: -0.2492
+           Episode_Reward/forward_pitch: -0.6027
+         Episode_Reward/ground_unloaded: -0.2759
+           Episode_Reward/feet_yaw_mean: -0.0919
+ Episode_Reward/joint_deviation_l1_arms: -0.0061
+       Episode_Reward/base_height_rough: 0.2933
+              Episode_Reward/torso_slam: -0.1249
+              Episode_Reward/relaxation: -2.2912
+     Episode_Reward/completely_airborne: -2.4777
+           Episode_Reward/torso_upright: -0.0001
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0044
+           Episode_Termination/time_out: 0.2743
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0009
+            Episode_Reward/joint_acc_l2: -0.0462
+              Episode_Reward/feet_slide: -0.1044
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.2567
+      Episode_Reward/base_height_medium: 0.2898
+        Episode_Reward/base_height_fine: 0.3375
+             Episode_Reward/ground_slam: -0.3577
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0558
+             Episode_Reward/action_rate: -15.0646
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9939
+            Metrics/height/height_error: 0.6505
+           Episode_Reward/body_velocity: -0.4439
+        Episode_Reward/joint_vel_limits: -0.0003
+               Episode_Reward/flat_feet: -0.9576
+      Episode_Reward/joint_deviation_l1: -0.0192
+    Episode_Reward/joint_tracking_error: -0.8214
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.2768
+         Episode_Reward/severely_tilted: -0.0093
+--------------------------------------------------------------------------------
+                         Iteration time: 2.45s
+                           Time elapsed: 0:00:22
+                                    ETA: 0:00:02
+
+################################################################################
+[1m                            Learning iteration 9/10                             [0m 
+
+                               Run name: nexus
+                            Total steps: 983040 
+                       Steps per second: 40046 
+                        Collection time: 2.140s 
+                          Learning time: 0.315s 
+                        Mean value loss: 2.9669
+                    Mean surrogate loss: -0.0114
+                      Mean entropy loss: 39.5436
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0029
+                  Mean l2c2_critic loss: 0.0020
+                            Mean reward: -514.75
+                    Mean episode length: 232.17
+                        Mean action std: 0.94
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_roll: -0.2817
+           Episode_Reward/feet_distance: -0.1060
+           Curriculum/polish_not_moving: -1.0000
+        Episode_Reward/action_rate_rate: -7.4398
+        Episode_Reward/illegal_contacts: -0.3770
+          Curriculum/polish_ground_slam: -1.0000
+              Episode_Reward/not_moving: -0.1167
+        Episode_Reward/joint_torques_l2: -0.2689
+           Episode_Reward/forward_pitch: -0.6581
+         Episode_Reward/ground_unloaded: -0.3447
+           Episode_Reward/feet_yaw_mean: -0.1018
+ Episode_Reward/joint_deviation_l1_arms: -0.0086
+       Episode_Reward/base_height_rough: 0.3261
+              Episode_Reward/torso_slam: -0.1484
+              Episode_Reward/relaxation: -2.0311
+     Episode_Reward/completely_airborne: -2.4644
+           Episode_Reward/torso_upright: -0.0000
+           Curriculum/polish_torso_slam: -5.0000
+  Episode_Reward/feet_distance_standing: -0.0094
+           Episode_Termination/time_out: 0.3062
+        Curriculum/random_fallen_states: 0.0000
+        Episode_Reward/joint_pos_limits: -0.0010
+            Episode_Reward/joint_acc_l2: -0.0493
+              Episode_Reward/feet_slide: -0.1234
+         Curriculum/polish_joint_vel_l2: -0.0010
+            Episode_Reward/joint_vel_l2: -0.2925
+      Episode_Reward/base_height_medium: 0.3111
+        Episode_Reward/base_height_fine: 0.3540
+             Episode_Reward/ground_slam: -0.4201
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/ankle_torques: -0.0612
+             Episode_Reward/action_rate: -16.6482
+              Curriculum/terrain_levels: 0.0000
+               Curriculum/adaptive_lift: 0.9939
+            Metrics/height/height_error: 0.6892
+           Episode_Reward/body_velocity: -0.4461
+        Episode_Reward/joint_vel_limits: -0.0003
+               Episode_Reward/flat_feet: -1.0563
+      Episode_Reward/joint_deviation_l1: -0.0253
+    Episode_Reward/joint_tracking_error: -0.8918
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Reward/torque_limits: -0.2917
+         Episode_Reward/severely_tilted: -0.0071
+--------------------------------------------------------------------------------
+                         Iteration time: 2.45s
+                           Time elapsed: 0:00:25
+                                    ETA: 0:00:00
+
+[nexus] 10 PPO iterations x 24 steps x 4096 envs in 25.4s -> 2542 ms/iter, 38669 env-steps/s | log /workspace/bench/nexus_port/logs/2026-09-02_16-36-59_nexus
+TRAIN ON NEXUS OK
+[INFO]: SimulationContext cleared
