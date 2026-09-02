@@ -1,0 +1,220 @@
+Loading user config located at: '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
+2026-09-02T15:16:45Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788362205.442985    3993 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788362205.443014    3993 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-02T15:16:45Z [351ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-02T15:16:45Z [396ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-02T15:16:45Z [396ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T15:16:45Z [397ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T15:16:45Z [398ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T15:16:46Z [943ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-09-02T15:16:46Z [943ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+[ISAACLAB] AppLauncher initialization complete
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.agents.rsl_rl_ppo_cfg:G1HeightTrackingPpoRunnerCfg
+/workspace/isaaclab_nexus/envs.py:68: UserWarning: nexusify dropped terms without a Nexus implementation: events.randomize_physics_material (randomize_rigid_body_material), events.randomize_base_com (randomize_rigid_body_com)
+  warnings.warn("nexusify dropped terms without a Nexus implementation: " + ", ".join(dropped))
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO] Generating terrains based on curriculum took Last: 0.257544 s
+[INFO]: Registered backend 'nexus' for factory Articulation.
+[INFO]: Registered backend 'nexus' for factory ContactSensor.
+[INFO]: Registered backend 'nexus' for factory RayCaster.
+[INFO]: Time taken for scene creation Last: 7.790931 s, Mean: 7.790931 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  NexusScene(num_envs=2048, entities=['robot', 'contact_forces', 'height_measurement_sensor', 'terrain'])
+[INFO]: Time taken for simulation start Last: 0.013166 s, Mean: 0.013166 s, Std: 0.000000 s, N: 1
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++--------------------------------------+
+|         Active Command Terms         |
++-------+--------+---------------------+
+| Index | Name   |         Type        |
++-------+--------+---------------------+
+|   0   | height | SmoothHeightCommand |
++-------+--------+---------------------+
+
+[INFO] Event Manager:  <EventManager> contains 3 active terms.
++----------------------------------------+
+| Active Event Terms in Mode: 'startup'  |
++--------+-------------------------------+
+| Index  | Name                          |
++--------+-------------------------------+
+|   0    | randomize_actuator_gains      |
+|   1    | randomize_bodies_mass         |
+|   2    | randomize_base_mass           |
++--------+-------------------------------+
++---------------------------------------------------------------------------+
+|                   Active Event Terms in Mode: 'interval'                  |
++-------+-----------------------------------------+-------------------------+
+| Index | Name                                    | Interval time range (s) |
++-------+-----------------------------------------+-------------------------+
+|   0   | push_robot                              |       (0.0, 10.0)       |
+|   1   | apply_external_force_torque             |       (0.0, 10.0)       |
+|   2   | apply_external_force_torque_extremities |       (0.0, 10.0)       |
++-------+-----------------------------------------+-------------------------+
++----------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+---------------------+
+|   Index    | Name                |
++------------+---------------------+
+|     0      | reset_base          |
++------------+---------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO]: Resolved joint names for the action term JointPositionAction: ['left_hip_pitch_joint', 'left_hip_roll_joint', 'left_hip_yaw_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint', 'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_yaw_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint', 'waist_yaw_joint', 'waist_roll_joint', 'waist_pitch_joint', 'left_shoulder_pitch_joint', 'left_shoulder_roll_joint', 'left_shoulder_yaw_joint', 'left_elbow_joint', 'left_wrist_roll_joint', 'left_wrist_pitch_joint', 'left_wrist_yaw_joint', 'right_shoulder_pitch_joint', 'right_shoulder_roll_joint', 'right_shoulder_yaw_joint', 'right_elbow_joint', 'right_wrist_roll_joint', 'right_wrist_pitch_joint', 'right_wrist_yaw_joint'] [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]]
+[INFO] Action Manager:  <ActionManager> contains 2 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 29)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          29 |
+|   1    | lift        |           0 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++----------------------------------------------+
+| Active Observation Terms in Group: 'policy'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | base_ang_vel           |   (5, 3)  |
+|    1    | projected_gravity      |   (5, 3)  |
+|    2    | joint_pos              |  (5, 29)  |
+|    3    | joint_vel              |  (5, 29)  |
+|    4    | actions                |  (5, 29)  |
+|    5    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
++----------------------------------------------+
+| Active Observation Terms in Group: 'critic'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | projected_gravity      |   (5, 3)  |
+|    1    | base_lin_vel           |   (5, 3)  |
+|    2    | base_ang_vel           |   (5, 3)  |
+|    3    | joint_pos              |  (5, 29)  |
+|    4    | joint_vel              |  (5, 29)  |
+|    5    | actions                |  (5, 29)  |
+|    6    | contact_forces         |  (5, 30)  |
+|    7    | base_height            |   (5, 1)  |
+|    8    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++----------------------------------+
+|     Active Termination Terms     |
++-------+---------------+----------+
+| Index | Name          | Time Out |
++-------+---------------+----------+
+|   0   | time_out      |   True   |
+|   1   | invalid_state |  False   |
++-------+---------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 32 active terms.
++--------------------------------------------+
+|            Active Reward Terms             |
++-------+-------------------------+----------+
+| Index | Name                    |   Weight |
++-------+-------------------------+----------+
+|   0   | joint_torques_l2        |   -5e-05 |
+|   1   | torque_limits           |    -0.01 |
+|   2   | joint_acc_l2            | -2.5e-08 |
+|   3   | joint_pos_limits        |     -0.1 |
+|   4   | joint_vel_limits        |    -0.01 |
+|   5   | action_rate             |     -1.0 |
+|   6   | action_rate_rate        |    -0.15 |
+|   7   | joint_vel_l2            |   -0.001 |
+|   8   | joint_tracking_error    |     -0.5 |
+|   9   | base_height_rough       |      4.0 |
+|   10  | base_height_medium      |      8.0 |
+|   11  | base_height_fine        |     16.0 |
+|   12  | relaxation              |     -1.0 |
+|   13  | joint_deviation_l1      |     -0.5 |
+|   14  | joint_deviation_l1_arms |     -0.5 |
+|   15  | ankle_torques           |   -0.001 |
+|   16  | not_moving              |     -1.0 |
+|   17  | torso_upright           |     -1.0 |
+|   18  | severely_tilted         |     -5.0 |
+|   19  | torso_roll              |     -5.0 |
+|   20  | forward_pitch           |    -10.0 |
+|   21  | illegal_contacts        |     -2.0 |
+|   22  | feet_distance           |     -5.0 |
+|   23  | feet_distance_standing  |    -10.0 |
+|   24  | ground_unloaded         |     -2.0 |
+|   25  | flat_feet               |     -1.0 |
+|   26  | feet_slide              |     -1.0 |
+|   27  | feet_yaw_mean           |     -2.0 |
+|   28  | completely_airborne     |    -50.0 |
+|   29  | body_velocity           |     -0.1 |
+|   30  | ground_slam             |     -1.0 |
+|   31  | torso_slam              |     -5.0 |
++-------+-------------------------+----------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 8 active terms.
++---------------------------------+
+|     Active Curriculum Terms     |
++-------+-------------------------+
+| Index | Name                    |
++-------+-------------------------+
+|   0   | adaptive_lift           |
+|   1   | terrain_levels          |
+|   2   | polish_action_rate_rate |
+|   3   | polish_ground_slam      |
+|   4   | polish_torso_slam       |
+|   5   | polish_not_moving       |
+|   6   | polish_joint_vel_l2     |
+|   7   | random_fallen_states    |
++-------+-------------------------+
+
+[INFO]: Completed setting up the environment...
+[nexus] env built in 8.0s
+[nexus] pre_learn (fallen-state dataset) done in 0.0s
+/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:220: UserWarning: The observation configuration dictionary 'obs_groups' is empty and thus likely not configured. Consider configuring the 'obs_groups' dictionary explicitly
+  warnings.warn(
+/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'actor' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'actor' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:243: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'critic' key. As an observation group with the name 'critic' was found, this is assumed to be the appropriate observation. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['policy']
+	 critic :  ['critic']
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): Identity()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=470, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=29, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): Identity()
+  (mlp): MLP(
+    (0): Linear(in_features=640, out_features=512, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=512, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+Storing git diff for 'WBC-AGILE' in: /workspace/bench/nexus_port/logs/2026-09-02_15-17-02_nexus/git/WBC-AGILE.diff

@@ -1,0 +1,273 @@
+The '--headless' CLI argument is deprecated. Omit '--viz' for default headless. If config visualizers are enabled and you want to force headless, use '--viz none'.
+Loading user config located at: '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
+2026-09-02T10:54:58Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788346498.900018  630092 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788346498.900048  630092 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-02T10:54:59Z [380ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-02T10:54:59Z [407ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-02T10:54:59Z [431ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T10:54:59Z [431ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T10:54:59Z [432ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T10:54:59Z [1,106ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-09-02T10:54:59Z [1,106ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+[ISAACLAB] AppLauncher initialization complete
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
+2026-09-02T10:55:03Z [4,279ms] [Warning] [isaaclab_physx.physics.physx_manager] TGS solver with enable_external_forces_every_iteration=False may cause noisy velocities.
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO] Generating terrains based on curriculum took Last: 0.217147 s
+[INFO]: Registered backend 'physx' for factory Articulation.
+[INFO]: Setting variant selection 'PhysX' for variant set 'Physics' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'left_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'right_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Registered backend 'physx' for factory FrameView.
+[INFO]: Registered backend 'physx' for factory ContactSensor.
+[INFO]: Registered backend 'physx' for factory RayCaster.
+[INFO]: Physics scene prim path: /physicsScene
+[INFO]: Time taken for scene creation Last: 1.684586 s, Mean: 1.684586 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 4
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : True
+2026-09-02T10:55:06Z [7,351ms] [Warning] [usdrt.population.plugin] Last global time was not created. Did you call setEnableUsdNoticeHandling?
+[INFO]: Simulation parameters for joints in /World/envs/env_.*/Robot:
++---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+|                                                        Simulation Joint Information (Prim path: /World/envs/env_.*/Robot)                                                       |
++-------+----------------------------+-----------+---------+----------+-----------------+------------------+------------------+-----------------+-----------------+---------------+
+| Index | Name                       | Stiffness | Damping | Armature | Static Friction | Dynamic Friction | Viscous Friction | Position Limits | Velocity Limits | Effort Limits |
++-------+----------------------------+-----------+---------+----------+-----------------+------------------+------------------+-----------------+-----------------+---------------+
+|   0   | left_hip_pitch_joint       |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.531, 2.880] |      32.000     |     88.000    |
+|   1   | right_hip_pitch_joint      |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.531, 2.880] |      32.000     |     88.000    |
+|   2   | waist_yaw_joint            |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.618, 2.618] |      32.000     |     88.000    |
+|   3   | left_hip_roll_joint        |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.524, 2.967] |      32.000     |     88.000    |
+|   4   | right_hip_roll_joint       |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.967, 0.524] |      32.000     |     88.000    |
+|   5   | waist_roll_joint           |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.520, 0.520] |      37.000     |     50.000    |
+|   6   | left_hip_yaw_joint         |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.758, 2.758] |      32.000     |     88.000    |
+|   7   | right_hip_yaw_joint        |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.758, 2.758] |      32.000     |     88.000    |
+|   8   | waist_pitch_joint          |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.520, 0.520] |      37.000     |     50.000    |
+|   9   | left_knee_joint            |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.087, 2.880] |      20.000     |    139.000    |
+|   10  | right_knee_joint           |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.087, 2.880] |      20.000     |    139.000    |
+|   11  | left_shoulder_pitch_joint  |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-3.089, 2.670] |      37.000     |     25.000    |
+|   12  | right_shoulder_pitch_joint |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-3.089, 2.670] |      37.000     |     25.000    |
+|   13  | left_ankle_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.873, 0.524] |      37.000     |     50.000    |
+|   14  | right_ankle_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.873, 0.524] |      37.000     |     50.000    |
+|   15  | left_shoulder_roll_joint   |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.588, 2.251] |      37.000     |     25.000    |
+|   16  | right_shoulder_roll_joint  |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.251, 1.588] |      37.000     |     25.000    |
+|   17  | left_ankle_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.262, 0.262] |      37.000     |     50.000    |
+|   18  | right_ankle_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-0.262, 0.262] |      37.000     |     50.000    |
+|   19  | left_shoulder_yaw_joint    |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.618, 2.618] |      37.000     |     25.000    |
+|   20  | right_shoulder_yaw_joint   |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-2.618, 2.618] |      37.000     |     25.000    |
+|   21  | left_elbow_joint           |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.047, 2.094] |      37.000     |     25.000    |
+|   22  | right_elbow_joint          |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.047, 2.094] |      37.000     |     25.000    |
+|   23  | left_wrist_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.972, 1.972] |      37.000     |     25.000    |
+|   24  | right_wrist_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.972, 1.972] |      37.000     |     25.000    |
+|   25  | left_wrist_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.614, 1.614] |      22.000     |     5.000     |
+|   26  | right_wrist_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.614, 1.614] |      22.000     |     5.000     |
+|   27  | left_wrist_yaw_joint       |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.614, 1.614] |      22.000     |     5.000     |
+|   28  | right_wrist_yaw_joint      |   0.000   |  0.000  |  0.020   |      0.010      |      0.000       |      0.000       | [-1.614, 1.614] |      22.000     |     5.000     |
++-------+----------------------------+-----------+---------+----------+-----------------+------------------+------------------+-----------------+-----------------+---------------+
+[INFO]: Read mesh prim: /World/ground/terrain/mesh with 369728 vertices and 2097240 faces.
+[INFO]: Time taken for simulation start Last: 1.667198 s, Mean: 1.667198 s, Std: 0.000000 s, N: 1
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++--------------------------------------+
+|         Active Command Terms         |
++-------+--------+---------------------+
+| Index | Name   |         Type        |
++-------+--------+---------------------+
+|   0   | height | SmoothHeightCommand |
++-------+--------+---------------------+
+
+[INFO] Event Manager:  <EventManager> contains 3 active terms.
++----------------------------------------+
+| Active Event Terms in Mode: 'startup'  |
++--------+-------------------------------+
+| Index  | Name                          |
++--------+-------------------------------+
+|   0    | randomize_physics_material    |
+|   1    | randomize_actuator_gains      |
+|   2    | randomize_bodies_mass         |
+|   3    | randomize_base_mass           |
+|   4    | randomize_base_com            |
++--------+-------------------------------+
++---------------------------------------------------------------------------+
+|                   Active Event Terms in Mode: 'interval'                  |
++-------+-----------------------------------------+-------------------------+
+| Index | Name                                    | Interval time range (s) |
++-------+-----------------------------------------+-------------------------+
+|   0   | push_robot                              |       (0.0, 10.0)       |
+|   1   | apply_external_force_torque             |       (0.0, 10.0)       |
+|   2   | apply_external_force_torque_extremities |       (0.0, 10.0)       |
++-------+-----------------------------------------+-------------------------+
++----------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+---------------------+
+|   Index    | Name                |
++------------+---------------------+
+|     0      | reset_base          |
++------------+---------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO]: Resolved joint names for the action term JointPositionAction: ['left_hip_pitch_joint', 'right_hip_pitch_joint', 'waist_yaw_joint', 'left_hip_roll_joint', 'right_hip_roll_joint', 'waist_roll_joint', 'left_hip_yaw_joint', 'right_hip_yaw_joint', 'waist_pitch_joint', 'left_knee_joint', 'right_knee_joint', 'left_shoulder_pitch_joint', 'right_shoulder_pitch_joint', 'left_ankle_pitch_joint', 'right_ankle_pitch_joint', 'left_shoulder_roll_joint', 'right_shoulder_roll_joint', 'left_ankle_roll_joint', 'right_ankle_roll_joint', 'left_shoulder_yaw_joint', 'right_shoulder_yaw_joint', 'left_elbow_joint', 'right_elbow_joint', 'left_wrist_roll_joint', 'right_wrist_roll_joint', 'left_wrist_pitch_joint', 'right_wrist_pitch_joint', 'left_wrist_yaw_joint', 'right_wrist_yaw_joint'] [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]]
+[INFO] Action Manager:  <ActionManager> contains 2 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 29)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          29 |
+|   1    | lift        |           0 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++----------------------------------------------+
+| Active Observation Terms in Group: 'policy'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | base_ang_vel           |   (5, 3)  |
+|    1    | projected_gravity      |   (5, 3)  |
+|    2    | joint_pos              |  (5, 29)  |
+|    3    | joint_vel              |  (5, 29)  |
+|    4    | actions                |  (5, 29)  |
+|    5    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
++----------------------------------------------+
+| Active Observation Terms in Group: 'critic'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | projected_gravity      |   (5, 3)  |
+|    1    | base_lin_vel           |   (5, 3)  |
+|    2    | base_ang_vel           |   (5, 3)  |
+|    3    | joint_pos              |  (5, 29)  |
+|    4    | joint_vel              |  (5, 29)  |
+|    5    | actions                |  (5, 29)  |
+|    6    | contact_forces         |  (5, 30)  |
+|    7    | base_height            |   (5, 1)  |
+|    8    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++----------------------------------+
+|     Active Termination Terms     |
++-------+---------------+----------+
+| Index | Name          | Time Out |
++-------+---------------+----------+
+|   0   | time_out      |   True   |
+|   1   | invalid_state |  False   |
++-------+---------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 32 active terms.
++--------------------------------------------+
+|            Active Reward Terms             |
++-------+-------------------------+----------+
+| Index | Name                    |   Weight |
++-------+-------------------------+----------+
+|   0   | joint_torques_l2        |   -5e-05 |
+|   1   | torque_limits           |    -0.01 |
+|   2   | joint_acc_l2            | -2.5e-08 |
+|   3   | joint_pos_limits        |     -0.1 |
+|   4   | joint_vel_limits        |    -0.01 |
+|   5   | action_rate             |     -1.0 |
+|   6   | action_rate_rate        |    -0.15 |
+|   7   | joint_vel_l2            |   -0.001 |
+|   8   | joint_tracking_error    |     -0.5 |
+|   9   | base_height_rough       |      4.0 |
+|   10  | base_height_medium      |      8.0 |
+|   11  | base_height_fine        |     16.0 |
+|   12  | relaxation              |     -1.0 |
+|   13  | joint_deviation_l1      |     -0.5 |
+|   14  | joint_deviation_l1_arms |     -0.5 |
+|   15  | ankle_torques           |   -0.001 |
+|   16  | not_moving              |     -1.0 |
+|   17  | torso_upright           |     -1.0 |
+|   18  | severely_tilted         |     -5.0 |
+|   19  | torso_roll              |     -5.0 |
+|   20  | forward_pitch           |    -10.0 |
+|   21  | illegal_contacts        |     -2.0 |
+|   22  | feet_distance           |     -5.0 |
+|   23  | feet_distance_standing  |    -10.0 |
+|   24  | ground_unloaded         |     -2.0 |
+|   25  | flat_feet               |     -1.0 |
+|   26  | feet_slide              |     -1.0 |
+|   27  | feet_yaw_mean           |     -2.0 |
+|   28  | completely_airborne     |    -50.0 |
+|   29  | body_velocity           |     -0.1 |
+|   30  | ground_slam             |     -1.0 |
+|   31  | torso_slam              |     -5.0 |
++-------+-------------------------+----------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 8 active terms.
++---------------------------------+
+|     Active Curriculum Terms     |
++-------+-------------------------+
+| Index | Name                    |
++-------+-------------------------+
+|   0   | adaptive_lift           |
+|   1   | terrain_levels          |
+|   2   | polish_action_rate_rate |
+|   3   | polish_ground_slam      |
+|   4   | polish_torso_slam       |
+|   5   | polish_not_moving       |
+|   6   | polish_joint_vel_l2     |
+|   7   | random_fallen_states    |
++-------+-------------------------+
+
+[INFO]: Completed setting up the environment...
+/workspace/bench/scripts/torque_origin.py:22: DeprecationWarning: The `root_state_w` property will be deprecated in a IsaacLab 4.0. Please use `root_link_pose_w` and `root_com_vel_w` instead.
+  st = tt(robot.data.root_state_w).clone()
+/workspace/bench/scripts/torque_origin.py:24: DeprecationWarning: The function 'write_root_state_to_sim' will be deprecated in a future release. Please use 'write_root_link_pose_to_sim_index' and 'write_root_com_velocity_to_sim_index' instead.
+  robot.write_root_state_to_sim(st)
+/workspace/bench/scripts/torque_origin.py:26: DeprecationWarning: The function 'write_joint_state_to_sim' will be deprecated in a future release. Please use 'write_joint_position_to_sim_index' and 'write_joint_velocity_to_sim_index' instead.
+  robot.write_joint_state_to_sim(position=jp, velocity=torch.zeros_like(jp))
+
+[to] ===== physx =====  PD on, joints at default target, airborne
+[to] actuator 'legs': joints=8  kp[min,max]=[91.5,108.7]  kd[min,max]=[2.24,4.80]
+[to] actuator 'feet': joints=4  kp[min,max]=[18.1,21.9]  kd[min,max]=[1.05,1.94]
+[to] actuator 'waist': joints=3  kp[min,max]=[92.2,109.2]  kd[min,max]=[2.15,4.93]
+[to] actuator 'arms': joints=14  kp[min,max]=[18.0,21.9]  kd[min,max]=[0.16,0.97]
+[to] ctrl-step 0: |tau|max=    7.92  |qd|max=  7.168  quat_w=+1.000  z= 3.909  RESET_THIS_STEP=False
+[to]      right_hip_pitch_joint      tau=   -7.92  q=-0.037 target=-0.100  qd=+2.275
+[to]      left_ankle_pitch_joint     tau=   -4.45  q=-0.148 target=-0.200  qd=+1.790
+[to]      right_ankle_pitch_joint    tau=   -4.44  q=-0.152 target=-0.200  qd=+1.600
+[to]      right_knee_joint           tau=   -3.43  q=+0.154 target=+0.300  qd=-7.168
+[to] ctrl-step 1: |tau|max=   15.71  |qd|max=  2.017  quat_w=+1.000  z= 3.896  RESET_THIS_STEP=False
+[to]      right_knee_joint           tau=  +15.71  q=+0.142 target=+0.300  qd=+1.941
+[to]      left_knee_joint            tau=  +14.52  q=+0.144 target=+0.300  qd=+1.849
+[to]      right_hip_pitch_joint      tau=   +4.27  q=-0.064 target=-0.100  qd=-2.017
+[to]      waist_roll_joint           tau=   +2.78  q=-0.017 target=+0.000  qd=-0.523
+[to] ctrl-step 2: |tau|max=    6.69  |qd|max=  3.594  quat_w=+1.000  z= 3.876  RESET_THIS_STEP=False
+[to]      right_hip_pitch_joint      tau=   +6.69  q=-0.098 target=-0.100  qd=-1.373
+[to]      waist_pitch_joint          tau=   -6.63  q=+0.031 target=+0.000  qd=+1.756
+[to]      waist_roll_joint           tau=   +3.63  q=-0.027 target=+0.000  qd=-0.510
+[to]      right_knee_joint           tau=   +2.98  q=+0.209 target=+0.300  qd=+3.594
+[to] ctrl-step 3: |tau|max=    9.02  |qd|max=  2.306  quat_w=+1.000  z= 3.849  RESET_THIS_STEP=False
+[to]      waist_pitch_joint          tau=   -9.02  q=+0.059 target=+0.000  qd=+1.017
+[to]      right_hip_pitch_joint      tau=   +5.52  q=-0.117 target=-0.100  qd=-0.737
+[to]      waist_roll_joint           tau=   +4.37  q=-0.035 target=+0.000  qd=-0.376
+[to]      left_hip_pitch_joint       tau=   +3.26  q=-0.114 target=-0.100  qd=-0.834
+[to] ctrl-step 4: |tau|max=    7.25  |qd|max=  1.292  quat_w=+1.000  z= 3.813  RESET_THIS_STEP=False
+[to]      waist_pitch_joint          tau=   -7.25  q=+0.065 target=+0.000  qd=-0.102
+[to]      waist_roll_joint           tau=   +4.49  q=-0.040 target=+0.000  qd=-0.177
+[to]      right_hip_pitch_joint      tau=   +4.07  q=-0.125 target=-0.100  qd=-0.219
+[to]      left_hip_pitch_joint       tau=   +3.26  q=-0.124 target=-0.100  qd=-0.329
+[to] ctrl-step 5: |tau|max=    4.29  |qd|max=  1.311  quat_w=+1.000  z= 3.770  RESET_THIS_STEP=False
+[to]      waist_pitch_joint          tau=   -4.29  q=+0.054 target=+0.000  qd=-0.771
+[to]      waist_roll_joint           tau=   +4.17  q=-0.041 target=+0.000  qd=+0.030
+[to]      left_hip_pitch_joint       tau=   +2.61  q=-0.125 target=-0.100  qd=+0.054
+[to]      right_hip_pitch_joint      tau=   +2.16  q=-0.124 target=-0.100  qd=+0.161
+[INFO]: SimulationContext cleared

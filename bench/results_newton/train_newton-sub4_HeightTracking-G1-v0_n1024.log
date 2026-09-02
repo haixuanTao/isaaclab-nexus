@@ -1,0 +1,2264 @@
+The '--headless' CLI argument is deprecated. Omit '--viz' for default headless. If config visualizers are enabled and you want to force headless, use '--viz none'.
+Loading user config located at: '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
+2026-09-02T06:51:31Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788331891.974312  532502 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788331891.974342  532502 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-02T06:51:32Z [369ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-02T06:51:32Z [373ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-02T06:51:32Z [420ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T06:51:32Z [421ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T06:51:32Z [422ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T06:51:32Z [1,001ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-09-02T06:51:32Z [1,001ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+[ISAACLAB] AppLauncher initialization complete
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.agents.rsl_rl_ppo_cfg:G1HeightTrackingPpoRunnerCfg
+[INFO] Logging experiment in directory: /workspace/WBC-AGILE-NEWTON/logs/rsl_rl/height_tracking_g1
+Exact experiment name requested from command line: 2026-09-02_06-51-42
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO] Generating terrains based on curriculum took Last: 0.220665 s
+[INFO]: Registered backend 'newton' for factory Articulation.
+[INFO]: Setting variant selection 'PhysX' for variant set 'Physics' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'left_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'right_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Registered backend 'newton' for factory FrameView.
+[INFO]: Registered backend 'newton' for factory ContactSensor.
+[INFO]: Registered backend 'newton' for factory RayCaster.
+[INFO]: Time taken for scene creation Last: 5.245913 s, Mean: 5.245913 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 1024
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : True
+[INFO]: Dispatching MODEL_INIT callbacks
+[INFO]: Finalizing model on device: cuda:0
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_newton/physics/newton_manager.py:989: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
+  replace_newton_shape_colors(cls._model)
+Finalize builder took: Last: 2.971874 s, Mean: 2.971874 s, Std: 0.000000 s, N: 1
+[INFO]: Dispatching PHYSICS_READY callbacks
+[INFO]: Simulation parameters for joints in /World/envs/env_.*/Robot:
++-------------------------------------------------------------------------------------------------------------------------------------------+
+|                                     Simulation Joint Information (Prim path: /World/envs/env_.*/Robot)                                    |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+| Index | Name                       | Stiffness | Damping | Armature | Static Friction | Position Limits | Velocity Limits | Effort Limits |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+|   0   | left_hip_pitch_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   1   | left_hip_roll_joint        |   0.000   |  0.000  |  0.020   |      0.010      | [-0.524, 2.967] |      32.000     |     88.000    |
+|   2   | left_hip_yaw_joint         |   0.000   |  0.000  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   3   | left_knee_joint            |   0.000   |  0.000  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   4   | left_ankle_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   5   | left_ankle_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   6   | right_hip_pitch_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   7   | right_hip_roll_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-2.967, 0.524] |      32.000     |     88.000    |
+|   8   | right_hip_yaw_joint        |   0.000   |  0.000  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   9   | right_knee_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   10  | right_ankle_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   11  | right_ankle_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   12  | waist_yaw_joint            |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      32.000     |     88.000    |
+|   13  | waist_roll_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   14  | waist_pitch_joint          |   0.000   |  0.000  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   15  | left_shoulder_pitch_joint  |   0.000   |  0.000  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   16  | left_shoulder_roll_joint   |   0.000   |  0.000  |  0.020   |      0.010      | [-1.588, 2.251] |      37.000     |     25.000    |
+|   17  | left_shoulder_yaw_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   18  | left_elbow_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   19  | left_wrist_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   20  | left_wrist_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   21  | left_wrist_yaw_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   22  | right_shoulder_pitch_joint |   0.000   |  0.000  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   23  | right_shoulder_roll_joint  |   0.000   |  0.000  |  0.020   |      0.010      | [-2.251, 1.588] |      37.000     |     25.000    |
+|   24  | right_shoulder_yaw_joint   |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   25  | right_elbow_joint          |   0.000   |  0.000  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   26  | right_wrist_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   27  | right_wrist_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   28  | right_wrist_yaw_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+[INFO]: Adding contact sensor for /World/envs/env_.*/Robot/.* with filter all bodies/shapes
+Contact sensor construction took: Last: 0.031016 s, Mean: 0.031016 s, Std: 0.000000 s, N: 1
+[INFO]: Contact sensor initialized with 30 sensors.
+[INFO]: Creating buffers for contact sensor data with num_envs: 1024, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Creating buffers for contact sensor data with num_envs: 1024, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Read mesh prim: /World/ground/terrain/mesh with 369728 vertices and 2097240 faces.
+Initialize solver took: Last: 2.119714 s, Mean: 2.119714 s, Std: 0.000000 s, N: 1
+[INFO]: Newton CUDA graph captured (standard Warp mode)
+CUDA graph took: Last: 0.883055 s, Mean: 0.883055 s, Std: 0.000000 s, N: 1
+[INFO]: Time taken for simulation start Last: 6.176149 s, Mean: 6.176149 s, Std: 0.000000 s, N: 1
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++--------------------------------------+
+|         Active Command Terms         |
++-------+--------+---------------------+
+| Index | Name   |         Type        |
++-------+--------+---------------------+
+|   0   | height | SmoothHeightCommand |
++-------+--------+---------------------+
+
+[INFO] Event Manager:  <EventManager> contains 3 active terms.
++----------------------------------------+
+| Active Event Terms in Mode: 'startup'  |
++--------+-------------------------------+
+| Index  | Name                          |
++--------+-------------------------------+
+|   0    | randomize_physics_material    |
+|   1    | randomize_actuator_gains      |
+|   2    | randomize_bodies_mass         |
+|   3    | randomize_base_mass           |
+|   4    | randomize_base_com            |
++--------+-------------------------------+
++---------------------------------------------------------------------------+
+|                   Active Event Terms in Mode: 'interval'                  |
++-------+-----------------------------------------+-------------------------+
+| Index | Name                                    | Interval time range (s) |
++-------+-----------------------------------------+-------------------------+
+|   0   | push_robot                              |       (0.0, 10.0)       |
+|   1   | apply_external_force_torque             |       (0.0, 10.0)       |
+|   2   | apply_external_force_torque_extremities |       (0.0, 10.0)       |
++-------+-----------------------------------------+-------------------------+
++----------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+---------------------+
+|   Index    | Name                |
++------------+---------------------+
+|     0      | reset_base          |
++------------+---------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO]: Resolved joint names for the action term JointPositionAction: ['left_hip_pitch_joint', 'left_hip_roll_joint', 'left_hip_yaw_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint', 'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_yaw_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint', 'waist_yaw_joint', 'waist_roll_joint', 'waist_pitch_joint', 'left_shoulder_pitch_joint', 'left_shoulder_roll_joint', 'left_shoulder_yaw_joint', 'left_elbow_joint', 'left_wrist_roll_joint', 'left_wrist_pitch_joint', 'left_wrist_yaw_joint', 'right_shoulder_pitch_joint', 'right_shoulder_roll_joint', 'right_shoulder_yaw_joint', 'right_elbow_joint', 'right_wrist_roll_joint', 'right_wrist_pitch_joint', 'right_wrist_yaw_joint'] [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]]
+[INFO] Action Manager:  <ActionManager> contains 2 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 29)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          29 |
+|   1    | lift        |           0 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++----------------------------------------------+
+| Active Observation Terms in Group: 'policy'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | base_ang_vel           |   (5, 3)  |
+|    1    | projected_gravity      |   (5, 3)  |
+|    2    | joint_pos              |  (5, 29)  |
+|    3    | joint_vel              |  (5, 29)  |
+|    4    | actions                |  (5, 29)  |
+|    5    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
++----------------------------------------------+
+| Active Observation Terms in Group: 'critic'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | projected_gravity      |   (5, 3)  |
+|    1    | base_lin_vel           |   (5, 3)  |
+|    2    | base_ang_vel           |   (5, 3)  |
+|    3    | joint_pos              |  (5, 29)  |
+|    4    | joint_vel              |  (5, 29)  |
+|    5    | actions                |  (5, 29)  |
+|    6    | contact_forces         |  (5, 30)  |
+|    7    | base_height            |   (5, 1)  |
+|    8    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++----------------------------------+
+|     Active Termination Terms     |
++-------+---------------+----------+
+| Index | Name          | Time Out |
++-------+---------------+----------+
+|   0   | time_out      |   True   |
+|   1   | invalid_state |  False   |
++-------+---------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 32 active terms.
++--------------------------------------------+
+|            Active Reward Terms             |
++-------+-------------------------+----------+
+| Index | Name                    |   Weight |
++-------+-------------------------+----------+
+|   0   | joint_torques_l2        |   -5e-05 |
+|   1   | torque_limits           |    -0.01 |
+|   2   | joint_acc_l2            | -2.5e-08 |
+|   3   | joint_pos_limits        |     -0.1 |
+|   4   | joint_vel_limits        |    -0.01 |
+|   5   | action_rate             |     -1.0 |
+|   6   | action_rate_rate        |    -0.15 |
+|   7   | joint_vel_l2            |   -0.001 |
+|   8   | joint_tracking_error    |     -0.5 |
+|   9   | base_height_rough       |      4.0 |
+|   10  | base_height_medium      |      8.0 |
+|   11  | base_height_fine        |     16.0 |
+|   12  | relaxation              |     -1.0 |
+|   13  | joint_deviation_l1      |     -0.5 |
+|   14  | joint_deviation_l1_arms |     -0.5 |
+|   15  | ankle_torques           |   -0.001 |
+|   16  | not_moving              |     -1.0 |
+|   17  | torso_upright           |     -1.0 |
+|   18  | severely_tilted         |     -5.0 |
+|   19  | torso_roll              |     -5.0 |
+|   20  | forward_pitch           |    -10.0 |
+|   21  | illegal_contacts        |     -2.0 |
+|   22  | feet_distance           |     -5.0 |
+|   23  | feet_distance_standing  |    -10.0 |
+|   24  | ground_unloaded         |     -2.0 |
+|   25  | flat_feet               |     -1.0 |
+|   26  | feet_slide              |     -1.0 |
+|   27  | feet_yaw_mean           |     -2.0 |
+|   28  | completely_airborne     |    -50.0 |
+|   29  | body_velocity           |     -0.1 |
+|   30  | ground_slam             |     -1.0 |
+|   31  | torso_slam              |     -5.0 |
++-------+-------------------------+----------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 8 active terms.
++---------------------------------+
+|     Active Curriculum Terms     |
++-------+-------------------------+
+| Index | Name                    |
++-------+-------------------------+
+|   0   | adaptive_lift           |
+|   1   | terrain_levels          |
+|   2   | polish_action_rate_rate |
+|   3   | polish_ground_slam      |
+|   4   | polish_torso_slam       |
+|   5   | polish_not_moving       |
+|   6   | polish_joint_vel_l2     |
+|   7   | random_fallen_states    |
++-------+-------------------------+
+
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab/isaaclab/envs/mdp/events.py:742: UserWarning: In Newton, body com pose always has unit quaternion. Consider using body_com_pos_b instead.Querying this property requires appending a unit quaternion to the position which is expensive.
+  self.default_com = self.asset.data.body_com_pose_b.torch.clone()
+[INFO]: Completed setting up the environment...
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:220: UserWarning: The observation configuration dictionary 'obs_groups' is empty and thus likely not configured. Consider configuring the 'obs_groups' dictionary explicitly
+  warnings.warn(
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'actor' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'actor' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:243: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'critic' key. As an observation group with the name 'critic' was found, this is assumed to be the appropriate observation. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['policy']
+	 critic :  ['critic']
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): Identity()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=470, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=29, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): Identity()
+  (mlp): MLP(
+    (0): Linear(in_features=640, out_features=512, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=512, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+Storing git diff for 'WBC-AGILE-NEWTON' in: /workspace/WBC-AGILE-NEWTON/logs/rsl_rl/height_tracking_g1/2026-09-02_06-51-42_height_tracking_g1/git/WBC-AGILE-NEWTON.diff
+################################################################################
+[1m                            Learning iteration 0/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 24576 
+                       Steps per second: 8246 
+                        Collection time: 2.753s 
+                          Learning time: 0.227s 
+                        Mean value loss: 3.5796
+                    Mean surrogate loss: 0.0313
+                      Mean entropy loss: 41.0979
+                     Mean symmetry loss: 0.0040
+                   Mean l2c2_actor loss: 0.0015
+                  Mean l2c2_critic loss: 0.0090
+                            Mean reward: -27.68
+                    Mean episode length: 13.17
+                        Mean action std: 1.00
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -0.1180
+        Episode_Reward/base_height_fine: 0.0334
+     Episode_Reward/completely_airborne: -0.1579
+        Episode_Reward/joint_vel_limits: -0.0000
+       Episode_Reward/base_height_rough: 0.0222
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -0.3851
+            Episode_Reward/joint_acc_l2: -0.0025
+              Episode_Reward/torso_slam: -0.0160
+        Episode_Reward/illegal_contacts: -0.0007
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.0144
+            Episode_Reward/joint_vel_l2: -0.0169
+           Episode_Reward/feet_yaw_mean: -0.0047
+               Episode_Reward/flat_feet: -0.0231
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0012
+           Episode_Reward/torque_limits: -0.0167
+    Episode_Reward/joint_tracking_error: -0.0502
+            Metrics/height/height_error: 0.0000
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -0.9004
+      Episode_Reward/base_height_medium: 0.0249
+        Episode_Reward/joint_pos_limits: -0.0001
+ Episode_Reward/joint_deviation_l1_arms: -0.0067
+  Episode_Reward/feet_distance_standing: -0.0021
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.0074
+      Episode_Reward/joint_deviation_l1: -0.0216
+           Episode_Reward/forward_pitch: -0.0099
+              Episode_Reward/feet_slide: -0.0124
+           Episode_Reward/torso_upright: 0.0000
+             Episode_Reward/ground_slam: -0.0216
+           Episode_Reward/body_velocity: -0.0344
+        Episode_Reward/joint_torques_l2: -0.0161
+           Episode_Reward/ankle_torques: -0.0061
+         Episode_Reward/ground_unloaded: -0.0135
+               Curriculum/adaptive_lift: 1.0000
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.0197
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 2.98s
+                           Time elapsed: 0:00:02
+                                    ETA: 0:01:26
+
+################################################################################
+[1m                            Learning iteration 1/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 49152 
+                       Steps per second: 16698 
+                        Collection time: 1.354s 
+                          Learning time: 0.118s 
+                        Mean value loss: 4.3164
+                    Mean surrogate loss: 0.0070
+                      Mean entropy loss: 41.0580
+                     Mean symmetry loss: 0.0028
+                   Mean l2c2_actor loss: 0.0015
+                  Mean l2c2_critic loss: 0.0172
+                            Mean reward: -55.43
+                    Mean episode length: 25.39
+                        Mean action std: 1.00
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -0.3907
+        Episode_Reward/base_height_fine: 0.0942
+     Episode_Reward/completely_airborne: -0.2032
+        Episode_Reward/joint_vel_limits: -0.0000
+       Episode_Reward/base_height_rough: 0.0713
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -1.2258
+            Episode_Reward/joint_acc_l2: -0.0067
+              Episode_Reward/torso_slam: -0.0766
+        Episode_Reward/illegal_contacts: -0.0050
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.0499
+            Episode_Reward/joint_vel_l2: -0.0491
+           Episode_Reward/feet_yaw_mean: -0.0160
+               Episode_Reward/flat_feet: -0.0829
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0069
+           Episode_Reward/torque_limits: -0.0532
+    Episode_Reward/joint_tracking_error: -0.1543
+            Metrics/height/height_error: 0.0000
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -2.7620
+      Episode_Reward/base_height_medium: 0.0800
+        Episode_Reward/joint_pos_limits: -0.0003
+ Episode_Reward/joint_deviation_l1_arms: -0.0200
+  Episode_Reward/feet_distance_standing: -0.0099
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.0189
+      Episode_Reward/joint_deviation_l1: -0.0590
+           Episode_Reward/forward_pitch: -0.0208
+              Episode_Reward/feet_slide: -0.0479
+           Episode_Reward/torso_upright: 0.0000
+             Episode_Reward/ground_slam: -0.1012
+           Episode_Reward/body_velocity: -0.1198
+        Episode_Reward/joint_torques_l2: -0.0473
+           Episode_Reward/ankle_torques: -0.0152
+         Episode_Reward/ground_unloaded: -0.0343
+               Curriculum/adaptive_lift: 1.0000
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.0898
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.47s
+                           Time elapsed: 0:00:04
+                                    ETA: 0:01:02
+
+################################################################################
+[1m                            Learning iteration 2/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 73728 
+                       Steps per second: 16533 
+                        Collection time: 1.370s 
+                          Learning time: 0.116s 
+                        Mean value loss: 4.2032
+                    Mean surrogate loss: -0.0113
+                      Mean entropy loss: 40.9287
+                     Mean symmetry loss: 0.0015
+                   Mean l2c2_actor loss: 0.0019
+                  Mean l2c2_critic loss: 0.0409
+                            Mean reward: -93.59
+                    Mean episode length: 41.02
+                        Mean action std: 0.99
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -0.6525
+        Episode_Reward/base_height_fine: 0.2249
+     Episode_Reward/completely_airborne: -0.3931
+        Episode_Reward/joint_vel_limits: -0.0001
+       Episode_Reward/base_height_rough: 0.1298
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -2.0461
+            Episode_Reward/joint_acc_l2: -0.0121
+              Episode_Reward/torso_slam: -0.2363
+        Episode_Reward/illegal_contacts: -0.0164
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.0878
+            Episode_Reward/joint_vel_l2: -0.0893
+           Episode_Reward/feet_yaw_mean: -0.0299
+               Episode_Reward/flat_feet: -0.1571
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0148
+           Episode_Reward/torque_limits: -0.0918
+    Episode_Reward/joint_tracking_error: -0.2634
+            Metrics/height/height_error: 0.0000
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -4.5861
+      Episode_Reward/base_height_medium: 0.1627
+        Episode_Reward/joint_pos_limits: -0.0006
+ Episode_Reward/joint_deviation_l1_arms: -0.0330
+  Episode_Reward/feet_distance_standing: -0.0122
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.0859
+      Episode_Reward/joint_deviation_l1: -0.0988
+           Episode_Reward/forward_pitch: -0.1344
+              Episode_Reward/feet_slide: -0.0844
+           Episode_Reward/torso_upright: -0.0014
+             Episode_Reward/ground_slam: -0.2195
+           Episode_Reward/body_velocity: -0.2949
+        Episode_Reward/joint_torques_l2: -0.0807
+           Episode_Reward/ankle_torques: -0.0289
+         Episode_Reward/ground_unloaded: -0.0592
+               Curriculum/adaptive_lift: 0.9995
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.1506
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.49s
+                           Time elapsed: 0:00:05
+                                    ETA: 0:00:53
+
+################################################################################
+[1m                            Learning iteration 3/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 98304 
+                       Steps per second: 16172 
+                        Collection time: 1.395s 
+                          Learning time: 0.125s 
+                        Mean value loss: 3.9767
+                    Mean surrogate loss: -0.0099
+                      Mean entropy loss: 40.8191
+                     Mean symmetry loss: 0.0010
+                   Mean l2c2_actor loss: 0.0022
+                  Mean l2c2_critic loss: 0.0504
+                            Mean reward: -144.47
+                    Mean episode length: 63.30
+                        Mean action std: 0.99
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -0.6521
+        Episode_Reward/base_height_fine: 0.3626
+     Episode_Reward/completely_airborne: -0.6229
+        Episode_Reward/joint_vel_limits: -0.0001
+       Episode_Reward/base_height_rough: 0.2047
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -2.8400
+            Episode_Reward/joint_acc_l2: -0.0144
+              Episode_Reward/torso_slam: -0.2264
+        Episode_Reward/illegal_contacts: -0.0203
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.1261
+            Episode_Reward/joint_vel_l2: -0.1186
+           Episode_Reward/feet_yaw_mean: -0.0412
+               Episode_Reward/flat_feet: -0.2969
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0226
+           Episode_Reward/torque_limits: -0.1217
+    Episode_Reward/joint_tracking_error: -0.3523
+            Metrics/height/height_error: 0.0000
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -6.3480
+      Episode_Reward/base_height_medium: 0.2548
+        Episode_Reward/joint_pos_limits: -0.0008
+ Episode_Reward/joint_deviation_l1_arms: -0.0179
+  Episode_Reward/feet_distance_standing: -0.0102
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.1285
+      Episode_Reward/joint_deviation_l1: -0.0527
+           Episode_Reward/forward_pitch: -0.1217
+              Episode_Reward/feet_slide: -0.1093
+           Episode_Reward/torso_upright: -0.0039
+             Episode_Reward/ground_slam: -0.2854
+           Episode_Reward/body_velocity: -0.2845
+        Episode_Reward/joint_torques_l2: -0.1035
+           Episode_Reward/ankle_torques: -0.0363
+         Episode_Reward/ground_unloaded: -0.1157
+               Curriculum/adaptive_lift: 0.9975
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.2207
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.52s
+                           Time elapsed: 0:00:07
+                                    ETA: 0:00:48
+
+################################################################################
+[1m                            Learning iteration 4/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 122880 
+                       Steps per second: 16437 
+                        Collection time: 1.369s 
+                          Learning time: 0.126s 
+                        Mean value loss: 3.9186
+                    Mean surrogate loss: -0.0137
+                      Mean entropy loss: 40.6998
+                     Mean symmetry loss: 0.0009
+                   Mean l2c2_actor loss: 0.0026
+                  Mean l2c2_critic loss: 0.0709
+                            Mean reward: -195.14
+                    Mean episode length: 85.35
+                        Mean action std: 0.98
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -0.8112
+        Episode_Reward/base_height_fine: 0.6157
+     Episode_Reward/completely_airborne: -0.6759
+        Episode_Reward/joint_vel_limits: -0.0001
+       Episode_Reward/base_height_rough: 0.2841
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -3.6357
+            Episode_Reward/joint_acc_l2: -0.0276
+              Episode_Reward/torso_slam: -0.2979
+        Episode_Reward/illegal_contacts: -0.0339
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.1556
+            Episode_Reward/joint_vel_l2: -0.1396
+           Episode_Reward/feet_yaw_mean: -0.0584
+               Episode_Reward/flat_feet: -0.3593
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0253
+           Episode_Reward/torque_limits: -0.1661
+    Episode_Reward/joint_tracking_error: -0.4628
+            Metrics/height/height_error: 0.2784
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -8.1147
+      Episode_Reward/base_height_medium: 0.3937
+        Episode_Reward/joint_pos_limits: -0.0011
+ Episode_Reward/joint_deviation_l1_arms: -0.0232
+  Episode_Reward/feet_distance_standing: -0.0102
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.2910
+      Episode_Reward/joint_deviation_l1: -0.0713
+           Episode_Reward/forward_pitch: -0.2109
+              Episode_Reward/feet_slide: -0.1350
+           Episode_Reward/torso_upright: -0.0007
+             Episode_Reward/ground_slam: -0.3602
+           Episode_Reward/body_velocity: -0.3754
+        Episode_Reward/joint_torques_l2: -0.1603
+           Episode_Reward/ankle_torques: -0.0525
+         Episode_Reward/ground_unloaded: -0.1612
+               Curriculum/adaptive_lift: 0.9960
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.3094
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:08
+                                    ETA: 0:00:44
+
+################################################################################
+[1m                            Learning iteration 5/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 147456 
+                       Steps per second: 16491 
+                        Collection time: 1.367s 
+                          Learning time: 0.124s 
+                        Mean value loss: 3.8677
+                    Mean surrogate loss: -0.0126
+                      Mean entropy loss: 40.6038
+                     Mean symmetry loss: 0.0008
+                   Mean l2c2_actor loss: 0.0029
+                  Mean l2c2_critic loss: 0.0839
+                            Mean reward: -246.41
+                    Mean episode length: 110.59
+                        Mean action std: 0.98
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -0.7910
+        Episode_Reward/base_height_fine: 0.5642
+     Episode_Reward/completely_airborne: -0.7854
+        Episode_Reward/joint_vel_limits: -0.0002
+       Episode_Reward/base_height_rough: 0.3225
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -4.4590
+            Episode_Reward/joint_acc_l2: -0.0240
+              Episode_Reward/torso_slam: -0.2933
+        Episode_Reward/illegal_contacts: -0.0604
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.1891
+            Episode_Reward/joint_vel_l2: -0.1777
+           Episode_Reward/feet_yaw_mean: -0.0610
+               Episode_Reward/flat_feet: -0.4581
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0393
+           Episode_Reward/torque_limits: -0.2009
+    Episode_Reward/joint_tracking_error: -0.5567
+            Metrics/height/height_error: 0.3126
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -9.9736
+      Episode_Reward/base_height_medium: 0.3943
+        Episode_Reward/joint_pos_limits: -0.0012
+ Episode_Reward/joint_deviation_l1_arms: -0.0256
+  Episode_Reward/feet_distance_standing: -0.0118
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.2549
+      Episode_Reward/joint_deviation_l1: -0.0774
+           Episode_Reward/forward_pitch: -0.3016
+              Episode_Reward/feet_slide: -0.1836
+           Episode_Reward/torso_upright: -0.0031
+             Episode_Reward/ground_slam: -0.4575
+           Episode_Reward/body_velocity: -0.4463
+        Episode_Reward/joint_torques_l2: -0.1732
+           Episode_Reward/ankle_torques: -0.0429
+         Episode_Reward/ground_unloaded: -0.1994
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.3873
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.49s
+                           Time elapsed: 0:00:10
+                                    ETA: 0:00:41
+
+################################################################################
+[1m                            Learning iteration 6/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 172032 
+                       Steps per second: 16403 
+                        Collection time: 1.374s 
+                          Learning time: 0.124s 
+                        Mean value loss: 3.8550
+                    Mean surrogate loss: -0.0128
+                      Mean entropy loss: 40.4948
+                     Mean symmetry loss: 0.0008
+                   Mean l2c2_actor loss: 0.0032
+                  Mean l2c2_critic loss: 0.0952
+                            Mean reward: -301.60
+                    Mean episode length: 135.30
+                        Mean action std: 0.98
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -1.7866
+        Episode_Reward/base_height_fine: 0.4750
+     Episode_Reward/completely_airborne: -1.1294
+        Episode_Reward/joint_vel_limits: -0.0002
+       Episode_Reward/base_height_rough: 0.3560
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -5.2142
+            Episode_Reward/joint_acc_l2: -0.0277
+              Episode_Reward/torso_slam: -0.3108
+        Episode_Reward/illegal_contacts: -0.0594
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.2253
+            Episode_Reward/joint_vel_l2: -0.2195
+           Episode_Reward/feet_yaw_mean: -0.0702
+               Episode_Reward/flat_feet: -0.6032
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0471
+           Episode_Reward/torque_limits: -0.2193
+    Episode_Reward/joint_tracking_error: -0.6374
+            Metrics/height/height_error: 0.2218
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -11.6499
+      Episode_Reward/base_height_medium: 0.3829
+        Episode_Reward/joint_pos_limits: -0.0012
+ Episode_Reward/joint_deviation_l1_arms: -0.0238
+  Episode_Reward/feet_distance_standing: -0.0152
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.1579
+      Episode_Reward/joint_deviation_l1: -0.0676
+           Episode_Reward/forward_pitch: -0.3088
+              Episode_Reward/feet_slide: -0.2035
+           Episode_Reward/torso_upright: -0.0041
+             Episode_Reward/ground_slam: -0.5086
+           Episode_Reward/body_velocity: -0.4967
+        Episode_Reward/joint_torques_l2: -0.1927
+           Episode_Reward/ankle_torques: -0.0467
+         Episode_Reward/ground_unloaded: -0.1758
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.4340
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:11
+                                    ETA: 0:00:39
+
+################################################################################
+[1m                            Learning iteration 7/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 196608 
+                       Steps per second: 16710 
+                        Collection time: 1.355s 
+                          Learning time: 0.116s 
+                        Mean value loss: 3.7194
+                    Mean surrogate loss: -0.0152
+                      Mean entropy loss: 40.3719
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0035
+                  Mean l2c2_critic loss: 0.0949
+                            Mean reward: -346.28
+                    Mean episode length: 156.00
+                        Mean action std: 0.97
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -2.2051
+        Episode_Reward/base_height_fine: 0.8065
+     Episode_Reward/completely_airborne: -0.9458
+        Episode_Reward/joint_vel_limits: -0.0002
+       Episode_Reward/base_height_rough: 0.4714
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -6.0790
+            Episode_Reward/joint_acc_l2: -0.0382
+              Episode_Reward/torso_slam: -0.3507
+        Episode_Reward/illegal_contacts: -0.0876
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.2575
+            Episode_Reward/joint_vel_l2: -0.2533
+           Episode_Reward/feet_yaw_mean: -0.0856
+               Episode_Reward/flat_feet: -0.6652
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0605
+           Episode_Reward/torque_limits: -0.2690
+    Episode_Reward/joint_tracking_error: -0.7474
+            Metrics/height/height_error: 0.1713
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -13.5741
+      Episode_Reward/base_height_medium: 0.5917
+        Episode_Reward/joint_pos_limits: -0.0015
+ Episode_Reward/joint_deviation_l1_arms: -0.0230
+  Episode_Reward/feet_distance_standing: -0.0152
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.2600
+      Episode_Reward/joint_deviation_l1: -0.0681
+           Episode_Reward/forward_pitch: -0.5022
+              Episode_Reward/feet_slide: -0.2595
+           Episode_Reward/torso_upright: -0.0038
+             Episode_Reward/ground_slam: -0.6275
+           Episode_Reward/body_velocity: -0.5231
+        Episode_Reward/joint_torques_l2: -0.2448
+           Episode_Reward/ankle_torques: -0.0733
+         Episode_Reward/ground_unloaded: -0.2150
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.5108
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.47s
+                           Time elapsed: 0:00:13
+                                    ETA: 0:00:36
+
+################################################################################
+[1m                            Learning iteration 8/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 221184 
+                       Steps per second: 16687 
+                        Collection time: 1.358s 
+                          Learning time: 0.115s 
+                        Mean value loss: 3.5569
+                    Mean surrogate loss: -0.0138
+                      Mean entropy loss: 40.2745
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0038
+                  Mean l2c2_critic loss: 0.0938
+                            Mean reward: -402.26
+                    Mean episode length: 177.56
+                        Mean action std: 0.97
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -3.1707
+        Episode_Reward/base_height_fine: 0.2643
+     Episode_Reward/completely_airborne: -1.2188
+        Episode_Reward/joint_vel_limits: -0.0002
+       Episode_Reward/base_height_rough: 0.3062
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -6.8493
+            Episode_Reward/joint_acc_l2: -0.0315
+              Episode_Reward/torso_slam: -0.4295
+        Episode_Reward/illegal_contacts: -0.1437
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.2927
+            Episode_Reward/joint_vel_l2: -0.2760
+           Episode_Reward/feet_yaw_mean: -0.0858
+               Episode_Reward/flat_feet: -0.7941
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0874
+           Episode_Reward/torque_limits: -0.2634
+    Episode_Reward/joint_tracking_error: -0.8270
+            Metrics/height/height_error: 0.1750
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -15.2997
+      Episode_Reward/base_height_medium: 0.2243
+        Episode_Reward/joint_pos_limits: -0.0014
+ Episode_Reward/joint_deviation_l1_arms: -0.0282
+  Episode_Reward/feet_distance_standing: -0.0200
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.1158
+      Episode_Reward/joint_deviation_l1: -0.0813
+           Episode_Reward/forward_pitch: -0.8353
+              Episode_Reward/feet_slide: -0.2989
+           Episode_Reward/torso_upright: -0.0031
+             Episode_Reward/ground_slam: -0.7088
+           Episode_Reward/body_velocity: -0.5506
+        Episode_Reward/joint_torques_l2: -0.2425
+           Episode_Reward/ankle_torques: -0.0890
+         Episode_Reward/ground_unloaded: -0.1650
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.5378
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.47s
+                           Time elapsed: 0:00:14
+                                    ETA: 0:00:34
+
+################################################################################
+[1m                            Learning iteration 9/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 245760 
+                       Steps per second: 16492 
+                        Collection time: 1.375s 
+                          Learning time: 0.115s 
+                        Mean value loss: 3.4090
+                    Mean surrogate loss: -0.0138
+                      Mean entropy loss: 40.1632
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0040
+                  Mean l2c2_critic loss: 0.0960
+                            Mean reward: -462.47
+                    Mean episode length: 205.46
+                        Mean action std: 0.96
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -2.4675
+        Episode_Reward/base_height_fine: 0.5949
+     Episode_Reward/completely_airborne: -1.4472
+        Episode_Reward/joint_vel_limits: -0.0003
+       Episode_Reward/base_height_rough: 0.4988
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -7.5899
+            Episode_Reward/joint_acc_l2: -0.0416
+              Episode_Reward/torso_slam: -0.4424
+        Episode_Reward/illegal_contacts: -0.0936
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.3210
+            Episode_Reward/joint_vel_l2: -0.3040
+           Episode_Reward/feet_yaw_mean: -0.1007
+               Episode_Reward/flat_feet: -0.9129
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0726
+           Episode_Reward/torque_limits: -0.3064
+    Episode_Reward/joint_tracking_error: -0.9008
+            Metrics/height/height_error: 0.2632
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -16.9699
+      Episode_Reward/base_height_medium: 0.5031
+        Episode_Reward/joint_pos_limits: -0.0017
+ Episode_Reward/joint_deviation_l1_arms: -0.0259
+  Episode_Reward/feet_distance_standing: -0.0105
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.2617
+      Episode_Reward/joint_deviation_l1: -0.0759
+           Episode_Reward/forward_pitch: -0.4624
+              Episode_Reward/feet_slide: -0.3116
+           Episode_Reward/torso_upright: -0.0028
+             Episode_Reward/ground_slam: -0.7523
+           Episode_Reward/body_velocity: -0.6275
+        Episode_Reward/joint_torques_l2: -0.2824
+           Episode_Reward/ankle_torques: -0.0855
+         Episode_Reward/ground_unloaded: -0.2511
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.6272
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.49s
+                           Time elapsed: 0:00:16
+                                    ETA: 0:00:32
+
+################################################################################
+[1m                            Learning iteration 10/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 270336 
+                       Steps per second: 16474 
+                        Collection time: 1.369s 
+                          Learning time: 0.123s 
+                        Mean value loss: 3.3256
+                    Mean surrogate loss: -0.0133
+                      Mean entropy loss: 40.0534
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0042
+                  Mean l2c2_critic loss: 0.1065
+                            Mean reward: -514.67
+                    Mean episode length: 230.14
+                        Mean action std: 0.96
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -2.3577
+        Episode_Reward/base_height_fine: 1.0701
+     Episode_Reward/completely_airborne: -1.8285
+        Episode_Reward/joint_vel_limits: -0.0002
+       Episode_Reward/base_height_rough: 0.6115
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -8.3937
+            Episode_Reward/joint_acc_l2: -0.0562
+              Episode_Reward/torso_slam: -0.4961
+        Episode_Reward/illegal_contacts: -0.0743
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.3570
+            Episode_Reward/joint_vel_l2: -0.3214
+           Episode_Reward/feet_yaw_mean: -0.1020
+               Episode_Reward/flat_feet: -1.0983
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.0842
+           Episode_Reward/torque_limits: -0.3596
+    Episode_Reward/joint_tracking_error: -1.0295
+            Metrics/height/height_error: 0.2717
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -18.7381
+      Episode_Reward/base_height_medium: 0.7480
+        Episode_Reward/joint_pos_limits: -0.0019
+ Episode_Reward/joint_deviation_l1_arms: -0.0134
+  Episode_Reward/feet_distance_standing: -0.0072
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.4106
+      Episode_Reward/joint_deviation_l1: -0.0387
+           Episode_Reward/forward_pitch: -0.3656
+              Episode_Reward/feet_slide: -0.3208
+           Episode_Reward/torso_upright: -0.0013
+             Episode_Reward/ground_slam: -0.8045
+           Episode_Reward/body_velocity: -0.6584
+        Episode_Reward/joint_torques_l2: -0.3366
+           Episode_Reward/ankle_torques: -0.0881
+         Episode_Reward/ground_unloaded: -0.3318
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.6450
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.49s
+                           Time elapsed: 0:00:17
+                                    ETA: 0:00:30
+
+################################################################################
+[1m                            Learning iteration 11/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 294912 
+                       Steps per second: 16349 
+                        Collection time: 1.388s 
+                          Learning time: 0.115s 
+                        Mean value loss: 3.3141
+                    Mean surrogate loss: -0.0133
+                      Mean entropy loss: 39.9457
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0045
+                  Mean l2c2_critic loss: 0.1037
+                            Mean reward: -564.17
+                    Mean episode length: 254.75
+                        Mean action std: 0.96
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -3.0145
+        Episode_Reward/base_height_fine: 1.0027
+     Episode_Reward/completely_airborne: -1.5525
+        Episode_Reward/joint_vel_limits: -0.0003
+       Episode_Reward/base_height_rough: 0.6623
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -9.1592
+            Episode_Reward/joint_acc_l2: -0.0512
+              Episode_Reward/torso_slam: -0.5099
+        Episode_Reward/illegal_contacts: -0.1655
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.3894
+            Episode_Reward/joint_vel_l2: -0.3588
+           Episode_Reward/feet_yaw_mean: -0.1089
+               Episode_Reward/flat_feet: -1.1056
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1061
+           Episode_Reward/torque_limits: -0.3805
+    Episode_Reward/joint_tracking_error: -1.1183
+            Metrics/height/height_error: 0.2289
+         Episode_Reward/severely_tilted: -0.0003
+             Episode_Reward/action_rate: -20.4333
+      Episode_Reward/base_height_medium: 0.7543
+        Episode_Reward/joint_pos_limits: -0.0022
+ Episode_Reward/joint_deviation_l1_arms: -0.0254
+  Episode_Reward/feet_distance_standing: -0.0151
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.4114
+      Episode_Reward/joint_deviation_l1: -0.0733
+           Episode_Reward/forward_pitch: -0.9153
+              Episode_Reward/feet_slide: -0.3865
+           Episode_Reward/torso_upright: -0.0036
+             Episode_Reward/ground_slam: -0.9255
+           Episode_Reward/body_velocity: -0.7391
+        Episode_Reward/joint_torques_l2: -0.3485
+           Episode_Reward/ankle_torques: -0.0936
+         Episode_Reward/ground_unloaded: -0.3415
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.8132
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:19
+                                    ETA: 0:00:29
+
+################################################################################
+[1m                            Learning iteration 12/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 319488 
+                       Steps per second: 16580 
+                        Collection time: 1.367s 
+                          Learning time: 0.115s 
+                        Mean value loss: 3.1636
+                    Mean surrogate loss: -0.0148
+                      Mean entropy loss: 39.8336
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0047
+                  Mean l2c2_critic loss: 0.1087
+                            Mean reward: -612.08
+                    Mean episode length: 274.08
+                        Mean action std: 0.95
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -4.1422
+        Episode_Reward/base_height_fine: 0.6775
+     Episode_Reward/completely_airborne: -1.8944
+        Episode_Reward/joint_vel_limits: -0.0004
+       Episode_Reward/base_height_rough: 0.6308
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -9.8961
+            Episode_Reward/joint_acc_l2: -0.0677
+              Episode_Reward/torso_slam: -0.5187
+        Episode_Reward/illegal_contacts: -0.2195
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.4226
+            Episode_Reward/joint_vel_l2: -0.3902
+           Episode_Reward/feet_yaw_mean: -0.1353
+               Episode_Reward/flat_feet: -1.2559
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1004
+           Episode_Reward/torque_limits: -0.4385
+    Episode_Reward/joint_tracking_error: -1.2069
+            Metrics/height/height_error: 0.2269
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -22.0834
+      Episode_Reward/base_height_medium: 0.5998
+        Episode_Reward/joint_pos_limits: -0.0023
+ Episode_Reward/joint_deviation_l1_arms: -0.0220
+  Episode_Reward/feet_distance_standing: -0.0102
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.1875
+      Episode_Reward/joint_deviation_l1: -0.0656
+           Episode_Reward/forward_pitch: -1.3184
+              Episode_Reward/feet_slide: -0.4285
+           Episode_Reward/torso_upright: -0.0002
+             Episode_Reward/ground_slam: -1.0255
+           Episode_Reward/body_velocity: -0.7743
+        Episode_Reward/joint_torques_l2: -0.4050
+           Episode_Reward/ankle_torques: -0.1036
+         Episode_Reward/ground_unloaded: -0.2782
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.8041
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.48s
+                           Time elapsed: 0:00:20
+                                    ETA: 0:00:27
+
+################################################################################
+[1m                            Learning iteration 13/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 344064 
+                       Steps per second: 16392 
+                        Collection time: 1.373s 
+                          Learning time: 0.127s 
+                        Mean value loss: 3.1629
+                    Mean surrogate loss: -0.0132
+                      Mean entropy loss: 39.7209
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0048
+                  Mean l2c2_critic loss: 0.1097
+                            Mean reward: -662.57
+                    Mean episode length: 300.80
+                        Mean action std: 0.95
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -2.4396
+        Episode_Reward/base_height_fine: 1.5729
+     Episode_Reward/completely_airborne: -1.7470
+        Episode_Reward/joint_vel_limits: -0.0004
+       Episode_Reward/base_height_rough: 0.8494
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -10.5814
+            Episode_Reward/joint_acc_l2: -0.0623
+              Episode_Reward/torso_slam: -0.6299
+        Episode_Reward/illegal_contacts: -0.1695
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.4543
+            Episode_Reward/joint_vel_l2: -0.4280
+           Episode_Reward/feet_yaw_mean: -0.1469
+               Episode_Reward/flat_feet: -1.2755
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1222
+           Episode_Reward/torque_limits: -0.4762
+    Episode_Reward/joint_tracking_error: -1.2755
+            Metrics/height/height_error: 0.3578
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -23.6927
+      Episode_Reward/base_height_medium: 1.0672
+        Episode_Reward/joint_pos_limits: -0.0027
+ Episode_Reward/joint_deviation_l1_arms: -0.0204
+  Episode_Reward/feet_distance_standing: -0.0125
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.6857
+      Episode_Reward/joint_deviation_l1: -0.0627
+           Episode_Reward/forward_pitch: -0.8821
+              Episode_Reward/feet_slide: -0.4627
+           Episode_Reward/torso_upright: -0.0023
+             Episode_Reward/ground_slam: -1.1399
+           Episode_Reward/body_velocity: -0.8568
+        Episode_Reward/joint_torques_l2: -0.4148
+           Episode_Reward/ankle_torques: -0.1283
+         Episode_Reward/ground_unloaded: -0.4834
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -0.9789
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:22
+                                    ETA: 0:00:25
+
+################################################################################
+[1m                            Learning iteration 14/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 368640 
+                       Steps per second: 16687 
+                        Collection time: 1.346s 
+                          Learning time: 0.126s 
+                        Mean value loss: 3.0627
+                    Mean surrogate loss: -0.0132
+                      Mean entropy loss: 39.6004
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0049
+                  Mean l2c2_critic loss: 0.1109
+                            Mean reward: -700.78
+                    Mean episode length: 321.68
+                        Mean action std: 0.95
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -3.2855
+        Episode_Reward/base_height_fine: 1.5310
+     Episode_Reward/completely_airborne: -1.9645
+        Episode_Reward/joint_vel_limits: -0.0004
+       Episode_Reward/base_height_rough: 0.8727
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -11.3950
+            Episode_Reward/joint_acc_l2: -0.0739
+              Episode_Reward/torso_slam: -0.5869
+        Episode_Reward/illegal_contacts: -0.1631
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.4868
+            Episode_Reward/joint_vel_l2: -0.4486
+           Episode_Reward/feet_yaw_mean: -0.1445
+               Episode_Reward/flat_feet: -1.3745
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1083
+           Episode_Reward/torque_limits: -0.4829
+    Episode_Reward/joint_tracking_error: -1.3796
+            Metrics/height/height_error: 0.2574
+         Episode_Reward/severely_tilted: -0.0001
+             Episode_Reward/action_rate: -25.4820
+      Episode_Reward/base_height_medium: 1.0743
+        Episode_Reward/joint_pos_limits: -0.0027
+ Episode_Reward/joint_deviation_l1_arms: -0.0288
+  Episode_Reward/feet_distance_standing: -0.0235
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.5869
+      Episode_Reward/joint_deviation_l1: -0.0861
+           Episode_Reward/forward_pitch: -0.8453
+              Episode_Reward/feet_slide: -0.4884
+           Episode_Reward/torso_upright: -0.0049
+             Episode_Reward/ground_slam: -1.1351
+           Episode_Reward/body_velocity: -0.8923
+        Episode_Reward/joint_torques_l2: -0.4592
+           Episode_Reward/ankle_torques: -0.1529
+         Episode_Reward/ground_unloaded: -0.4742
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.0184
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.47s
+                           Time elapsed: 0:00:23
+                                    ETA: 0:00:23
+
+################################################################################
+[1m                            Learning iteration 15/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 393216 
+                       Steps per second: 16323 
+                        Collection time: 1.380s 
+                          Learning time: 0.126s 
+                        Mean value loss: 3.0563
+                    Mean surrogate loss: -0.0146
+                      Mean entropy loss: 39.4809
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0052
+                  Mean l2c2_critic loss: 0.1356
+                            Mean reward: -741.74
+                    Mean episode length: 344.89
+                        Mean action std: 0.94
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -3.3669
+        Episode_Reward/base_height_fine: 0.8599
+     Episode_Reward/completely_airborne: -2.5968
+        Episode_Reward/joint_vel_limits: -0.0004
+       Episode_Reward/base_height_rough: 0.7702
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -12.0968
+            Episode_Reward/joint_acc_l2: -0.0842
+              Episode_Reward/torso_slam: -0.6970
+        Episode_Reward/illegal_contacts: -0.1469
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.5166
+            Episode_Reward/joint_vel_l2: -0.4724
+           Episode_Reward/feet_yaw_mean: -0.1590
+               Episode_Reward/flat_feet: -1.5207
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1504
+           Episode_Reward/torque_limits: -0.5413
+    Episode_Reward/joint_tracking_error: -1.4766
+            Metrics/height/height_error: nan
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -27.0406
+      Episode_Reward/base_height_medium: 0.7080
+        Episode_Reward/joint_pos_limits: -0.0031
+ Episode_Reward/joint_deviation_l1_arms: -0.0272
+  Episode_Reward/feet_distance_standing: -0.0148
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.3430
+      Episode_Reward/joint_deviation_l1: -0.0789
+           Episode_Reward/forward_pitch: -0.7844
+              Episode_Reward/feet_slide: -0.4911
+           Episode_Reward/torso_upright: -0.0019
+             Episode_Reward/ground_slam: -1.1763
+           Episode_Reward/body_velocity: -1.0013
+        Episode_Reward/joint_torques_l2: -0.4971
+           Episode_Reward/ankle_torques: -0.1451
+         Episode_Reward/ground_unloaded: -0.5148
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.0920
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.51s
+                           Time elapsed: 0:00:25
+                                    ETA: 0:00:22
+
+################################################################################
+[1m                            Learning iteration 16/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 417792 
+                       Steps per second: 16524 
+                        Collection time: 1.372s 
+                          Learning time: 0.115s 
+                        Mean value loss: 3.1858
+                    Mean surrogate loss: -0.0131
+                      Mean entropy loss: 39.3797
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0052
+                  Mean l2c2_critic loss: 0.1165
+                            Mean reward: -787.01
+                    Mean episode length: 366.07
+                        Mean action std: 0.94
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -3.9687
+        Episode_Reward/base_height_fine: 1.2245
+     Episode_Reward/completely_airborne: -1.8829
+        Episode_Reward/joint_vel_limits: -0.0004
+       Episode_Reward/base_height_rough: 0.8910
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -12.7375
+            Episode_Reward/joint_acc_l2: -0.0631
+              Episode_Reward/torso_slam: -0.6211
+        Episode_Reward/illegal_contacts: -0.2805
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.5428
+            Episode_Reward/joint_vel_l2: -0.5121
+           Episode_Reward/feet_yaw_mean: -0.1652
+               Episode_Reward/flat_feet: -1.6427
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1535
+           Episode_Reward/torque_limits: -0.5202
+    Episode_Reward/joint_tracking_error: -1.5305
+            Metrics/height/height_error: nan
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -28.5057
+      Episode_Reward/base_height_medium: 0.9568
+        Episode_Reward/joint_pos_limits: -0.0031
+ Episode_Reward/joint_deviation_l1_arms: -0.0263
+  Episode_Reward/feet_distance_standing: -0.0370
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.3739
+      Episode_Reward/joint_deviation_l1: -0.0790
+           Episode_Reward/forward_pitch: -1.7422
+              Episode_Reward/feet_slide: -0.6126
+           Episode_Reward/torso_upright: -0.0053
+             Episode_Reward/ground_slam: -1.3815
+           Episode_Reward/body_velocity: -0.9102
+        Episode_Reward/joint_torques_l2: -0.4680
+           Episode_Reward/ankle_torques: -0.1217
+         Episode_Reward/ground_unloaded: -0.4725
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.0591
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.49s
+                           Time elapsed: 0:00:26
+                                    ETA: 0:00:20
+
+################################################################################
+[1m                            Learning iteration 17/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 442368 
+                       Steps per second: 16422 
+                        Collection time: 1.371s 
+                          Learning time: 0.125s 
+                        Mean value loss: 2.6456
+                    Mean surrogate loss: -0.0139
+                      Mean entropy loss: 39.2674
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0053
+                  Mean l2c2_critic loss: 0.0917
+                            Mean reward: -848.84
+                    Mean episode length: 392.22
+                        Mean action std: 0.94
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -4.8038
+        Episode_Reward/base_height_fine: 1.1623
+     Episode_Reward/completely_airborne: -2.4477
+        Episode_Reward/joint_vel_limits: -0.0004
+       Episode_Reward/base_height_rough: 0.9175
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -13.4547
+            Episode_Reward/joint_acc_l2: -0.0884
+              Episode_Reward/torso_slam: -0.7272
+        Episode_Reward/illegal_contacts: -0.2976
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.5722
+            Episode_Reward/joint_vel_l2: -0.5288
+           Episode_Reward/feet_yaw_mean: -0.1926
+               Episode_Reward/flat_feet: -1.7651
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1414
+           Episode_Reward/torque_limits: -0.5462
+    Episode_Reward/joint_tracking_error: -1.6398
+            Metrics/height/height_error: 0.4033
+         Episode_Reward/severely_tilted: -0.0008
+             Episode_Reward/action_rate: -30.1642
+      Episode_Reward/base_height_medium: 0.9466
+        Episode_Reward/joint_pos_limits: -0.0032
+ Episode_Reward/joint_deviation_l1_arms: -0.0199
+  Episode_Reward/feet_distance_standing: -0.0053
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.3806
+      Episode_Reward/joint_deviation_l1: -0.0595
+           Episode_Reward/forward_pitch: -1.7238
+              Episode_Reward/feet_slide: -0.6163
+           Episode_Reward/torso_upright: -0.0033
+             Episode_Reward/ground_slam: -1.4185
+           Episode_Reward/body_velocity: -0.9939
+        Episode_Reward/joint_torques_l2: -0.5439
+           Episode_Reward/ankle_torques: -0.1357
+         Episode_Reward/ground_unloaded: -0.5118
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.1500
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:28
+                                    ETA: 0:00:18
+
+################################################################################
+[1m                            Learning iteration 18/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 466944 
+                       Steps per second: 16798 
+                        Collection time: 1.338s 
+                          Learning time: 0.125s 
+                        Mean value loss: 2.5403
+                    Mean surrogate loss: -0.0126
+                      Mean entropy loss: 39.1369
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0053
+                  Mean l2c2_critic loss: 0.0992
+                            Mean reward: -891.91
+                    Mean episode length: 409.85
+                        Mean action std: 0.93
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -6.0952
+        Episode_Reward/base_height_fine: 1.5947
+     Episode_Reward/completely_airborne: -2.4935
+        Episode_Reward/joint_vel_limits: -0.0004
+       Episode_Reward/base_height_rough: 1.0209
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -14.2491
+            Episode_Reward/joint_acc_l2: -0.1013
+              Episode_Reward/torso_slam: -0.8399
+        Episode_Reward/illegal_contacts: -0.2554
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.5987
+            Episode_Reward/joint_vel_l2: -0.5440
+           Episode_Reward/feet_yaw_mean: -0.1851
+               Episode_Reward/flat_feet: -1.8225
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1694
+           Episode_Reward/torque_limits: -0.5747
+    Episode_Reward/joint_tracking_error: -1.7036
+            Metrics/height/height_error: 0.3336
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -31.8701
+      Episode_Reward/base_height_medium: 1.1985
+        Episode_Reward/joint_pos_limits: -0.0034
+ Episode_Reward/joint_deviation_l1_arms: -0.0369
+  Episode_Reward/feet_distance_standing: -0.0148
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.4975
+      Episode_Reward/joint_deviation_l1: -0.1118
+           Episode_Reward/forward_pitch: -1.5138
+              Episode_Reward/feet_slide: -0.6361
+           Episode_Reward/torso_upright: -0.0086
+             Episode_Reward/ground_slam: -1.4319
+           Episode_Reward/body_velocity: -1.0942
+        Episode_Reward/joint_torques_l2: -0.5911
+           Episode_Reward/ankle_torques: -0.1709
+         Episode_Reward/ground_unloaded: -0.4665
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.1745
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.46s
+                           Time elapsed: 0:00:29
+                                    ETA: 0:00:17
+
+################################################################################
+[1m                            Learning iteration 19/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 491520 
+                       Steps per second: 16385 
+                        Collection time: 1.371s 
+                          Learning time: 0.129s 
+                        Mean value loss: 2.6867
+                    Mean surrogate loss: -0.0125
+                      Mean entropy loss: 39.0301
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0054
+                  Mean l2c2_critic loss: 0.0834
+                            Mean reward: -932.65
+                    Mean episode length: 433.73
+                        Mean action std: 0.93
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -2.7684
+        Episode_Reward/base_height_fine: 2.0611
+     Episode_Reward/completely_airborne: -2.6542
+        Episode_Reward/joint_vel_limits: -0.0005
+       Episode_Reward/base_height_rough: 1.1990
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -14.9444
+            Episode_Reward/joint_acc_l2: -0.1115
+              Episode_Reward/torso_slam: -0.7701
+        Episode_Reward/illegal_contacts: -0.2493
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.6259
+            Episode_Reward/joint_vel_l2: -0.5884
+           Episode_Reward/feet_yaw_mean: -0.2101
+               Episode_Reward/flat_feet: -1.8709
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2309
+           Episode_Reward/torque_limits: -0.6602
+    Episode_Reward/joint_tracking_error: -1.8401
+            Metrics/height/height_error: nan
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -33.4605
+      Episode_Reward/base_height_medium: 1.4660
+        Episode_Reward/joint_pos_limits: -0.0039
+ Episode_Reward/joint_deviation_l1_arms: -0.0418
+  Episode_Reward/feet_distance_standing: -0.0251
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.7582
+      Episode_Reward/joint_deviation_l1: -0.1188
+           Episode_Reward/forward_pitch: -1.3735
+              Episode_Reward/feet_slide: -0.6504
+           Episode_Reward/torso_upright: -0.0085
+             Episode_Reward/ground_slam: -1.5089
+           Episode_Reward/body_velocity: -1.2080
+        Episode_Reward/joint_torques_l2: -0.6383
+           Episode_Reward/ankle_torques: -0.1623
+         Episode_Reward/ground_unloaded: -0.7591
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.3765
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:31
+                                    ETA: 0:00:15
+
+################################################################################
+[1m                            Learning iteration 20/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 516096 
+                       Steps per second: 16254 
+                        Collection time: 1.383s 
+                          Learning time: 0.129s 
+                        Mean value loss: 2.1886
+                    Mean surrogate loss: -0.0126
+                      Mean entropy loss: 38.9168
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0054
+                  Mean l2c2_critic loss: 0.0622
+                            Mean reward: -997.34
+                    Mean episode length: 463.49
+                        Mean action std: 0.92
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -4.4297
+        Episode_Reward/base_height_fine: 1.1755
+     Episode_Reward/completely_airborne: -3.1609
+        Episode_Reward/joint_vel_limits: -0.0007
+       Episode_Reward/base_height_rough: 0.9107
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -15.7541
+            Episode_Reward/joint_acc_l2: -0.0813
+              Episode_Reward/torso_slam: -0.8430
+        Episode_Reward/illegal_contacts: -0.2395
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.6539
+            Episode_Reward/joint_vel_l2: -0.6502
+           Episode_Reward/feet_yaw_mean: -0.2136
+               Episode_Reward/flat_feet: -2.0820
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2084
+           Episode_Reward/torque_limits: -0.6497
+    Episode_Reward/joint_tracking_error: -1.8491
+            Metrics/height/height_error: 0.3811
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -35.2251
+      Episode_Reward/base_height_medium: 0.8756
+        Episode_Reward/joint_pos_limits: -0.0039
+ Episode_Reward/joint_deviation_l1_arms: -0.0180
+  Episode_Reward/feet_distance_standing: -0.0110
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.4285
+      Episode_Reward/joint_deviation_l1: -0.0533
+           Episode_Reward/forward_pitch: -1.3533
+              Episode_Reward/feet_slide: -0.6938
+           Episode_Reward/torso_upright: -0.0040
+             Episode_Reward/ground_slam: -1.6318
+           Episode_Reward/body_velocity: -1.1532
+        Episode_Reward/joint_torques_l2: -0.5885
+           Episode_Reward/ankle_torques: -0.1818
+         Episode_Reward/ground_unloaded: -0.6353
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.3479
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.51s
+                           Time elapsed: 0:00:32
+                                    ETA: 0:00:14
+
+################################################################################
+[1m                            Learning iteration 21/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 540672 
+                       Steps per second: 16366 
+                        Collection time: 1.378s 
+                          Learning time: 0.123s 
+                        Mean value loss: 2.0499
+                    Mean surrogate loss: -0.0145
+                      Mean entropy loss: 38.7948
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0056
+                  Mean l2c2_critic loss: 0.0603
+                            Mean reward: -1044.08
+                    Mean episode length: 493.83
+                        Mean action std: 0.92
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -5.2421
+        Episode_Reward/base_height_fine: 1.7059
+     Episode_Reward/completely_airborne: -3.1433
+        Episode_Reward/joint_vel_limits: -0.0005
+       Episode_Reward/base_height_rough: 1.1355
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -16.3975
+            Episode_Reward/joint_acc_l2: -0.0959
+              Episode_Reward/torso_slam: -0.8949
+        Episode_Reward/illegal_contacts: -0.2527
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.6914
+            Episode_Reward/joint_vel_l2: -0.6419
+           Episode_Reward/feet_yaw_mean: -0.2269
+               Episode_Reward/flat_feet: -2.1554
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.1790
+           Episode_Reward/torque_limits: -0.6835
+    Episode_Reward/joint_tracking_error: -1.9392
+            Metrics/height/height_error: nan
+         Episode_Reward/severely_tilted: -0.0002
+             Episode_Reward/action_rate: -36.6859
+      Episode_Reward/base_height_medium: 1.2439
+        Episode_Reward/joint_pos_limits: -0.0040
+ Episode_Reward/joint_deviation_l1_arms: -0.0299
+  Episode_Reward/feet_distance_standing: -0.0217
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.7579
+      Episode_Reward/joint_deviation_l1: -0.0926
+           Episode_Reward/forward_pitch: -1.3757
+              Episode_Reward/feet_slide: -0.7278
+           Episode_Reward/torso_upright: -0.0054
+             Episode_Reward/ground_slam: -1.6741
+           Episode_Reward/body_velocity: -1.2009
+        Episode_Reward/joint_torques_l2: -0.6319
+           Episode_Reward/ankle_torques: -0.1591
+         Episode_Reward/ground_unloaded: -0.6401
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.4467
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:34
+                                    ETA: 0:00:12
+
+################################################################################
+[1m                            Learning iteration 22/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 565248 
+                       Steps per second: 16429 
+                        Collection time: 1.372s 
+                          Learning time: 0.124s 
+                        Mean value loss: 1.9689
+                    Mean surrogate loss: -0.0124
+                      Mean entropy loss: 38.6749
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0057
+                  Mean l2c2_critic loss: 0.0575
+                            Mean reward: -1092.61
+                    Mean episode length: 516.07
+                        Mean action std: 0.92
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -4.7593
+        Episode_Reward/base_height_fine: 1.7624
+     Episode_Reward/completely_airborne: -3.8630
+        Episode_Reward/joint_vel_limits: -0.0006
+       Episode_Reward/base_height_rough: 1.1338
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -17.0301
+            Episode_Reward/joint_acc_l2: -0.1134
+              Episode_Reward/torso_slam: -0.9199
+        Episode_Reward/illegal_contacts: -0.2394
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.7210
+            Episode_Reward/joint_vel_l2: -0.6754
+           Episode_Reward/feet_yaw_mean: -0.2280
+               Episode_Reward/flat_feet: -2.3481
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2129
+           Episode_Reward/torque_limits: -0.7247
+    Episode_Reward/joint_tracking_error: -2.0274
+            Metrics/height/height_error: 0.4434
+         Episode_Reward/severely_tilted: -0.0006
+             Episode_Reward/action_rate: -38.1268
+      Episode_Reward/base_height_medium: 1.2213
+        Episode_Reward/joint_pos_limits: -0.0042
+ Episode_Reward/joint_deviation_l1_arms: -0.0182
+  Episode_Reward/feet_distance_standing: -0.0102
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.7721
+      Episode_Reward/joint_deviation_l1: -0.0507
+           Episode_Reward/forward_pitch: -1.2650
+              Episode_Reward/feet_slide: -0.7293
+           Episode_Reward/torso_upright: -0.0009
+             Episode_Reward/ground_slam: -1.7268
+           Episode_Reward/body_velocity: -1.2539
+        Episode_Reward/joint_torques_l2: -0.6890
+           Episode_Reward/ankle_torques: -0.1839
+         Episode_Reward/ground_unloaded: -0.7485
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.4835
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:35
+                                    ETA: 0:00:10
+
+################################################################################
+[1m                            Learning iteration 23/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 589824 
+                       Steps per second: 16175 
+                        Collection time: 1.390s 
+                          Learning time: 0.129s 
+                        Mean value loss: 1.8810
+                    Mean surrogate loss: -0.0127
+                      Mean entropy loss: 38.5436
+                     Mean symmetry loss: 0.0007
+                   Mean l2c2_actor loss: 0.0056
+                  Mean l2c2_critic loss: 0.0497
+                            Mean reward: -1141.35
+                    Mean episode length: 542.32
+                        Mean action std: 0.91
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -6.4368
+        Episode_Reward/base_height_fine: 2.1055
+     Episode_Reward/completely_airborne: -3.3722
+        Episode_Reward/joint_vel_limits: -0.0006
+       Episode_Reward/base_height_rough: 1.3139
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -17.7793
+            Episode_Reward/joint_acc_l2: -0.1138
+              Episode_Reward/torso_slam: -1.0234
+        Episode_Reward/illegal_contacts: -0.2887
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.7555
+            Episode_Reward/joint_vel_l2: -0.7003
+           Episode_Reward/feet_yaw_mean: -0.2265
+               Episode_Reward/flat_feet: -2.4153
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2133
+           Episode_Reward/torque_limits: -0.7942
+    Episode_Reward/joint_tracking_error: -2.1525
+            Metrics/height/height_error: 0.2934
+         Episode_Reward/severely_tilted: -0.0003
+             Episode_Reward/action_rate: -39.7873
+      Episode_Reward/base_height_medium: 1.5144
+        Episode_Reward/joint_pos_limits: -0.0044
+ Episode_Reward/joint_deviation_l1_arms: -0.0262
+  Episode_Reward/feet_distance_standing: -0.0096
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.7758
+      Episode_Reward/joint_deviation_l1: -0.0757
+           Episode_Reward/forward_pitch: -1.6372
+              Episode_Reward/feet_slide: -0.7741
+           Episode_Reward/torso_upright: -0.0017
+             Episode_Reward/ground_slam: -1.8018
+           Episode_Reward/body_velocity: -1.3495
+        Episode_Reward/joint_torques_l2: -0.7094
+           Episode_Reward/ankle_torques: -0.1583
+         Episode_Reward/ground_unloaded: -0.6583
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.5370
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.52s
+                           Time elapsed: 0:00:37
+                                    ETA: 0:00:09
+
+################################################################################
+[1m                            Learning iteration 24/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 614400 
+                       Steps per second: 16404 
+                        Collection time: 1.374s 
+                          Learning time: 0.124s 
+                        Mean value loss: 1.8363
+                    Mean surrogate loss: -0.0132
+                      Mean entropy loss: 38.4398
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0058
+                  Mean l2c2_critic loss: 0.0444
+                            Mean reward: -1174.87
+                    Mean episode length: 562.51
+                        Mean action std: 0.91
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -4.5764
+        Episode_Reward/base_height_fine: 2.4131
+     Episode_Reward/completely_airborne: -3.5898
+        Episode_Reward/joint_vel_limits: -0.0006
+       Episode_Reward/base_height_rough: 1.4298
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -18.4390
+            Episode_Reward/joint_acc_l2: -0.1061
+              Episode_Reward/torso_slam: -0.9556
+        Episode_Reward/illegal_contacts: -0.3096
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.7860
+            Episode_Reward/joint_vel_l2: -0.7382
+           Episode_Reward/feet_yaw_mean: -0.2503
+               Episode_Reward/flat_feet: -2.5055
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2345
+           Episode_Reward/torque_limits: -0.7744
+    Episode_Reward/joint_tracking_error: -2.1639
+            Metrics/height/height_error: 0.3500
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -41.2656
+      Episode_Reward/base_height_medium: 1.7024
+        Episode_Reward/joint_pos_limits: -0.0043
+ Episode_Reward/joint_deviation_l1_arms: -0.0203
+  Episode_Reward/feet_distance_standing: -0.0099
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.9599
+      Episode_Reward/joint_deviation_l1: -0.0593
+           Episode_Reward/forward_pitch: -1.6964
+              Episode_Reward/feet_slide: -0.8497
+           Episode_Reward/torso_upright: -0.0019
+             Episode_Reward/ground_slam: -1.9332
+           Episode_Reward/body_velocity: -1.3480
+        Episode_Reward/joint_torques_l2: -0.7087
+           Episode_Reward/ankle_torques: -0.1710
+         Episode_Reward/ground_unloaded: -0.8879
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.6707
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:38
+                                    ETA: 0:00:07
+
+################################################################################
+[1m                            Learning iteration 25/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 638976 
+                       Steps per second: 16381 
+                        Collection time: 1.385s 
+                          Learning time: 0.115s 
+                        Mean value loss: 1.8475
+                    Mean surrogate loss: -0.0135
+                      Mean entropy loss: 38.3204
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0058
+                  Mean l2c2_critic loss: 0.0361
+                            Mean reward: -1226.66
+                    Mean episode length: 586.92
+                        Mean action std: 0.91
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -6.4838
+        Episode_Reward/base_height_fine: 1.5396
+     Episode_Reward/completely_airborne: -3.1190
+        Episode_Reward/joint_vel_limits: -0.0008
+       Episode_Reward/base_height_rough: 1.3240
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -19.0038
+            Episode_Reward/joint_acc_l2: -0.0888
+              Episode_Reward/torso_slam: -1.0685
+        Episode_Reward/illegal_contacts: -0.3620
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.8165
+            Episode_Reward/joint_vel_l2: -0.7875
+           Episode_Reward/feet_yaw_mean: -0.2767
+               Episode_Reward/flat_feet: -2.5305
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2427
+           Episode_Reward/torque_limits: -0.8364
+    Episode_Reward/joint_tracking_error: -2.2773
+            Metrics/height/height_error: 0.4400
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -42.5863
+      Episode_Reward/base_height_medium: 1.2888
+        Episode_Reward/joint_pos_limits: -0.0050
+ Episode_Reward/joint_deviation_l1_arms: -0.0360
+  Episode_Reward/feet_distance_standing: -0.0109
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.5014
+      Episode_Reward/joint_deviation_l1: -0.1068
+           Episode_Reward/forward_pitch: -2.0057
+              Episode_Reward/feet_slide: -0.9115
+           Episode_Reward/torso_upright: -0.0051
+             Episode_Reward/ground_slam: -2.1445
+           Episode_Reward/body_velocity: -1.4516
+        Episode_Reward/joint_torques_l2: -0.6851
+           Episode_Reward/ankle_torques: -0.2205
+         Episode_Reward/ground_unloaded: -0.6846
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.7502
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:40
+                                    ETA: 0:00:06
+
+################################################################################
+[1m                            Learning iteration 26/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 663552 
+                       Steps per second: 16503 
+                        Collection time: 1.375s 
+                          Learning time: 0.115s 
+                        Mean value loss: 1.6717
+                    Mean surrogate loss: -0.0141
+                      Mean entropy loss: 38.1955
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0059
+                  Mean l2c2_critic loss: 0.0346
+                            Mean reward: -1263.81
+                    Mean episode length: 608.92
+                        Mean action std: 0.90
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -4.6652
+        Episode_Reward/base_height_fine: 2.0356
+     Episode_Reward/completely_airborne: -3.3792
+        Episode_Reward/joint_vel_limits: -0.0006
+       Episode_Reward/base_height_rough: 1.3119
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -19.7853
+            Episode_Reward/joint_acc_l2: -0.0986
+              Episode_Reward/torso_slam: -1.0325
+        Episode_Reward/illegal_contacts: -0.4392
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.8442
+            Episode_Reward/joint_vel_l2: -0.7826
+           Episode_Reward/feet_yaw_mean: -0.2636
+               Episode_Reward/flat_feet: -2.7124
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2367
+           Episode_Reward/torque_limits: -0.8016
+    Episode_Reward/joint_tracking_error: -2.3175
+            Metrics/height/height_error: 0.4637
+         Episode_Reward/severely_tilted: -0.0006
+             Episode_Reward/action_rate: -44.2967
+      Episode_Reward/base_height_medium: 1.3989
+        Episode_Reward/joint_pos_limits: -0.0049
+ Episode_Reward/joint_deviation_l1_arms: -0.0261
+  Episode_Reward/feet_distance_standing: -0.0179
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.9220
+      Episode_Reward/joint_deviation_l1: -0.0761
+           Episode_Reward/forward_pitch: -2.6492
+              Episode_Reward/feet_slide: -0.9191
+           Episode_Reward/torso_upright: -0.0006
+             Episode_Reward/ground_slam: -2.0381
+           Episode_Reward/body_velocity: -1.3192
+        Episode_Reward/joint_torques_l2: -0.7334
+           Episode_Reward/ankle_torques: -0.2080
+         Episode_Reward/ground_unloaded: -0.9021
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.7278
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.49s
+                           Time elapsed: 0:00:41
+                                    ETA: 0:00:04
+
+################################################################################
+[1m                            Learning iteration 27/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 688128 
+                       Steps per second: 16384 
+                        Collection time: 1.385s 
+                          Learning time: 0.115s 
+                        Mean value loss: 1.6033
+                    Mean surrogate loss: -0.0143
+                      Mean entropy loss: 38.0727
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0060
+                  Mean l2c2_critic loss: 0.0339
+                            Mean reward: -1313.11
+                    Mean episode length: 634.09
+                        Mean action std: 0.90
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -6.7276
+        Episode_Reward/base_height_fine: 2.9299
+     Episode_Reward/completely_airborne: -3.6852
+        Episode_Reward/joint_vel_limits: -0.0005
+       Episode_Reward/base_height_rough: 1.5970
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -20.3116
+            Episode_Reward/joint_acc_l2: -0.1484
+              Episode_Reward/torso_slam: -1.0914
+        Episode_Reward/illegal_contacts: -0.3749
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.8755
+            Episode_Reward/joint_vel_l2: -0.7693
+           Episode_Reward/feet_yaw_mean: -0.2547
+               Episode_Reward/flat_feet: -2.7961
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2256
+           Episode_Reward/torque_limits: -0.9214
+    Episode_Reward/joint_tracking_error: -2.4404
+            Metrics/height/height_error: nan
+         Episode_Reward/severely_tilted: -0.0004
+             Episode_Reward/action_rate: -45.5024
+      Episode_Reward/base_height_medium: 1.9688
+        Episode_Reward/joint_pos_limits: -0.0050
+ Episode_Reward/joint_deviation_l1_arms: -0.0296
+  Episode_Reward/feet_distance_standing: -0.0086
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -1.2354
+      Episode_Reward/joint_deviation_l1: -0.0882
+           Episode_Reward/forward_pitch: -2.0856
+              Episode_Reward/feet_slide: -0.9039
+           Episode_Reward/torso_upright: -0.0037
+             Episode_Reward/ground_slam: -1.9856
+           Episode_Reward/body_velocity: -1.5039
+        Episode_Reward/joint_torques_l2: -0.8631
+           Episode_Reward/ankle_torques: -0.2038
+         Episode_Reward/ground_unloaded: -0.8819
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.8556
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:43
+                                    ETA: 0:00:03
+
+################################################################################
+[1m                            Learning iteration 28/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 712704 
+                       Steps per second: 16378 
+                        Collection time: 1.375s 
+                          Learning time: 0.125s 
+                        Mean value loss: 1.5846
+                    Mean surrogate loss: -0.0146
+                      Mean entropy loss: 37.9361
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0062
+                  Mean l2c2_critic loss: 0.0387
+                            Mean reward: -1353.71
+                    Mean episode length: 655.13
+                        Mean action std: 0.89
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -7.3968
+        Episode_Reward/base_height_fine: 1.7310
+     Episode_Reward/completely_airborne: -3.7199
+        Episode_Reward/joint_vel_limits: -0.0006
+       Episode_Reward/base_height_rough: 1.3787
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -21.0040
+            Episode_Reward/joint_acc_l2: -0.1304
+              Episode_Reward/torso_slam: -1.1397
+        Episode_Reward/illegal_contacts: -0.4488
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.9032
+            Episode_Reward/joint_vel_l2: -0.8422
+           Episode_Reward/feet_yaw_mean: -0.2901
+               Episode_Reward/flat_feet: -2.8809
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2790
+           Episode_Reward/torque_limits: -0.8976
+    Episode_Reward/joint_tracking_error: -2.5252
+            Metrics/height/height_error: 0.4178
+         Episode_Reward/severely_tilted: 0.0000
+             Episode_Reward/action_rate: -47.0684
+      Episode_Reward/base_height_medium: 1.3300
+        Episode_Reward/joint_pos_limits: -0.0054
+ Episode_Reward/joint_deviation_l1_arms: -0.0287
+  Episode_Reward/feet_distance_standing: -0.0097
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.6606
+      Episode_Reward/joint_deviation_l1: -0.0856
+           Episode_Reward/forward_pitch: -2.5922
+              Episode_Reward/feet_slide: -0.9763
+           Episode_Reward/torso_upright: -0.0036
+             Episode_Reward/ground_slam: -2.1399
+           Episode_Reward/body_velocity: -1.5278
+        Episode_Reward/joint_torques_l2: -0.8482
+           Episode_Reward/ankle_torques: -0.2038
+         Episode_Reward/ground_unloaded: -0.8113
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.9190
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.50s
+                           Time elapsed: 0:00:44
+                                    ETA: 0:00:01
+
+################################################################################
+[1m                            Learning iteration 29/30                            [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 737280 
+                       Steps per second: 16266 
+                        Collection time: 1.388s 
+                          Learning time: 0.123s 
+                        Mean value loss: 1.5721
+                    Mean surrogate loss: -0.0152
+                      Mean entropy loss: 37.7989
+                     Mean symmetry loss: 0.0006
+                   Mean l2c2_actor loss: 0.0062
+                  Mean l2c2_critic loss: 0.0385
+                            Mean reward: -1436.79
+                    Mean episode length: 688.30
+                        Mean action std: 0.89
+                    Entropy coefficient: 0.002500
+              Episode_Reward/relaxation: -7.7891
+        Episode_Reward/base_height_fine: 2.0153
+     Episode_Reward/completely_airborne: -4.2937
+        Episode_Reward/joint_vel_limits: -0.0007
+       Episode_Reward/base_height_rough: 1.6198
+     Curriculum/polish_action_rate_rate: -0.1500
+           Curriculum/polish_torso_slam: -5.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/action_rate_rate: -21.7061
+            Episode_Reward/joint_acc_l2: -0.1455
+              Episode_Reward/torso_slam: -1.0206
+        Episode_Reward/illegal_contacts: -0.3771
+      Episode_Termination/invalid_state: 0.0000
+           Episode_Termination/time_out: 0.9353
+            Episode_Reward/joint_vel_l2: -0.8581
+           Episode_Reward/feet_yaw_mean: -0.2943
+               Episode_Reward/flat_feet: -3.0444
+           Curriculum/polish_not_moving: -1.0000
+           Episode_Reward/feet_distance: -0.2447
+           Episode_Reward/torque_limits: -0.9624
+    Episode_Reward/joint_tracking_error: -2.6389
+            Metrics/height/height_error: 0.3820
+         Episode_Reward/severely_tilted: -0.0004
+             Episode_Reward/action_rate: -48.6178
+      Episode_Reward/base_height_medium: 1.6905
+        Episode_Reward/joint_pos_limits: -0.0058
+ Episode_Reward/joint_deviation_l1_arms: -0.0288
+  Episode_Reward/feet_distance_standing: -0.0030
+              Curriculum/terrain_levels: 0.0000
+              Episode_Reward/not_moving: -0.5894
+      Episode_Reward/joint_deviation_l1: -0.0832
+           Episode_Reward/forward_pitch: -2.1548
+              Episode_Reward/feet_slide: -0.9976
+           Episode_Reward/torso_upright: -0.0044
+             Episode_Reward/ground_slam: -2.1845
+           Episode_Reward/body_velocity: -1.5447
+        Episode_Reward/joint_torques_l2: -0.8772
+           Episode_Reward/ankle_torques: -0.2535
+         Episode_Reward/ground_unloaded: -0.8436
+               Curriculum/adaptive_lift: 0.9958
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/torso_roll: -1.8425
+        Curriculum/random_fallen_states: 0.0000
+--------------------------------------------------------------------------------
+                         Iteration time: 1.51s
+                           Time elapsed: 0:00:46
+                                    ETA: 0:00:00
+
+[INFO]: SimulationContext cleared

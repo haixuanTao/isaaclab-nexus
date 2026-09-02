@@ -1,0 +1,2 @@
+spawn+finalize 1024 envs: 0.6s | joints 21 bodies 22
+num_envs=1024 | iteration median 910.4 ms (min 808.4) | env-steps/s 26,994 | physics substeps/s 107,975

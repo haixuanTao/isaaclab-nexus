@@ -1,0 +1,88 @@
+The '--headless' CLI argument is deprecated. Omit '--viz' for default headless. If config visualizers are enabled and you want to force headless, use '--viz none'.
+Loading user config located at: '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
+2026-09-02T04:49:03Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788324543.437274  379718 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788324543.437299  379718 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-02T04:49:03Z [375ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-02T04:49:03Z [394ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-02T04:49:03Z [426ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T04:49:03Z [426ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T04:49:03Z [427ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T04:49:04Z [1,096ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-09-02T04:49:04Z [1,096ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+[ISAACLAB] AppLauncher initialization complete
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.agents.rsl_rl_ppo_cfg:G1HeightTrackingPpoRunnerCfg
+[INFO] Logging experiment in directory: /workspace/WBC-AGILE/logs/rsl_rl/height_tracking_g1
+Exact experiment name requested from command line: 2026-09-02_04-49-14
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO] Generating terrains based on curriculum took Last: 0.218677 s
+[INFO]: Registered backend 'newton' for factory Articulation.
+[INFO]: Setting variant selection 'PhysX' for variant set 'Physics' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'left_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'right_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Registered backend 'newton' for factory FrameView.
+[INFO]: Registered backend 'newton' for factory ContactSensor.
+[INFO]: Registered backend 'newton' for factory RayCaster.
+[INFO]: Time taken for scene creation Last: 12.997936 s, Mean: 12.997936 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 512
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : True
+[INFO]: Dispatching MODEL_INIT callbacks
+[INFO]: Finalizing model on device: cuda:0
+/workspace/WBC-AGILE/.venv/lib/python3.12/site-packages/isaaclab_newton/physics/newton_manager.py:989: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
+  replace_newton_shape_colors(cls._model)
+Finalize builder took: Last: 2.673260 s, Mean: 2.673260 s, Std: 0.000000 s, N: 1
+[INFO]: Dispatching PHYSICS_READY callbacks
+[INFO]: Simulation parameters for joints in /World/envs/env_.*/Robot:
++-------------------------------------------------------------------------------------------------------------------------------------------+
+|                                     Simulation Joint Information (Prim path: /World/envs/env_.*/Robot)                                    |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+| Index | Name                       | Stiffness | Damping | Armature | Static Friction | Position Limits | Velocity Limits | Effort Limits |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+|   0   | left_hip_pitch_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   1   | left_hip_roll_joint        |   0.000   |  0.000  |  0.020   |      0.010      | [-0.524, 2.967] |      32.000     |     88.000    |
+|   2   | left_hip_yaw_joint         |   0.000   |  0.000  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   3   | left_knee_joint            |   0.000   |  0.000  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   4   | left_ankle_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   5   | left_ankle_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   6   | right_hip_pitch_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   7   | right_hip_roll_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-2.967, 0.524] |      32.000     |     88.000    |
+|   8   | right_hip_yaw_joint        |   0.000   |  0.000  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   9   | right_knee_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   10  | right_ankle_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   11  | right_ankle_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   12  | waist_yaw_joint            |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      32.000     |     88.000    |
+|   13  | waist_roll_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   14  | waist_pitch_joint          |   0.000   |  0.000  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   15  | left_shoulder_pitch_joint  |   0.000   |  0.000  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   16  | left_shoulder_roll_joint   |   0.000   |  0.000  |  0.020   |      0.010      | [-1.588, 2.251] |      37.000     |     25.000    |
+|   17  | left_shoulder_yaw_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   18  | left_elbow_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   19  | left_wrist_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   20  | left_wrist_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   21  | left_wrist_yaw_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   22  | right_shoulder_pitch_joint |   0.000   |  0.000  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   23  | right_shoulder_roll_joint  |   0.000   |  0.000  |  0.020   |      0.010      | [-2.251, 1.588] |      37.000     |     25.000    |
+|   24  | right_shoulder_yaw_joint   |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   25  | right_elbow_joint          |   0.000   |  0.000  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   26  | right_wrist_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   27  | right_wrist_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   28  | right_wrist_yaw_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+[INFO]: Adding contact sensor for /World/envs/env_.*/Robot/.* with filter all bodies/shapes
+Contact sensor construction took: Last: 0.205102 s, Mean: 0.205102 s, Std: 0.000000 s, N: 1
+[INFO]: Contact sensor initialized with 30 sensors.
+[INFO]: Creating buffers for contact sensor data with num_envs: 512, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Creating buffers for contact sensor data with num_envs: 512, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Read mesh prim: /World/ground/terrain/mesh with 369728 vertices and 2097240 faces.
+Initialize solver took: Last: 18.646470 s, Mean: 18.646470 s, Std: 0.000000 s, N: 1

@@ -1,0 +1,14 @@
+=== [06:47:52] newton substeps=2  HeightTracking-G1-v0  num_envs=1024  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton-sub2_HeightTracking-G1-v0_n1024.log
+=== [06:48:53] newton substeps=2  HeightTracking-G1-v0  num_envs=2048  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton-sub2_HeightTracking-G1-v0_n2048.log
+=== [06:50:03] newton substeps=2  HeightTracking-G1-v0  num_envs=4096  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton-sub2_HeightTracking-G1-v0_n4096.log
+=== newton substeps=2 done 06:51:31 ===
+=== [06:51:31] newton substeps=4  HeightTracking-G1-v0  num_envs=1024  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton-sub4_HeightTracking-G1-v0_n1024.log
+=== [06:52:44] newton substeps=4  HeightTracking-G1-v0  num_envs=2048  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton-sub4_HeightTracking-G1-v0_n2048.log
+=== [06:54:09] newton substeps=4  HeightTracking-G1-v0  num_envs=4096  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton-sub4_HeightTracking-G1-v0_n4096.log
+=== newton substeps=4 done 06:56:01 ===

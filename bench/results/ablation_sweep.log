@@ -1,0 +1,7 @@
+=== [04:55:36] AGILE_ABLATE=none num_envs=4096 ===
+    exit=0 -> /workspace/bench/results/ablate_none_n4096.log
+=== [04:58:17] AGILE_ABLATE=nophysics num_envs=4096 ===
+    exit=0 -> /workspace/bench/results/ablate_nophysics_n4096.log
+=== [04:59:31] AGILE_ABLATE=nophysics_noreadback num_envs=4096 ===
+    exit=0 -> /workspace/bench/results/ablate_nophysics_noreadback_n4096.log
+=== ablation ladder done 05:00:44 ===

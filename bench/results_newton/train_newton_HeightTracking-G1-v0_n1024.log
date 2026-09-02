@@ -1,0 +1,498 @@
+The '--headless' CLI argument is deprecated. Omit '--viz' for default headless. If config visualizers are enabled and you want to force headless, use '--viz none'.
+Loading user config located at: '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
+2026-09-02T06:32:37Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788330757.264711  449683 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788330757.264740  449683 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-02T06:32:37Z [377ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-02T06:32:37Z [423ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-02T06:32:37Z [423ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T06:32:37Z [423ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T06:32:37Z [424ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T06:32:38Z [1,077ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-09-02T06:32:38Z [1,077ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+[ISAACLAB] AppLauncher initialization complete
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.agents.rsl_rl_ppo_cfg:G1HeightTrackingPpoRunnerCfg
+[INFO] Logging experiment in directory: /workspace/WBC-AGILE-NEWTON/logs/rsl_rl/height_tracking_g1
+Exact experiment name requested from command line: 2026-09-02_06-32-47
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : 42
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+[INFO] Generating terrains based on curriculum took Last: 0.223236 s
+[INFO]: Registered backend 'newton' for factory Articulation.
+[INFO]: Setting variant selection 'PhysX' for variant set 'Physics' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'left_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'right_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Registered backend 'newton' for factory FrameView.
+[INFO]: Registered backend 'newton' for factory ContactSensor.
+[INFO]: Registered backend 'newton' for factory RayCaster.
+[INFO]: Time taken for scene creation Last: 5.425392 s, Mean: 5.425392 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 1024
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : True
+[INFO]: Dispatching MODEL_INIT callbacks
+[INFO]: Finalizing model on device: cuda:0
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_newton/physics/newton_manager.py:989: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
+  replace_newton_shape_colors(cls._model)
+Finalize builder took: Last: 3.470364 s, Mean: 3.470364 s, Std: 0.000000 s, N: 1
+[INFO]: Dispatching PHYSICS_READY callbacks
+[INFO]: Simulation parameters for joints in /World/envs/env_.*/Robot:
++-------------------------------------------------------------------------------------------------------------------------------------------+
+|                                     Simulation Joint Information (Prim path: /World/envs/env_.*/Robot)                                    |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+| Index | Name                       | Stiffness | Damping | Armature | Static Friction | Position Limits | Velocity Limits | Effort Limits |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+|   0   | left_hip_pitch_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   1   | left_hip_roll_joint        |   0.000   |  0.000  |  0.020   |      0.010      | [-0.524, 2.967] |      32.000     |     88.000    |
+|   2   | left_hip_yaw_joint         |   0.000   |  0.000  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   3   | left_knee_joint            |   0.000   |  0.000  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   4   | left_ankle_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   5   | left_ankle_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   6   | right_hip_pitch_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   7   | right_hip_roll_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-2.967, 0.524] |      32.000     |     88.000    |
+|   8   | right_hip_yaw_joint        |   0.000   |  0.000  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   9   | right_knee_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   10  | right_ankle_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   11  | right_ankle_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   12  | waist_yaw_joint            |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      32.000     |     88.000    |
+|   13  | waist_roll_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   14  | waist_pitch_joint          |   0.000   |  0.000  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   15  | left_shoulder_pitch_joint  |   0.000   |  0.000  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   16  | left_shoulder_roll_joint   |   0.000   |  0.000  |  0.020   |      0.010      | [-1.588, 2.251] |      37.000     |     25.000    |
+|   17  | left_shoulder_yaw_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   18  | left_elbow_joint           |   0.000   |  0.000  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   19  | left_wrist_roll_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   20  | left_wrist_pitch_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   21  | left_wrist_yaw_joint       |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   22  | right_shoulder_pitch_joint |   0.000   |  0.000  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   23  | right_shoulder_roll_joint  |   0.000   |  0.000  |  0.020   |      0.010      | [-2.251, 1.588] |      37.000     |     25.000    |
+|   24  | right_shoulder_yaw_joint   |   0.000   |  0.000  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   25  | right_elbow_joint          |   0.000   |  0.000  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   26  | right_wrist_roll_joint     |   0.000   |  0.000  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   27  | right_wrist_pitch_joint    |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   28  | right_wrist_yaw_joint      |   0.000   |  0.000  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+[INFO]: Adding contact sensor for /World/envs/env_.*/Robot/.* with filter all bodies/shapes
+Contact sensor construction took: Last: 0.032330 s, Mean: 0.032330 s, Std: 0.000000 s, N: 1
+[INFO]: Contact sensor initialized with 30 sensors.
+[INFO]: Creating buffers for contact sensor data with num_envs: 1024, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Creating buffers for contact sensor data with num_envs: 1024, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Read mesh prim: /World/ground/terrain/mesh with 369728 vertices and 2097240 faces.
+Initialize solver took: Last: 2.330311 s, Mean: 2.330311 s, Std: 0.000000 s, N: 1
+[INFO]: Newton CUDA graph captured (standard Warp mode)
+CUDA graph took: Last: 1.462688 s, Mean: 1.462688 s, Std: 0.000000 s, N: 1
+[INFO]: Time taken for simulation start Last: 7.549521 s, Mean: 7.549521 s, Std: 0.000000 s, N: 1
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++--------------------------------------+
+|         Active Command Terms         |
++-------+--------+---------------------+
+| Index | Name   |         Type        |
++-------+--------+---------------------+
+|   0   | height | SmoothHeightCommand |
++-------+--------+---------------------+
+
+[INFO] Event Manager:  <EventManager> contains 3 active terms.
++----------------------------------------+
+| Active Event Terms in Mode: 'startup'  |
++--------+-------------------------------+
+| Index  | Name                          |
++--------+-------------------------------+
+|   0    | randomize_physics_material    |
+|   1    | randomize_actuator_gains      |
+|   2    | randomize_bodies_mass         |
+|   3    | randomize_base_mass           |
+|   4    | randomize_base_com            |
++--------+-------------------------------+
++---------------------------------------------------------------------------+
+|                   Active Event Terms in Mode: 'interval'                  |
++-------+-----------------------------------------+-------------------------+
+| Index | Name                                    | Interval time range (s) |
++-------+-----------------------------------------+-------------------------+
+|   0   | push_robot                              |       (0.0, 10.0)       |
+|   1   | apply_external_force_torque             |       (0.0, 10.0)       |
+|   2   | apply_external_force_torque_extremities |       (0.0, 10.0)       |
++-------+-----------------------------------------+-------------------------+
++----------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+---------------------+
+|   Index    | Name                |
++------------+---------------------+
+|     0      | reset_base          |
++------------+---------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO]: Resolved joint names for the action term JointPositionAction: ['left_hip_pitch_joint', 'left_hip_roll_joint', 'left_hip_yaw_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint', 'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_yaw_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint', 'waist_yaw_joint', 'waist_roll_joint', 'waist_pitch_joint', 'left_shoulder_pitch_joint', 'left_shoulder_roll_joint', 'left_shoulder_yaw_joint', 'left_elbow_joint', 'left_wrist_roll_joint', 'left_wrist_pitch_joint', 'left_wrist_yaw_joint', 'right_shoulder_pitch_joint', 'right_shoulder_roll_joint', 'right_shoulder_yaw_joint', 'right_elbow_joint', 'right_wrist_roll_joint', 'right_wrist_pitch_joint', 'right_wrist_yaw_joint'] [[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28]]
+[INFO] Action Manager:  <ActionManager> contains 2 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 29)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          29 |
+|   1    | lift        |           0 |
++--------+-------------+-------------+
+
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++----------------------------------------------+
+| Active Observation Terms in Group: 'policy'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | base_ang_vel           |   (5, 3)  |
+|    1    | projected_gravity      |   (5, 3)  |
+|    2    | joint_pos              |  (5, 29)  |
+|    3    | joint_vel              |  (5, 29)  |
+|    4    | actions                |  (5, 29)  |
+|    5    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
++----------------------------------------------+
+| Active Observation Terms in Group: 'critic'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | projected_gravity      |   (5, 3)  |
+|    1    | base_lin_vel           |   (5, 3)  |
+|    2    | base_ang_vel           |   (5, 3)  |
+|    3    | joint_pos              |  (5, 29)  |
+|    4    | joint_vel              |  (5, 29)  |
+|    5    | actions                |  (5, 29)  |
+|    6    | contact_forces         |  (5, 30)  |
+|    7    | base_height            |   (5, 1)  |
+|    8    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++----------------------------------+
+|     Active Termination Terms     |
++-------+---------------+----------+
+| Index | Name          | Time Out |
++-------+---------------+----------+
+|   0   | time_out      |   True   |
+|   1   | invalid_state |  False   |
++-------+---------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 32 active terms.
++--------------------------------------------+
+|            Active Reward Terms             |
++-------+-------------------------+----------+
+| Index | Name                    |   Weight |
++-------+-------------------------+----------+
+|   0   | joint_torques_l2        |   -5e-05 |
+|   1   | torque_limits           |    -0.01 |
+|   2   | joint_acc_l2            | -2.5e-08 |
+|   3   | joint_pos_limits        |     -0.1 |
+|   4   | joint_vel_limits        |    -0.01 |
+|   5   | action_rate             |     -1.0 |
+|   6   | action_rate_rate        |    -0.15 |
+|   7   | joint_vel_l2            |   -0.001 |
+|   8   | joint_tracking_error    |     -0.5 |
+|   9   | base_height_rough       |      4.0 |
+|   10  | base_height_medium      |      8.0 |
+|   11  | base_height_fine        |     16.0 |
+|   12  | relaxation              |     -1.0 |
+|   13  | joint_deviation_l1      |     -0.5 |
+|   14  | joint_deviation_l1_arms |     -0.5 |
+|   15  | ankle_torques           |   -0.001 |
+|   16  | not_moving              |     -1.0 |
+|   17  | torso_upright           |     -1.0 |
+|   18  | severely_tilted         |     -5.0 |
+|   19  | torso_roll              |     -5.0 |
+|   20  | forward_pitch           |    -10.0 |
+|   21  | illegal_contacts        |     -2.0 |
+|   22  | feet_distance           |     -5.0 |
+|   23  | feet_distance_standing  |    -10.0 |
+|   24  | ground_unloaded         |     -2.0 |
+|   25  | flat_feet               |     -1.0 |
+|   26  | feet_slide              |     -1.0 |
+|   27  | feet_yaw_mean           |     -2.0 |
+|   28  | completely_airborne     |    -50.0 |
+|   29  | body_velocity           |     -0.1 |
+|   30  | ground_slam             |     -1.0 |
+|   31  | torso_slam              |     -5.0 |
++-------+-------------------------+----------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 8 active terms.
++---------------------------------+
+|     Active Curriculum Terms     |
++-------+-------------------------+
+| Index | Name                    |
++-------+-------------------------+
+|   0   | adaptive_lift           |
+|   1   | terrain_levels          |
+|   2   | polish_action_rate_rate |
+|   3   | polish_ground_slam      |
+|   4   | polish_torso_slam       |
+|   5   | polish_not_moving       |
+|   6   | polish_joint_vel_l2     |
+|   7   | random_fallen_states    |
++-------+-------------------------+
+
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab/isaaclab/envs/mdp/events.py:742: UserWarning: In Newton, body com pose always has unit quaternion. Consider using body_com_pos_b instead.Querying this property requires appending a unit quaternion to the position which is expensive.
+  self.default_com = self.asset.data.body_com_pose_b.torch.clone()
+[INFO]: Completed setting up the environment...
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:220: UserWarning: The observation configuration dictionary 'obs_groups' is empty and thus likely not configured. Consider configuring the 'obs_groups' dictionary explicitly
+  warnings.warn(
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'actor' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'actor' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:243: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'critic' key. As an observation group with the name 'critic' was found, this is assumed to be the appropriate observation. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
+  warnings.warn(
+--------------------------------------------------------------------------------
+Resolved observation sets: 
+	 actor :  ['policy']
+	 critic :  ['critic']
+--------------------------------------------------------------------------------
+Actor Model: MLPModel(
+  (obs_normalizer): Identity()
+  (distribution): GaussianDistribution()
+  (mlp): MLP(
+    (0): Linear(in_features=470, out_features=256, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=256, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=29, bias=True)
+  )
+)
+Critic Model: MLPModel(
+  (obs_normalizer): Identity()
+  (mlp): MLP(
+    (0): Linear(in_features=640, out_features=512, bias=True)
+    (1): ELU(alpha=1.0)
+    (2): Linear(in_features=512, out_features=256, bias=True)
+    (3): ELU(alpha=1.0)
+    (4): Linear(in_features=256, out_features=128, bias=True)
+    (5): ELU(alpha=1.0)
+    (6): Linear(in_features=128, out_features=1, bias=True)
+  )
+)
+Storing git diff for 'WBC-AGILE-NEWTON' in: /workspace/WBC-AGILE-NEWTON/logs/rsl_rl/height_tracking_g1/2026-09-02_06-32-47_height_tracking_g1/git/WBC-AGILE-NEWTON.diff
+################################################################################
+[1m                            Learning iteration 0/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 24576 
+                       Steps per second: 10028 
+                        Collection time: 2.224s 
+                          Learning time: 0.226s 
+                        Mean value loss: 6.3086
+                    Mean surrogate loss: 0.0323
+                      Mean entropy loss: 41.1199
+                     Mean symmetry loss: 0.0046
+                   Mean l2c2_actor loss: 0.0015
+                  Mean l2c2_critic loss: 0.0118
+                            Mean reward: -34.83
+                    Mean episode length: 13.11
+                        Mean action std: 1.00
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_slam: -0.0659
+           Episode_Reward/torque_limits: -0.0223
+               Curriculum/adaptive_lift: 1.0000
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/forward_pitch: -0.0125
+           Episode_Reward/body_velocity: -0.1759
+            Metrics/height/height_error: 0.0000
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/base_height_fine: 0.0420
+              Episode_Reward/torso_roll: -0.0248
+  Episode_Reward/feet_distance_standing: -0.0021
+           Curriculum/polish_not_moving: -1.0000
+      Episode_Reward/base_height_medium: 0.0286
+             Episode_Reward/action_rate: -0.8735
+           Curriculum/polish_torso_slam: -5.0000
+      Episode_Reward/joint_deviation_l1: -0.0308
+        Episode_Reward/joint_pos_limits: -0.0002
+     Episode_Reward/completely_airborne: -0.1220
+        Episode_Reward/joint_vel_limits: -0.0001
+ Episode_Reward/joint_deviation_l1_arms: -0.0141
+            Episode_Reward/joint_acc_l2: -0.0047
+       Episode_Reward/base_height_rough: 0.0240
+           Episode_Reward/feet_yaw_mean: -0.0075
+           Episode_Reward/ankle_torques: -0.0071
+            Episode_Reward/joint_vel_l2: -0.0354
+         Episode_Reward/severely_tilted: -0.0001
+         Episode_Reward/ground_unloaded: -0.0127
+           Episode_Reward/torso_upright: 0.0000
+        Episode_Reward/illegal_contacts: -0.0013
+              Curriculum/terrain_levels: 0.0000
+      Episode_Termination/invalid_state: 0.0016
+        Episode_Reward/joint_torques_l2: -0.0179
+              Episode_Reward/feet_slide: -0.0183
+        Episode_Reward/action_rate_rate: -0.3734
+           Episode_Reward/feet_distance: -0.0012
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/relaxation: -0.1241
+        Curriculum/random_fallen_states: 0.0000
+           Episode_Termination/time_out: 0.0144
+             Episode_Reward/ground_slam: -0.0554
+    Episode_Reward/joint_tracking_error: -0.0658
+               Episode_Reward/flat_feet: -0.0218
+              Episode_Reward/not_moving: -0.0294
+--------------------------------------------------------------------------------
+                         Iteration time: 2.45s
+                           Time elapsed: 0:00:02
+                                    ETA: 0:01:11
+
+################################################################################
+[1m                            Learning iteration 1/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 49152 
+                       Steps per second: 25866 
+                        Collection time: 0.832s 
+                          Learning time: 0.118s 
+                        Mean value loss: 9.2075
+                    Mean surrogate loss: 0.0123
+                      Mean entropy loss: 41.1022
+                     Mean symmetry loss: 0.0036
+                   Mean l2c2_actor loss: 0.0015
+                  Mean l2c2_critic loss: 0.0202
+                            Mean reward: -72.11
+                    Mean episode length: 24.52
+                        Mean action std: 1.00
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_slam: -0.3675
+           Episode_Reward/torque_limits: -0.0724
+               Curriculum/adaptive_lift: 1.0000
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/forward_pitch: -0.0368
+           Episode_Reward/body_velocity: -1.1676
+            Metrics/height/height_error: nan
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/base_height_fine: 0.2135
+              Episode_Reward/torso_roll: -0.0861
+  Episode_Reward/feet_distance_standing: -0.0145
+           Curriculum/polish_not_moving: -1.0000
+      Episode_Reward/base_height_medium: 0.1369
+             Episode_Reward/action_rate: -2.5485
+           Curriculum/polish_torso_slam: -5.0000
+      Episode_Reward/joint_deviation_l1: -0.0962
+        Episode_Reward/joint_pos_limits: -0.0007
+     Episode_Reward/completely_airborne: -0.2876
+        Episode_Reward/joint_vel_limits: -0.0003
+ Episode_Reward/joint_deviation_l1_arms: -0.0530
+            Episode_Reward/joint_acc_l2: -0.0134
+       Episode_Reward/base_height_rough: 0.0925
+           Episode_Reward/feet_yaw_mean: -0.0531
+           Episode_Reward/ankle_torques: -0.0166
+            Episode_Reward/joint_vel_l2: -0.1124
+         Episode_Reward/severely_tilted: -0.0053
+         Episode_Reward/ground_unloaded: -0.0379
+           Episode_Reward/torso_upright: 0.0000
+        Episode_Reward/illegal_contacts: -0.0069
+              Curriculum/terrain_levels: 0.0000
+      Episode_Termination/invalid_state: 0.0092
+        Episode_Reward/joint_torques_l2: -0.0560
+              Episode_Reward/feet_slide: -0.0568
+        Episode_Reward/action_rate_rate: -1.1291
+           Episode_Reward/feet_distance: -0.0111
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/relaxation: -0.3937
+        Curriculum/random_fallen_states: 0.0000
+           Episode_Termination/time_out: 0.0482
+             Episode_Reward/ground_slam: -0.2973
+    Episode_Reward/joint_tracking_error: -0.2229
+               Episode_Reward/flat_feet: -0.0802
+              Episode_Reward/not_moving: -0.1965
+--------------------------------------------------------------------------------
+                         Iteration time: 0.95s
+                           Time elapsed: 0:00:03
+                                    ETA: 0:00:47
+
+################################################################################
+[1m                            Learning iteration 2/30                             [0m 
+
+                               Run name: height_tracking_g1
+                            Total steps: 73728 
+                       Steps per second: 25172 
+                        Collection time: 0.861s 
+                          Learning time: 0.115s 
+                        Mean value loss: 9.1227
+                    Mean surrogate loss: -0.0069
+                      Mean entropy loss: 41.0633
+                     Mean symmetry loss: 0.0019
+                   Mean l2c2_actor loss: 0.0017
+                  Mean l2c2_critic loss: 0.0291
+                            Mean reward: -150.76
+                    Mean episode length: 42.22
+                        Mean action std: 1.00
+                    Entropy coefficient: 0.002500
+              Episode_Reward/torso_slam: -0.9976
+           Episode_Reward/torque_limits: -0.1038
+               Curriculum/adaptive_lift: 1.0000
+     Curriculum/polish_action_rate_rate: -0.1500
+           Episode_Reward/forward_pitch: -0.0760
+           Episode_Reward/body_velocity: -2.0178
+            Metrics/height/height_error: nan
+          Curriculum/polish_ground_slam: -1.0000
+        Episode_Reward/base_height_fine: 0.2462
+              Episode_Reward/torso_roll: -0.1169
+  Episode_Reward/feet_distance_standing: -0.0336
+           Curriculum/polish_not_moving: -1.0000
+      Episode_Reward/base_height_medium: 0.1609
+             Episode_Reward/action_rate: -3.2034
+           Curriculum/polish_torso_slam: -5.0000
+      Episode_Reward/joint_deviation_l1: -0.1185
+        Episode_Reward/joint_pos_limits: -0.0011
+     Episode_Reward/completely_airborne: -0.3641
+        Episode_Reward/joint_vel_limits: -0.0004
+ Episode_Reward/joint_deviation_l1_arms: -0.0707
+            Episode_Reward/joint_acc_l2: -0.0238
+       Episode_Reward/base_height_rough: 0.1112
+           Episode_Reward/feet_yaw_mean: -0.0850
+           Episode_Reward/ankle_torques: -0.0248
+            Episode_Reward/joint_vel_l2: -0.1708
+         Episode_Reward/severely_tilted: -0.0117
+         Episode_Reward/ground_unloaded: -0.0469
+           Episode_Reward/torso_upright: -0.0016
+        Episode_Reward/illegal_contacts: -0.0142
+              Curriculum/terrain_levels: 0.0000
+      Episode_Termination/invalid_state: 0.0203
+        Episode_Reward/joint_torques_l2: -0.0780
+              Episode_Reward/feet_slide: -0.0730
+        Episode_Reward/action_rate_rate: -1.4226
+           Episode_Reward/feet_distance: -0.0269
+         Curriculum/polish_joint_vel_l2: -0.0010
+              Episode_Reward/relaxation: -0.6143
+        Curriculum/random_fallen_states: 0.0000
+           Episode_Termination/time_out: 0.0830
+             Episode_Reward/ground_slam: -0.6415
+    Episode_Reward/joint_tracking_error: -0.3262
+               Episode_Reward/flat_feet: -0.1082
+              Episode_Reward/not_moving: -0.2315
+--------------------------------------------------------------------------------
+                         Iteration time: 0.98s
+                           Time elapsed: 0:00:04
+                                    ETA: 0:00:39
+
+Traceback (most recent call last):
+  File "/workspace/WBC-AGILE-NEWTON/scripts/train.py", line 221, in <module>
+    main()
+  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_tasks/utils/hydra.py", line 485, in wrapper
+    _run_hydra(task, env_cfg, agent_cfg, hydra_args, lambda e, a: func(e, a, *args, **kwargs))
+  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_tasks/utils/hydra.py", line 426, in _run_hydra
+    callback(env_cfg, agent_cfg)
+  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_tasks/utils/hydra.py", line 485, in <lambda>
+    _run_hydra(task, env_cfg, agent_cfg, hydra_args, lambda e, a: func(e, a, *args, **kwargs))
+                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/WBC-AGILE-NEWTON/scripts/train.py", line 213, in main
+    runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
+  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/runners/on_policy_runner.py", line 100, in learn
+    check_nan(obs, rewards, dones)
+  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py", line 279, in check_nan
+    raise ValueError(
+ValueError: The observation group 'policy' returned by the environment contains NaN values. This usually indicates a bug in the environment's step() or reset() function.

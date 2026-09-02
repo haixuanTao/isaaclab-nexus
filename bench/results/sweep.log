@@ -1,0 +1,7 @@
+=== [03:38:10] HeightTracking-G1-v0 num_envs=1024 iters=30 ===
+    exit=0  -> /workspace/bench/results/train_HeightTracking-G1-v0_n1024.log
+=== [03:39:40] HeightTracking-G1-v0 num_envs=2048 iters=30 ===
+    exit=0  -> /workspace/bench/results/train_HeightTracking-G1-v0_n2048.log
+=== [03:41:43] HeightTracking-G1-v0 num_envs=4096 iters=30 ===
+    exit=0  -> /workspace/bench/results/train_HeightTracking-G1-v0_n4096.log
+=== [03:45:03] HeightTracking-G1-v0 num_envs=8192 iters=30 ===

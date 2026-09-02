@@ -1,0 +1,560 @@
+<title>Where AGILE Spends an Iteration</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#F6F7F9;
+  --surface:#FFFFFF;
+  --sunken:#EDEFF3;
+  --ink:#12161C;
+  --ink-2:#3A4453;
+  --ink-3:#6B7688;
+  --rule:#D9DEE6;
+  --rule-2:#C3CAD6;
+  --compute:#0E6E67;
+  --compute-soft:#CFE6E3;
+  --idle:#A85A08;
+  --idle-soft:#F3E2CC;
+  --fail:#96123C;
+  --fail-soft:#F6D9E1;
+  --shadow:0 1px 2px rgba(18,22,28,.06);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1015;
+    --surface:#151A21;
+    --sunken:#1D232C;
+    --ink:#E7EBF1;
+    --ink-2:#B3BDCB;
+    --ink-3:#7D8899;
+    --rule:#28303B;
+    --rule-2:#3A4553;
+    --compute:#4FC3B6;
+    --compute-soft:#16413E;
+    --idle:#E0A050;
+    --idle-soft:#43301A;
+    --fail:#E8718F;
+    --fail-soft:#431726;
+    --shadow:0 1px 2px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1015;
+  --surface:#151A21;
+  --sunken:#1D232C;
+  --ink:#E7EBF1;
+  --ink-2:#B3BDCB;
+  --ink-3:#7D8899;
+  --rule:#28303B;
+  --rule-2:#3A4553;
+  --compute:#4FC3B6;
+  --compute-soft:#16413E;
+  --idle:#E0A050;
+  --idle-soft:#43301A;
+  --fail:#E8718F;
+  --fail-soft:#431726;
+  --shadow:0 1px 2px rgba(0,0,0,.4);
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--ground);
+  color:var(--ink);
+  font-family:"Source Serif 4",Georgia,serif;
+  font-size:17px;
+  line-height:1.6;
+  margin:0;
+  padding:0 24px 96px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto}
+.measure{max-width:66ch}
+
+h1,h2,h3,.lbl,th,.mono,.num{font-family:Archivo,"Helvetica Neue",Arial,sans-serif}
+h1{
+  font-size:clamp(30px,4.4vw,46px);
+  line-height:1.08;
+  font-weight:700;
+  letter-spacing:-.02em;
+  text-wrap:balance;
+  margin:0 0 18px;
+}
+h2{
+  font-size:23px;font-weight:700;letter-spacing:-.01em;
+  margin:0 0 4px;text-wrap:balance;
+}
+h3{font-size:15px;font-weight:600;margin:0 0 10px;letter-spacing:-.005em}
+p{margin:0 0 16px}
+a{color:var(--compute)}
+
+.lbl{
+  font-size:11px;font-weight:600;text-transform:uppercase;
+  letter-spacing:.11em;color:var(--ink-3);
+}
+.mono,code{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace}
+code{
+  font-size:.86em;background:var(--sunken);
+  padding:.12em .38em;border-radius:3px;color:var(--ink-2);
+}
+.num{font-variant-numeric:tabular-nums}
+
+/* ---------- masthead ---------- */
+header{padding:56px 0 0}
+.eyebrow{
+  display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;
+  margin-bottom:22px;
+}
+.eyebrow .lbl{color:var(--compute)}
+.dek{
+  font-size:19px;line-height:1.5;color:var(--ink-2);
+  max-width:62ch;margin:0 0 28px;
+}
+.rig{
+  display:flex;flex-wrap:wrap;gap:0;
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  margin-bottom:52px;
+}
+.rig div{
+  flex:1 1 168px;padding:13px 18px 14px;
+  border-right:1px solid var(--rule);
+}
+.rig div:last-child{border-right:0}
+.rig .lbl{display:block;margin-bottom:3px}
+.rig .v{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--ink);font-variant-numeric:tabular-nums}
+
+section{margin-bottom:52px}
+.shead{
+  display:flex;align-items:baseline;gap:14px;
+  border-bottom:2px solid var(--ink);padding-bottom:9px;margin-bottom:22px;
+}
+.shead .n{
+  font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:700;
+  color:var(--ink-3);letter-spacing:0;
+}
+
+/* ---------- the split bar ---------- */
+.split{
+  background:var(--surface);border:1px solid var(--rule);
+  border-radius:4px;padding:26px 26px 22px;margin-bottom:26px;
+  box-shadow:var(--shadow);
+}
+.bar{
+  display:flex;height:56px;border-radius:3px;overflow:hidden;
+  border:1px solid var(--rule-2);
+}
+.bar span{
+  display:flex;align-items:center;padding:0 14px;
+  font-family:Archivo,sans-serif;font-size:13px;font-weight:600;
+  font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;
+}
+.b-busy{background:var(--compute);color:#fff}
+.b-idle{background:var(--idle-soft);color:var(--idle)}
+.b-roll{background:var(--compute-soft);color:var(--compute)}
+.b-upd{background:var(--compute);color:#fff}
+.scale{
+  display:flex;justify-content:space-between;
+  font-family:"JetBrains Mono",monospace;font-size:11px;
+  color:var(--ink-3);margin-top:7px;font-variant-numeric:tabular-nums;
+}
+.caption{
+  font-size:14px;color:var(--ink-2);margin:14px 0 0;max-width:70ch;
+}
+.caption strong{color:var(--ink);font-weight:600}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin-bottom:14px;border:1px solid var(--rule);border-radius:4px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:520px}
+th{
+  font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--ink-3);text-align:left;padding:11px 14px;
+  border-bottom:1px solid var(--rule-2);white-space:nowrap;
+}
+td{
+  padding:9px 14px;border-bottom:1px solid var(--rule);
+  font-family:"JetBrains Mono",monospace;font-size:13px;
+  font-variant-numeric:tabular-nums;color:var(--ink-2);
+}
+tr:last-child td{border-bottom:0}
+td:first-child{color:var(--ink)}
+.r{text-align:right}
+th.r{text-align:right}
+.hi td{background:var(--sunken);color:var(--ink);font-weight:500}
+.bad td{color:var(--fail)}
+.bad td:first-child{color:var(--fail)}
+
+/* ---------- family bars ---------- */
+.fam{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.frow{
+  display:grid;grid-template-columns:210px 1fr 92px;
+  gap:14px;align-items:center;background:var(--surface);padding:11px 16px;
+}
+.fname{font-family:Archivo,sans-serif;font-size:13px;font-weight:500;color:var(--ink)}
+.ftrack{height:16px;background:var(--sunken);border-radius:2px;overflow:hidden}
+.ffill{height:100%;background:var(--compute)}
+.ffill.wk{background:var(--idle)}
+.fval{
+  font-family:"JetBrains Mono",monospace;font-size:12.5px;text-align:right;
+  color:var(--ink-2);font-variant-numeric:tabular-nums;
+}
+
+/* ---------- paired launch/work ---------- */
+.paired{display:flex;flex-direction:column;gap:1px;background:var(--rule);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.prow{background:var(--surface);padding:13px 16px;display:grid;grid-template-columns:210px 1fr;gap:14px;align-items:center}
+.ptracks{display:flex;flex-direction:column;gap:5px}
+.ptrack{display:grid;grid-template-columns:54px 1fr 62px;gap:9px;align-items:center}
+.ptrack .lbl{font-size:9.5px;letter-spacing:.08em}
+.pbar{height:11px;background:var(--sunken);border-radius:2px;overflow:hidden}
+.pfill{height:100%}
+.pfill.launch{background:var(--idle)}
+.pfill.work{background:var(--compute)}
+.pval{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--ink-3);text-align:right;font-variant-numeric:tabular-nums}
+
+/* ---------- callout ---------- */
+/* ---------- comparison ---------- */
+.prov{
+  display:flex;gap:0;border:1px solid var(--rule);border-radius:4px;
+  overflow:hidden;margin-bottom:22px;background:var(--surface);
+}
+.prov div{flex:1 1 0;padding:14px 18px;border-right:1px solid var(--rule)}
+.prov div:last-child{border-right:0}
+.prov .who{font-family:Archivo,sans-serif;font-weight:700;font-size:15px;margin-bottom:4px}
+.prov .src{font-size:13px;color:var(--ink-2);line-height:1.45}
+.prov .measured .who{color:var(--compute)}
+.prov .claimed .who{color:var(--idle)}
+.tag{
+  display:inline-block;font-family:"JetBrains Mono",monospace;font-size:10px;
+  letter-spacing:.04em;padding:2px 6px;border-radius:2px;margin-bottom:7px;
+}
+.tag.m{background:var(--compute-soft);color:var(--compute)}
+.tag.c{background:var(--idle-soft);color:var(--idle)}
+
+.dual{display:flex;flex-direction:column;gap:1px;background:var(--rule);
+  border:1px solid var(--rule);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.drow{background:var(--surface);padding:12px 16px;
+  display:grid;grid-template-columns:150px 1fr 1fr;gap:16px;align-items:center}
+.drow.head{background:var(--sunken)}
+.drow.head span{font-family:Archivo,sans-serif;font-size:10.5px;font-weight:600;
+  text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3)}
+.dname{font-family:Archivo,sans-serif;font-size:13px;font-weight:500;color:var(--ink)}
+.dcell{display:grid;grid-template-columns:1fr 58px;gap:9px;align-items:center}
+.dbar{height:14px;background:var(--sunken);border-radius:2px;overflow:hidden}
+.dfill{height:100%}
+.dfill.z{background:var(--idle)}
+.dfill.a{background:var(--compute)}
+.dnum{font-family:"JetBrains Mono",monospace;font-size:12px;text-align:right;
+  color:var(--ink-2);font-variant-numeric:tabular-nums}
+@media (max-width:700px){
+  .prov{flex-direction:column}
+  .prov div{border-right:0;border-bottom:1px solid var(--rule)}
+  .drow{grid-template-columns:1fr;gap:7px}
+}
+
+.callout{
+  border-left:3px solid var(--idle);background:var(--surface);
+  padding:18px 22px;border-radius:0 4px 4px 0;margin:0 0 20px;
+  border-top:1px solid var(--rule);border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);
+}
+.callout.fail{border-left-color:var(--fail)}
+.callout p:last-child{margin-bottom:0}
+.callout .lbl{display:block;margin-bottom:7px}
+.callout.fail .lbl{color:var(--fail)}
+
+pre{
+  background:var(--sunken);border:1px solid var(--rule);border-radius:4px;
+  padding:14px 16px;overflow-x:auto;margin:0 0 18px;
+  font-family:"JetBrains Mono",monospace;font-size:12.5px;line-height:1.55;
+  color:var(--ink-2);
+}
+ul{margin:0 0 16px;padding-left:20px}
+li{margin-bottom:7px}
+footer{
+  border-top:1px solid var(--rule);padding-top:20px;
+  font-size:13.5px;color:var(--ink-3);
+}
+@media (max-width:660px){
+  .frow{grid-template-columns:1fr;gap:6px}
+  .prow{grid-template-columns:1fr;gap:8px}
+  .fval{text-align:left}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">
+    <span class="lbl">Nsight Systems 2026.1.3</span>
+    <span class="lbl" style="color:var(--ink-3)">·&nbsp;&nbsp;WBC-AGILE · Unitree G1, 29 DOF</span>
+  </div>
+  <h1>Where AGILE Spends an Iteration</h1>
+  <p class="dek">A 45-second steady-state trace of NVIDIA's production humanoid RL pipeline at 4,096 environments. The GPU is idle half the wall clock, and the idle is not one stall — it is 1.25 million gaps averaging 18&nbsp;microseconds.</p>
+
+  <div class="rig">
+    <div><span class="lbl">GPU</span><span class="v">RTX 5090 · cc 12.0 · 500 W</span></div>
+    <div><span class="lbl">Task</span><span class="v">HeightTracking-G1-v0</span></div>
+    <div><span class="lbl">Actuated DOF</span><span class="v">29 (full body)</span></div>
+    <div><span class="lbl">Physics / control</span><span class="v">200 Hz / 50 Hz</span></div>
+    <div><span class="lbl">Stack</span><span class="v">IsaacLab 3.0.0b2 · torch 2.11</span></div>
+  </div>
+</header>
+
+<section>
+  <div class="shead"><span class="n">01</span><h2>Half the wall clock is idle</h2></div>
+
+  <div class="split">
+    <h3>GPU occupancy across the 45 s window</h3>
+    <div class="bar">
+      <span class="b-busy" style="width:49.6%">Busy&nbsp;&nbsp;22,289 ms · 49.6%</span>
+      <span class="b-idle" style="width:50.4%">Idle&nbsp;&nbsp;22,689 ms · 50.4%</span>
+    </div>
+    <div class="scale"><span>0 s</span><span>22.5 s</span><span>45.0 s</span></div>
+    <p class="caption">Busy is the <strong>union</strong> of kernel intervals, not their sum — kernels overlapping across streams are counted once. The sum was 22,710 ms, so cross-stream overlap is negligible: <strong>the work is serialized</strong>.</p>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Measure</th><th class="r">Value</th><th>Reading</th></tr></thead>
+      <tbody>
+        <tr><td>Kernel launches</td><td class="r">1,287,406</td><td>28,623 per second</td></tr>
+        <tr class="hi"><td>Mean kernel duration</td><td class="r">17.6 µs</td><td>never a large unit of work</td></tr>
+        <tr><td>Memcpy operations</td><td class="r">337,251</td><td>765 ms total — launch-bound, not bandwidth-bound</td></tr>
+        <tr><td>Launches per iteration</td><td class="r">132,398</td><td>≈ 5,031 per environment step</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="n">02</span><h2>Rollout is 94% of the iteration</h2></div>
+
+  <div class="split">
+    <h3>One iteration · 4,630 ms</h3>
+    <div class="bar">
+      <span class="b-roll" style="width:94%">Rollout&nbsp;&nbsp;4,354 ms · 94.0%</span>
+      <span class="b-upd" style="width:6%">6.0%</span>
+    </div>
+    <div class="scale"><span>0 ms</span><span>PPO update begins → 4,354 ms</span><span>4,630 ms</span></div>
+    <p class="caption">Segmented by <strong>presence or absence of PhysX kernels</strong> in the trace. rsl_rl's own timers independently report 94.1% / 5.9%. Two unrelated methods agree.</p>
+  </div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Phase</th><th class="r">Duration</th><th class="r">Share</th><th class="r">GPU busy within</th><th class="r">Launches</th></tr></thead>
+      <tbody>
+        <tr><td>Rollout</td><td class="r">4,353.7 ms</td><td class="r">94.0%</td><td class="r">49.5%</td><td class="r">120,752</td></tr>
+        <tr><td>PPO update</td><td class="r">276.7 ms</td><td class="r">6.0%</td><td class="r">63.4%</td><td class="r">11,646</td></tr>
+        <tr class="hi"><td>Full iteration</td><td class="r">4,630.4 ms</td><td class="r">100%</td><td class="r">50.3%</td><td class="r">132,398</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="measure" style="font-size:15px;color:var(--ink-2)">The update is the <em>denser</em> phase — 63.4% busy against the rollout's 49.5% — but it is only six percent of the iteration. Optimizing the learner cannot move this number.</p>
+</section>
+
+<section>
+  <div class="shead"><span class="n">03</span><h2>PhysX is ~90% of the work; the network is 5%</h2></div>
+
+  <div class="fam">
+    <div class="frow"><span class="fname">PhysX articulation / solver</span><span class="ftrack"><span class="ffill" style="width:100%"></span></span><span class="fval">14,949 ms · 67.1%</span></div>
+    <div class="frow"><span class="fname">PhysX collision (BP/NP)</span><span class="ftrack"><span class="ffill" style="width:29.9%"></span></span><span class="fval">4,463 ms · 20.0%</span></div>
+    <div class="frow"><span class="fname">torch elementwise / index</span><span class="ftrack"><span class="ffill wk" style="width:9.3%"></span></span><span class="fval">1,387 ms · 6.2%</span></div>
+    <div class="frow"><span class="fname">Neural net (GEMM)</span><span class="ftrack"><span class="ffill" style="width:7.5%"></span></span><span class="fval">1,117 ms · 5.0%</span></div>
+    <div class="frow"><span class="fname">Unclassified (mostly PhysX)</span><span class="ftrack"><span class="ffill" style="width:4.0%"></span></span><span class="fval">597 ms · 2.7%</span></div>
+    <div class="frow"><span class="fname">Warp height-scan / raycast</span><span class="ftrack"><span class="ffill" style="width:1.3%"></span></span><span class="fval">197 ms · 0.9%</span></div>
+  </div>
+  <p class="caption" style="margin-top:12px">Share of GPU <em>busy</em> time. Bars scaled to the largest family.</p>
+</section>
+
+<section>
+  <div class="shead"><span class="n">04</span><h2>The task layer, measured</h2></div>
+  <p class="measure">Isaac Lab's manager-based MDP — observation terms, reward terms, resets — compiles to chains of small tensor ops. Comparing each family's share of <em>launches</em> against its share of <em>work</em> isolates what that costs.</p>
+
+  <div class="paired">
+    <div class="prow">
+      <span class="fname">torch elementwise / index</span>
+      <div class="ptracks">
+        <div class="ptrack"><span class="lbl">Launches</span><span class="pbar"><span class="pfill launch" style="width:51.4%"></span></span><span class="pval">51.4%</span></div>
+        <div class="ptrack"><span class="lbl">GPU work</span><span class="pbar"><span class="pfill work" style="width:6.2%"></span></span><span class="pval">6.2%</span></div>
+      </div>
+    </div>
+    <div class="prow">
+      <span class="fname">PhysX articulation / solver</span>
+      <div class="ptracks">
+        <div class="ptrack"><span class="lbl">Launches</span><span class="pbar"><span class="pfill launch" style="width:29.4%"></span></span><span class="pval">29.4%</span></div>
+        <div class="ptrack"><span class="lbl">GPU work</span><span class="pbar"><span class="pfill work" style="width:67.1%"></span></span><span class="pval">67.1%</span></div>
+      </div>
+    </div>
+    <div class="prow">
+      <span class="fname">Neural net (GEMM)</span>
+      <div class="ptracks">
+        <div class="ptrack"><span class="lbl">Launches</span><span class="pbar"><span class="pfill launch" style="width:1.8%"></span></span><span class="pval">1.8%</span></div>
+        <div class="ptrack"><span class="lbl">GPU work</span><span class="pbar"><span class="pfill work" style="width:5.0%"></span></span><span class="pval">5.0%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:22px">
+    <span class="lbl">The finding</span>
+    <p style="margin:0"><strong>662,324 launches — 51% of every kernel launch in the run — produce 6.2% of the GPU work</strong>, averaging 2.1&nbsp;µs each. The task layer contributes almost no arithmetic and roughly half the dispatch pressure.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="n">05</span><h2>The idle is dispatch latency</h2></div>
+  <p class="measure">If the idle were a few long synchronizations, it would be a scheduling problem. It is not: the median gap is <span class="mono">5.6&nbsp;µs</span>, and half of all idle time arrives in gaps shorter than 100&nbsp;µs.</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Gap size</th><th class="r">Count</th><th class="r">Total</th><th class="r">Share of idle</th></tr></thead>
+      <tbody>
+        <tr><td>&lt; 5 µs</td><td class="r">590,902</td><td class="r">1,156 ms</td><td class="r">5.1%</td></tr>
+        <tr><td>5 – 20 µs</td><td class="r">513,624</td><td class="r">5,335 ms</td><td class="r">23.5%</td></tr>
+        <tr><td>20 – 100 µs</td><td class="r">132,298</td><td class="r">4,818 ms</td><td class="r">21.2%</td></tr>
+        <tr><td>0.1 – 1 ms</td><td class="r">9,392</td><td class="r">1,443 ms</td><td class="r">6.4%</td></tr>
+        <tr class="hi"><td>&gt; 1 ms</td><td class="r">1,879</td><td class="r">9,938 ms</td><td class="r">43.8%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">Mean 18.2 µs · median 5.6 µs · p99 94.6 µs · max 13.47 ms. The 1,879 gaps over 1 ms are host synchronization points, ≈179 per iteration.</p>
+
+  <h3 style="margin-top:30px">Host-side CUDA API</h3>
+  <div class="tw">
+    <table>
+      <thead><tr><th>API call</th><th class="r">Total</th><th class="r">Calls</th><th class="r">µs / call</th></tr></thead>
+      <tbody>
+        <tr><td>cudaLaunchKernel</td><td class="r">2,108 ms</td><td class="r">715,691</td><td class="r">2.95</td></tr>
+        <tr><td>cuLaunchKernel</td><td class="r">1,493 ms</td><td class="r">571,715</td><td class="r">2.61</td></tr>
+        <tr><td>cudaStreamSynchronize</td><td class="r">1,294 ms</td><td class="r">115,495</td><td class="r">11.21</td></tr>
+        <tr><td>cudaMemcpyAsync</td><td class="r">570 ms</td><td class="r">143,764</td><td class="r">3.96</td></tr>
+        <tr><td>cuStreamSynchronize</td><td class="r">391 ms</td><td class="r">8,374</td><td class="r">46.66</td></tr>
+        <tr class="hi"><td>All CUDA API</td><td class="r">6,697 ms</td><td class="r">—</td><td class="r">14.9% of one host thread</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption"><strong>3.60 seconds of the 45-second window is spent purely issuing kernel launches.</strong></p>
+</section>
+
+<section>
+  <div class="shead"><span class="n">06</span><h2>Throughput, and a wall at 8,192</h2></div>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Envs</th><th class="r">Iteration</th><th class="r">Collect</th><th class="r">Learn</th><th class="r">Collect %</th><th class="r">Env-steps/s</th><th class="r">Power</th><th class="r">Util</th></tr></thead>
+      <tbody>
+        <tr><td>1,024</td><td class="r">2.160 s</td><td class="r">2.033</td><td class="r">0.122</td><td class="r">94.1%</td><td class="r">11,378</td><td class="r">139 W</td><td class="r">69%</td></tr>
+        <tr><td>2,048</td><td class="r">2.810 s</td><td class="r">2.663</td><td class="r">0.151</td><td class="r">94.8%</td><td class="r">17,492</td><td class="r">161 W</td><td class="r">70%</td></tr>
+        <tr class="hi"><td>4,096</td><td class="r">3.990 s</td><td class="r">3.754</td><td class="r">0.234</td><td class="r">94.1%</td><td class="r">24,638</td><td class="r">182 W</td><td class="r">60%</td></tr>
+        <tr class="bad"><td>8,192</td><td class="r">68.35 s</td><td class="r">67.808</td><td class="r">0.539</td><td class="r">99.2%</td><td class="r">2,876</td><td class="r">—</td><td class="r">17%</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <span class="lbl">Power, not utilization</span>
+    <p style="margin:0">At 4,096 envs the card draws <strong>182 W of a 500 W cap — 36%</strong> — while <code>nvidia-smi</code> reports 60% "utilization." That metric counts the fraction of time at least one kernel is resident, not occupancy or throughput. High utilization at low power is the signature of many small serialized kernels.</p>
+  </div>
+
+  <div class="callout fail">
+    <span class="lbl">8,192 environments fails twice</span>
+    <p>Out of the box, PhysX overflows its GPU broadphase buffer:</p>
+    <pre>PxGpuDynamicsMemoryConfig::foundLostAggregatePairsCapacity
+  needs 172,733,764 — default is 2**25 (33,554,432)
+  "otherwise, the simulation will miss interactions"</pre>
+    <p>The run took 55.2 s per iteration <em>and</em> was silently dropping contacts. Raising the buffer 8× made it <strong>slower — 68.35 s</strong> — because PhysX then actually computes what it had been discarding. Throughput against 4,096 envs collapses from 24,638 to 2,876 env-steps/s: an <strong>8.6× loss for a 2× batch increase</strong>.</p>
+  </div>
+
+  <p class="measure">The cause is the task configuration, not PhysX. <code>STAND_UP_ROUGH_TERRAIN_G1_CFG</code> generates a fixed grid of <strong>72 tiles at 8 × 8 m</strong>, independent of <code>num_envs</code>. More environments pack more robots onto the same tiles:</p>
+
+  <div class="tw">
+    <table>
+      <thead><tr><th>Envs</th><th class="r">Robots per 8 × 8 m tile</th><th class="r">Area per robot</th></tr></thead>
+      <tbody>
+        <tr><td>1,024</td><td class="r">14</td><td class="r">4.5 m²</td></tr>
+        <tr><td>4,096</td><td class="r">57</td><td class="r">1.1 m²</td></tr>
+        <tr class="bad"><td>8,192</td><td class="r">114</td><td class="r">0.56 m²</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="caption">At 8,192 the robots stand shoulder-to-shoulder, so broadphase aggregate pairs grow superlinearly. Scaling past ~4,096 requires growing the terrain grid with the environment count — which no CLI flag does, and which changes the task.</p>
+</section>
+
+<section>
+  <div class="shead"><span class="n">07</span><h2>Against Zealot — with one column unmeasured</h2></div>
+
+  <div class="prov">
+    <div class="measured">
+      <span class="tag m">MEASURED HERE</span>
+      <div class="who">WBC-AGILE</div>
+      <div class="src">Traced on this machine, 4,096 envs, RTX 5090. Every figure above.</div>
+    </div>
+    <div class="claimed">
+      <span class="tag c">AUTHORS' RUN</span>
+      <div class="who">Zealot</div>
+      <div class="src">The authors' own profiling data, from the paper's §2.3 tables. Measured on their machine, not re-run here.</div>
+    </div>
+  </div>
+
+  <p class="measure">Both columns are real measurements. What makes the pairing <strong>uncontrolled</strong> is that they were taken on different machines: Zealot's environment count is left as a placeholder in the draft, its GPU is unstated, and its solver budget is not matched to AGILE's. So the <em>shape</em> of each iteration compares — where time goes as a proportion, which survives differences in batch size and hardware — while absolute milliseconds do not.</p>
+
+  <h3 style="margin-top:26px">Iteration composition</h3>
+  <div class="dual">
+    <div class="drow head"><span>Share of iteration</span><span>Zealot · authors' run</span><span>AGILE · this machine</span></div>
+    <div class="drow"><span class="dname">Rollout</span>
+      <span class="dcell"><span class="dbar"><span class="dfill z" style="width:78.3%"></span></span><span class="dnum">78.3%</span></span>
+      <span class="dcell"><span class="dbar"><span class="dfill a" style="width:94.0%"></span></span><span class="dnum">94.0%</span></span></div>
+    <div class="drow"><span class="dname">PPO update</span>
+      <span class="dcell"><span class="dbar"><span class="dfill z" style="width:19.7%"></span></span><span class="dnum">19.7%</span></span>
+      <span class="dcell"><span class="dbar"><span class="dfill a" style="width:6.0%"></span></span><span class="dnum">6.0%</span></span></div>
+    <div class="drow"><span class="dname">GPU busy</span>
+      <span class="dcell"><span class="dbar"><span class="dfill z" style="width:74.7%"></span></span><span class="dnum">74.7%</span></span>
+      <span class="dcell"><span class="dbar"><span class="dfill a" style="width:50.3%"></span></span><span class="dnum">50.3%</span></span></div>
+    <div class="drow"><span class="dname">GPU idle</span>
+      <span class="dcell"><span class="dbar"><span class="dfill z" style="width:25.3%"></span></span><span class="dnum">25.3%</span></span>
+      <span class="dcell"><span class="dbar"><span class="dfill a" style="width:49.7%"></span></span><span class="dnum">49.7%</span></span></div>
+  </div>
+
+  <h3 style="margin-top:26px">What the GPU is actually running</h3>
+  <div class="dual">
+    <div class="drow head"><span>Share of kernel time</span><span>Zealot · authors' run</span><span>AGILE · this machine</span></div>
+    <div class="drow"><span class="dname">Physics</span>
+      <span class="dcell"><span class="dbar"><span class="dfill z" style="width:79.6%"></span></span><span class="dnum">79.6%</span></span>
+      <span class="dcell"><span class="dbar"><span class="dfill a" style="width:85.5%"></span></span><span class="dnum">85.5%</span></span></div>
+    <div class="drow"><span class="dname">Neural net</span>
+      <span class="dcell"><span class="dbar"><span class="dfill z" style="width:20.2%"></span></span><span class="dnum">20.2%</span></span>
+      <span class="dcell"><span class="dbar"><span class="dfill a" style="width:4.9%"></span></span><span class="dnum">4.9%</span></span></div>
+    <div class="drow"><span class="dname">Task layer</span>
+      <span class="dcell"><span class="dbar"><span class="dfill z" style="width:0.2%"></span></span><span class="dnum">0.2%</span></span>
+      <span class="dcell"><span class="dbar"><span class="dfill a" style="width:6.1%"></span></span><span class="dnum">6.1%</span></span></div>
+  </div>
+  <p class="caption">AGILE's remaining 3.5% is unclassified kernels (mostly PhysX) and Warp raycasts. Bars are percentages, drawn to a shared 0–100% scale.</p>
+
+  <div class="callout" style="margin-top:24px">
+    <span class="lbl">Read it this way</span>
+    <p>The claim these numbers support is not "faster." It is that the two stacks <strong>fail differently</strong>. AGILE leaves the GPU idle half the time and spends 6.1% of its kernel time on a task layer that issues half its launches. Zealot's draft reports a denser GPU and a task layer of 0.2%.</p>
+    <p style="margin-bottom:0">The comparison becomes controlled only when both columns are taken on one machine at one environment count with a stated solver budget. Both are real today; they are just not yet the same experiment.</p>
+  </div>
+
+  <div class="callout">
+    <span class="lbl">Two places a reader will stumble</span>
+    <p><strong>The rollout family total does not follow from the phase table.</strong> The draft's families read "rollout 850, update 190, reset + GAE 20" = 1,060, against 966 ms reported as accounted. Summing the phase table's own rollout rows (646 + 41 + 38 + 14 + 12 + 5) gives <strong>756</strong>, and 756 + 190 + 20 = 966 exactly. Either 850 is a typo for 756, or the families are <em>wall spans</em> that include idle the phase rows don't attribute — in which case rollout's span exceeds the sum of its parts by 94 ms and the two tables are measuring different things. Both are defensible; the paper needs to say which, because 1,060 ms of non-overlapping work cannot fit a 1,000 ms iteration.</p>
+    <p style="margin-bottom:0"><strong>"82% GPU" and "75% GPU busy" are not a contradiction</strong>, though they read as one. 796 ms is wall time spent in GPU-side <em>phases</em>; 747.25 ms is actual kernel execution. The 48.75 ms difference is GPU idle inside those phases — they are 93.9% dense. Both statements are true of different quantities; naming which is which in the caption removes the apparent conflict.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="n">08</span><h2>What this measurement cannot say</h2></div>
+  <ul class="measure">
+    <li><strong>No CPU sampling.</strong> The container reports <code>perf_event_paranoid=4</code> with <code>perf_event_open</code> unavailable, so nsys CPU sampling, context-switch tracing and <code>--gpu-metrics</code> are all unavailable. CUPTI tracing is unaffected. Host-side attribution therefore stops at the CUDA API — there are no CPU stacks behind it.</li>
+    <li><strong>Power is polled, not traced.</strong> Sampled from <code>nvidia-smi</code> at 50–100 ms, not from GPU hardware counters.</li>
+    <li><strong>No NVTX ranges.</strong> AGILE ships none, so phase boundaries were recovered from kernel composition and cross-checked against rsl_rl's timers rather than read from markers.</li>
+    <li><strong>Profiling overhead ≈7%.</strong> Iteration 4.28 s traced against 3.99 s untraced; the ratios above are unaffected, the absolute times are inflated.</li>
+    <li><strong>One GPU, one task, one seed.</strong> A 500 W RTX 5090 — figures quoted against a 600 W part are not comparable.</li>
+    <li><strong>DOF caveat.</strong> Every G1 task simulates the full 29-DOF articulation; the "12 DOF" variants differ only in action-space width. A 12-vs-29 comparison measures policy width, not simulation cost.</li>
+    <li><strong>The Zealot column was measured elsewhere.</strong> It is the authors' own profiling data, transcribed from the draft — real, but taken on a different machine at an unstated environment count, so it is not controlled against the AGILE column.</li>
+    <li><strong>Solver budgets are not matched.</strong> AGILE runs PhysX <span class="mono">TGS</span> with 8 position and 4 velocity iterations per substep, 4 substeps per control step — 32 position and 16 velocity iterations per control step. TGS re-linearizes contacts each position iteration, so its iteration count is not interchangeable with a Gauss-Seidel count. Matching solvers on iteration <em>count</em> compares unlike units; match on an outcome — penetration depth, constraint residual, or task-level tracking error at equal wall-time — and report the counts as configuration.</li>
+  </ul>
+</section>
+
+<footer>
+  <p style="margin:0">Trace: <code>nsys profile --trace=cuda,osrt,nvtx --sample=none --cpuctxsw=none</code> · 45 s window after 115 s warm-up · 103 MB report, 120 MB SQLite export. Throughput from rsl_rl's own timers, median of iterations 5–29. WBC-AGILE at Apache-2.0.</p>
+</footer>
+</div>

@@ -1,0 +1,13 @@
+=== [06:31:05] physx  HeightTracking-G1-v0  num_envs=1024  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_physx_HeightTracking-G1-v0_n1024.log
+=== [06:32:37] newton  HeightTracking-G1-v0  num_envs=1024  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton_HeightTracking-G1-v0_n1024.log
+=== [06:33:08] physx  HeightTracking-G1-v0  num_envs=2048  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_physx_HeightTracking-G1-v0_n2048.log
+=== [06:35:29] newton  HeightTracking-G1-v0  num_envs=2048  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton_HeightTracking-G1-v0_n2048.log
+=== [06:36:19] physx  HeightTracking-G1-v0  num_envs=4096  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_physx_HeightTracking-G1-v0_n4096.log
+=== [06:39:42] newton  HeightTracking-G1-v0  num_envs=4096  iters=30 ===
+    exit=0  -> /workspace/bench/results_newton/train_newton_HeightTracking-G1-v0_n4096.log
+=== compare done 06:40:28 ===
