@@ -17,10 +17,11 @@ TASK = "HeightTracking-G1-v0"; G1 = "/workspace/unitree_mujoco/unitree_robots/g1
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 2048
 STEPS = int(sys.argv[2]) if len(sys.argv) > 2 else 40
 REDUCE = bool(int(sys.argv[3])) if len(sys.argv) > 3 else True
+SOLVER_IT = int(sys.argv[4]) if len(sys.argv) > 4 else 4
 
 cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point")
 cfg.scene.num_envs = N; cfg.seed = 42
-nexusify(cfg, G1, contact_reduction=REDUCE)
+nexusify(cfg, G1, contact_reduction=REDUCE, solver_iterations=SOLVER_IT)
 env = gym.make(TASK, cfg=cfg).unwrapped
 scene = env.scene
 robot = scene.articulations["robot"]
@@ -53,7 +54,7 @@ print(f"{'section':<12} {'total_s':>9} {'ms/ctrl-step':>13} {'share':>7}")
 for k, v in sorted(acc.items(), key=lambda kv: -kv[1]):
     print(f"{k:<12} {v:9.3f} {v/STEPS*1e3:13.2f} {v/total*100:6.1f}%")
 print(f"{'TOTAL':<12} {total:9.3f} {total/STEPS*1e3:13.2f} {100.0:6.1f}%")
-print(f"env-steps/s: {N*STEPS/total:.0f} | contact_reduction={REDUCE}")
+print(f"env-steps/s: {N*STEPS/total:.0f} | contact_reduction={REDUCE} | solver_iterations={SOLVER_IT}")
 # how far the feet sit below the terrain surface they stand on
 feet_ids = robot.find_bodies(".*ankle_roll_link")[0]
 p_w = robot.data.body_link_pos_w.torch[:, feet_ids]

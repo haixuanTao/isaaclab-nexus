@@ -553,3 +553,32 @@ nothing from the critical path. The other CUDA-specific optimization *is* alread
 paying the indirect-dispatch stream drain.
 
 Capture failure is non-fatal in the backend (warn, drop back to the encoded path).
+
+## The real regression: `solver_iterations` is a SUBSTEP count
+`NexusCfg.solver_iterations` was left at the engine's default of 4. It is not a PGS
+iteration count: `GpuMultibodySet::set_visible_dt` divides `dt` by it and runs that many
+full integrate + dynamics passes per step. So the G1 was being integrated at **800 Hz**
+while Isaac Lab and PhysX were asked for 200 Hz — 4x the dynamics work, for an integration
+rate nobody requested. The nsys call counts said so plainly: 4 `gpu_mb_gravity_and_lu` and
+8 `gpu_mb_solve_constraints` per `gpu_narrow_phase_pfm_pfm`.
+
+Plain step loop, 4096 envs, 30 control steps:
+
+| substeps | physics ms/ctrl step | total ms | env-steps/s | foot-terrain gap p05/p50/p95 |
+|---:|---:|---:|---:|---|
+| 4 | 454.0 | 537.0 | 7,628 | 0.013 / 0.032 / 1.143 |
+| 2 | 260.1 | 341.8 | 11,984 | 0.016 / 0.033 / 1.142 |
+| **1** | **166.0** | **249.5** | **16,415** | 0.019 / 0.031 / 1.142 |
+
+2.15x, with the robots resting on the terrain exactly as before. In the full training loop
+(`train_nexus.py 4096 10`): **15.48 -> 11.32 s/iteration, 6,350 -> 8,684 env-steps/s**, and
+the reward curve is unchanged (-46/-100/-154/-212/-265/-315 vs -46/-102/-157/-216/-269/-322),
+i.e. this removes work, not fidelity. 1 is also the value at which the engine's contact
+sensor reports 1.019x body weight without the backend's per-iteration rescaling.
+`NexusCfg.solver_iterations` now defaults to 1.
+
+Note what the two numbers above imply: at 1 substep the plain loop runs at 16,415 env-steps/s
+but training only reaches 8,684, so **more than half of the training step is no longer
+physics**. That is the next thing to profile (actuator model, resets, managers under real
+actions — the step-breakdown above was measured with zero actions and is no longer
+representative).
