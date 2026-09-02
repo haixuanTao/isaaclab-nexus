@@ -807,3 +807,21 @@ written at 17:34 — the exact minute the Nexus run's iteration 73 slowed — an
 ~18:16, four minutes before the v2 Nexus run began, which is why v2 was "slow from iteration 1".
 Neither the buffer ratchet nor the allocator was involved; the earlier "+4 GB" was that process.
 Every throughput number in this document was measured with the GPU otherwise idle.
+
+## Long run, iteration 3000 (shared GPU, 4.70 s/iter): the policy is learning to get up
+Per-term episode rewards from the training log — the height terms tripled and the tilt /
+illegal-contact penalties vanished, i.e. the base is rising and staying upright:
+
+| term | it 100 | it 1500 | it 3030 |
+|---|---:|---:|---:|
+| base_height_fine | 0.43 | 2.49 | **3.43** |
+| base_height_medium | 0.60 | 1.66 | 2.21 |
+| severely_tilted | −0.22 | −0.005 | −0.001 |
+| forward_pitch | −1.60 | −0.04 | −0.14 |
+| illegal_contacts | −1.49 | −1.52 | −0.26 |
+| flat_feet | −3.68 | −0.80 | −0.93 |
+| joint_tracking_error | −0.93 | −0.33 | −0.27 |
+
+Mean reward −511 (it 100) → −139 (it 2000) → −135 (it 3000); `terrain_levels` stays 0 on this
+backend (curriculum is static, stated limitation). Allocator and engine stats are flat every
+250 iterations: `torch reserved 2.81 GiB, retries 0 | engine cap/batch 256, max_colors 8`.

@@ -29,10 +29,10 @@ for t in range(T):
         d.qpos[jidx] = jp[t, k]; mujoco.mj_forward(m, d)
         cam.lookat[:] = rp[t, k] + np.array([0, 0, 0.2]); r.update_scene(d, cam, opt)
         img = r.render()[:, :, ::-1].copy()
-        cv2.putText(img, f"Nexus | env {k} | t={t/fps:4.1f}s", (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
+        cv2.putText(img, f"Nexus {os.environ.get('NEXUS_VIDEO_TAG', '')} | env {k} | t={t/fps:4.1f}s", (10, 24), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
         tiles.append(img)
     vw.write(np.vstack([np.hstack(tiles[:2]), np.hstack(tiles[2:4])]))
 vw.release()
-out = f"{D}/nexus_g1_standup_model99.mp4"
+out = f"{D}/nexus_g1_standup_{os.environ.get('NEXUS_VIDEO_TAG', 'model99')}.mp4"
 subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", raw, "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "20", out], check=True); os.remove(raw)
 print(f"wrote {out}: {T} frames @ {fps} fps, {K} envs, {os.path.getsize(out)/1e6:.1f} MB | GL={os.environ.get('MUJOCO_GL')}")
