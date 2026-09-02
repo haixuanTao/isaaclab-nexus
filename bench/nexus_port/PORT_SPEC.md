@@ -798,3 +798,12 @@ expandable_segments:True`, no concurrent jobs, `NEXUS_STATS_EVERY=250` logging t
 stats (`num_alloc_retries`, reserved) and engine resize stats every 250 iterations, and a watch
 that flags any iteration over 3.5 s. Started 2026-09-02 18:20 UTC as
 `train_nexus_10k_v2_HeightTracking-G1-v0_n4096.log`; the first run's `model_250.pt` is kept.
+
+**Resolved (18:25 UTC): the 1.9x was GPU sharing.** `nvidia-smi --query-compute-apps` shows a
+second 4096-env training of the same task on this GPU — `scripts/train.py --task
+HeightTracking-G1-v0 --num_envs 4096 --headless --max_iterations 10000`, launched from
+`/workspace/WBC-AGILE-NEWTON` (a parallel session), 6 GB. Its fallen-state dataset cache was
+written at 17:34 — the exact minute the Nexus run's iteration 73 slowed — and it was restarted at
+~18:16, four minutes before the v2 Nexus run began, which is why v2 was "slow from iteration 1".
+Neither the buffer ratchet nor the allocator was involved; the earlier "+4 GB" was that process.
+Every throughput number in this document was measured with the GPU otherwise idle.
