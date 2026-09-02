@@ -87,7 +87,7 @@ visual STLs (mean hull 1,087 vertices, pelvis 5,583); `bench/nexus_port/make_con
 writes a copy with support-mapped hulls. 1.32x.
 
 Net effect on AGILE's `HeightTracking-G1-v0` on an RTX 5090, PPO iteration time vs PhysX on the
-same task: 1024 envs 1.52 vs 2.16 s, 2048 envs 1.89 vs 2.81 s, 4096 envs **2.45 vs 3.99 s**
+same task: 1024 envs 1.36 vs 2.16 s, 2048 envs 1.75 vs 2.81 s, 4096 envs **2.45 vs 3.99 s** (medians of steady iterations)
 (40,124 vs 24,638 env-steps/s), with an identical reward curve at every step. Numbers and method in `bench/nexus_port/PORT_SPEC.md`.
 
 ## Known limitations
