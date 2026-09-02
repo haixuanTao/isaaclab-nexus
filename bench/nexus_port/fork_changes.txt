@@ -1,0 +1,4 @@
+ crates/examples3d/bench_batch_sweep3.rs |   6 ++
+ crates/nexus_python3d/src/lib.rs        |   1 +
+ crates/nexus_python3d/src/nexus.rs      | 181 ++++++++++++++++++++++++++++++++
+ 3 files changed, 188 insertions(+)

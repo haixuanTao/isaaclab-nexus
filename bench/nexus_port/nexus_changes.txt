@@ -1,0 +1,3 @@
+ crates/nexus_python3d/src/nexus.rs                 | 105 +++++++++++++++++++++
+ .../dynamics/multibody/multibody_from_rapier.rs    |   5 +-
+ 2 files changed, 109 insertions(+), 1 deletion(-)

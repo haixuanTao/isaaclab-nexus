@@ -1,0 +1,76 @@
+is_primed	
+default_root_pose	num_instances
+default_root_vel	num_instances
+default_joint_pos	num_instances, num_joints
+default_joint_vel	num_instances, num_joints
+joint_pos_target	num_instances, num_joints
+joint_vel_target	num_instances, num_joints
+joint_effort_target	num_instances, num_joints
+computed_torque	num_instances, num_joints
+applied_torque	num_instances, num_joints
+joint_stiffness	num_instances, num_joints
+joint_damping	num_instances, num_joints
+joint_armature	num_instances, num_joints
+joint_friction_coeff	num_instances, num_joints
+joint_pos_limits_lower	num_instances, num_joints
+joint_pos_limits_upper	num_instances, num_joints
+joint_pos_limits	num_instances, num_joints, 2
+joint_vel_limits	num_instances, num_joints
+joint_effort_limits	num_instances, num_joints
+soft_joint_vel_limits	num_instances, num_joints
+gear_ratio	num_instances, num_joints
+fixed_tendon_stiffness	num_instances, num_fixed_tendons
+fixed_tendon_damping	num_instances, num_fixed_tendons
+fixed_tendon_limit_stiffness	num_instances, num_fixed_tendons
+fixed_tendon_rest_length	num_instances, num_fixed_tendons
+fixed_tendon_offset	num_instances, num_fixed_tendons
+fixed_tendon_pos_limits	num_instances, num_fixed_tendons, 2
+spatial_tendon_stiffness	num_instances, num_spatial_tendons
+spatial_tendon_damping	num_instances, num_spatial_tendons
+spatial_tendon_limit_stiffness	num_instances, num_spatial_tendons
+spatial_tendon_offset	num_instances, num_spatial_tendons
+root_link_pose_w	num_instances,
+root_com_vel_w	num_instances,
+body_mass	num_instances, num_bodies
+body_inertia	num_instances, num_bodies, 9
+body_link_pose_w	num_instances, num_bodies
+body_com_vel_w	num_instances, num_bodies
+body_com_acc_w	num_instances, num_bodies
+body_com_pos_b	num_instances, num_bodies
+body_com_pose_b	num_instances, num_bodies
+body_com_jacobian_w	
+body_link_jacobian_w	
+mass_matrix	
+gravity_compensation_forces	
+joint_pos	num_instances, num_joints
+joint_vel	num_instances, num_joints
+joint_acc	num_instances, num_joints
+root_link_ang_vel_b	num_instances
+root_com_lin_vel_b	num_instances
+root_com_ang_vel_b	num_instances
+root_link_pos_w	num_instances
+root_link_quat_w	num_instances
+root_link_lin_vel_w	num_instances
+root_link_ang_vel_w	num_instances
+root_com_pos_w	num_instances
+root_com_quat_w	num_instances
+root_com_lin_vel_w	num_instances
+root_com_ang_vel_w	num_instances
+body_link_pos_w	num_instances, num_bodies
+body_link_quat_w	num_instances, num_bodies
+body_link_lin_vel_w	num_instances, num_bodies
+body_link_ang_vel_w	num_instances, num_bodies
+body_com_pos_w	num_instances, num_bodies
+body_com_quat_w	num_instances, num_bodies
+body_com_lin_vel_w	num_instances, num_bodies
+body_com_ang_vel_w	num_instances, num_bodies
+body_com_lin_acc_w	num_instances, num_bodies
+body_com_ang_acc_w	num_instances, num_bodies
+body_com_quat_b	num_instances, num_bodies
+root_state_w	
+root_link_state_w	
+root_com_state_w	
+default_root_state	num_instances, 13
+body_state_w	num_instances, num_bodies, 13
+body_link_state_w	num_instances, num_bodies, 13
+body_com_state_w	num_instances, num_bodies, 13
