@@ -1,28 +1,26 @@
 The '--headless' CLI argument is deprecated. Omit '--viz' for default headless. If config visualizers are enabled and you want to force headless, use '--viz none'.
 Loading user config located at: '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
-2026-09-02T16:45:47Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
+2026-09-02T16:47:31Z [0ms] [Warning] [omni.ext.plugin] [ext: isaaclab_visualizers] Extensions config 'extension.toml' doesn't exist '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers' or '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab_visualizers/config'
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1788367547.969014   62754 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
-W0000 00:00:1788367547.969046   62754 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
-2026-09-02T16:45:48Z [409ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
-2026-09-02T16:45:48Z [431ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
-2026-09-02T16:45:48Z [459ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
-2026-09-02T16:45:48Z [459ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
-2026-09-02T16:45:48Z [460ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
-2026-09-02T16:45:49Z [1,140ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
-2026-09-02T16:45:49Z [1,140ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+E0000 00:00:1788367651.435706   63240 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788367651.435734   63240 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-02T16:47:31Z [407ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-02T16:47:31Z [410ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-02T16:47:31Z [457ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T16:47:31Z [457ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T16:47:31Z [458ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-02T16:47:32Z [1,390ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
+2026-09-02T16:47:32Z [1,390ms] [Warning] [isaacsim.core.simulation_manager.plugin] USD stage is not available; stage-opened subscription is deferred
 [ISAACLAB] AppLauncher initialization complete
 [INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
-[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.agents.rsl_rl_ppo_cfg:G1HeightTrackingPpoRunnerCfg
-[INFO] Logging experiment in directory: /workspace/WBC-AGILE-NEWTON/logs/rsl_rl/height_tracking_g1
-Exact experiment name requested from command line: 2026-09-02_16-46-01
+2026-09-02T16:47:38Z [7,091ms] [Warning] [isaaclab.envs.manager_based_env] Seed not set for the environment. The environment creation may not be deterministic.
 [INFO]: Base environment:
 	Environment device    : cuda:0
-	Environment seed      : 42
+	Environment seed      : None
 	Physics step-size     : 0.005
 	Rendering step-size   : 0.02
 	Environment step-size : 0.02
-2026-09-02T16:46:01Z [13,805ms] [Warning] [isaaclab.terrains.terrain_importer] Visual material specified for ground plane but no diffuse color found. Using default color: (0.0, 0.0, 0.0)
+2026-09-02T16:47:38Z [7,198ms] [Warning] [isaaclab.terrains.terrain_importer] Visual material specified for ground plane but no diffuse color found. Using default color: (0.0, 0.0, 0.0)
 [INFO]: Registered backend 'newton' for factory Articulation.
 [INFO]: Setting variant selection 'PhysX' for variant set 'Physics' on prim '/World/envs/env_0/Robot'.
 [INFO]: Setting variant selection 'None' for variant set 'left_hand' on prim '/World/envs/env_0/Robot'.
@@ -30,9 +28,9 @@ Exact experiment name requested from command line: 2026-09-02_16-46-01
 [INFO]: Registered backend 'newton' for factory FrameView.
 [INFO]: Registered backend 'newton' for factory ContactSensor.
 [INFO]: Registered backend 'newton' for factory RayCaster.
-[INFO]: Time taken for scene creation Last: 11.702269 s, Mean: 11.702269 s, Std: 0.000000 s, N: 1
+[INFO]: Time taken for scene creation Last: 2.621489 s, Mean: 2.621489 s, Std: 0.000000 s, N: 1
 [INFO]: Scene manager:  <class InteractiveScene>
-	Number of environments: 4096
+	Number of environments: 4
 	Environment spacing   : 2.5
 	Source prim name      : /World/envs/env_0
 	Global prim paths     : ['/World/ground']
@@ -41,7 +39,7 @@ Exact experiment name requested from command line: 2026-09-02_16-46-01
 [INFO]: Finalizing model on device: cuda:0
 /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_newton/physics/newton_manager.py:989: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
   replace_newton_shape_colors(cls._model)
-Finalize builder took: Last: 8.780204 s, Mean: 8.780204 s, Std: 0.000000 s, N: 1
+Finalize builder took: Last: 0.223198 s, Mean: 0.223198 s, Std: 0.000000 s, N: 1
 [INFO]: Dispatching PHYSICS_READY callbacks
 [INFO]: Simulation parameters for joints in /World/envs/env_.*/Robot:
 +-------------------------------------------------------------------------------------------------------------------------------------------+
@@ -80,16 +78,15 @@ Finalize builder took: Last: 8.780204 s, Mean: 8.780204 s, Std: 0.000000 s, N: 1
 |   28  | right_wrist_yaw_joint      |   20.000  |  0.200  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
 +-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
 [INFO]: Adding contact sensor for /World/envs/env_.*/Robot/.* with filter all bodies/shapes
-Contact sensor construction took: Last: 0.126478 s, Mean: 0.126478 s, Std: 0.000000 s, N: 1
+Contact sensor construction took: Last: 0.002787 s, Mean: 0.002787 s, Std: 0.000000 s, N: 1
 [INFO]: Contact sensor initialized with 30 sensors.
-[INFO]: Creating buffers for contact sensor data with num_envs: 4096, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
-[INFO]: Creating buffers for contact sensor data with num_envs: 4096, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Creating buffers for contact sensor data with num_envs: 4, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Creating buffers for contact sensor data with num_envs: 4, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_air_time: True, track_pose: False, device: cuda:0
 [INFO]: Created infinite plane mesh prim: /World/ground/terrain/GroundPlane/CollisionPlane.
-Initialize solver took: Last: 1.948063 s, Mean: 1.948063 s, Std: 0.000000 s, N: 1
+Initialize solver took: Last: 1.284162 s, Mean: 1.284162 s, Std: 0.000000 s, N: 1
 [INFO]: Newton CUDA graph captured (standard Warp mode)
-CUDA graph took: Last: 1.026868 s, Mean: 1.026868 s, Std: 0.000000 s, N: 1
-[newton] DC-motor torque-speed envelope active on 118784/143360 DOFs (4096 worlds x 30 joints) via jnt_actfrcrange
-[INFO]: Time taken for simulation start Last: 12.686798 s, Mean: 12.686798 s, Std: 0.000000 s, N: 1
+CUDA graph took: Last: 1.025836 s, Mean: 1.025836 s, Std: 0.000000 s, N: 1
+[INFO]: Time taken for simulation start Last: 2.688882 s, Mean: 2.688882 s, Std: 0.000000 s, N: 1
 [INFO] Command Manager:  <CommandManager> contains 1 active terms.
 +--------------------------------------+
 |         Active Command Terms         |
@@ -245,125 +242,12 @@ CUDA graph took: Last: 1.026868 s, Mean: 1.026868 s, Std: 0.000000 s, N: 1
 /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab/source/isaaclab/isaaclab/envs/mdp/events.py:742: UserWarning: In Newton, body com pose always has unit quaternion. Consider using body_com_pos_b instead.Querying this property requires appending a unit quaternion to the position which is expensive.
   self.default_com = self.asset.data.body_com_pose_b.torch.clone()
 [INFO]: Completed setting up the environment...
-/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:220: UserWarning: The observation configuration dictionary 'obs_groups' is empty and thus likely not configured. Consider configuring the 'obs_groups' dictionary explicitly
-  warnings.warn(
-/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:251: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'actor' key. As an observation group with the name 'policy' was found, this is assumed to be the appropriate observation. Consider adding the 'actor' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
-  warnings.warn(
-/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py:243: UserWarning: The observation configuration dictionary 'obs_groups' does not contain the 'critic' key. As an observation group with the name 'critic' was found, this is assumed to be the appropriate observation. Consider adding the 'critic' key to the 'obs_groups' dictionary for clarity. This behavior will be removed in a future version.
-  warnings.warn(
---------------------------------------------------------------------------------
-Resolved observation sets: 
-	 actor :  ['policy']
-	 critic :  ['critic']
---------------------------------------------------------------------------------
-Actor Model: MLPModel(
-  (obs_normalizer): Identity()
-  (distribution): GaussianDistribution()
-  (mlp): MLP(
-    (0): Linear(in_features=470, out_features=256, bias=True)
-    (1): ELU(alpha=1.0)
-    (2): Linear(in_features=256, out_features=256, bias=True)
-    (3): ELU(alpha=1.0)
-    (4): Linear(in_features=256, out_features=128, bias=True)
-    (5): ELU(alpha=1.0)
-    (6): Linear(in_features=128, out_features=29, bias=True)
-  )
-)
-Critic Model: MLPModel(
-  (obs_normalizer): Identity()
-  (mlp): MLP(
-    (0): Linear(in_features=640, out_features=512, bias=True)
-    (1): ELU(alpha=1.0)
-    (2): Linear(in_features=512, out_features=256, bias=True)
-    (3): ELU(alpha=1.0)
-    (4): Linear(in_features=256, out_features=128, bias=True)
-    (5): ELU(alpha=1.0)
-    (6): Linear(in_features=128, out_features=1, bias=True)
-  )
-)
-Storing git diff for 'WBC-AGILE-NEWTON' in: /workspace/WBC-AGILE-NEWTON/logs/rsl_rl/height_tracking_g1/2026-09-02_16-46-01_height_tracking_g1/git/WBC-AGILE-NEWTON.diff
-################################################################################
-[1m                            Learning iteration 0/60                             [0m 
 
-                               Run name: height_tracking_g1
-                            Total steps: 98304 
-                       Steps per second: 37180 
-                        Collection time: 2.297s 
-                          Learning time: 0.347s 
-                        Mean value loss: 8.2739
-                    Mean surrogate loss: 0.0340
-                      Mean entropy loss: 41.1002
-                     Mean symmetry loss: 0.0029
-                   Mean l2c2_actor loss: 0.0012
-                  Mean l2c2_critic loss: 0.0085
-                            Mean reward: -55.70
-                    Mean episode length: 17.60
-                        Mean action std: 1.00
-                    Entropy coefficient: 0.002500
-           Episode_Reward/body_velocity: -0.2742
- Episode_Reward/joint_deviation_l1_arms: -0.0127
-           Episode_Reward/torso_upright: 0.0000
-        Episode_Reward/joint_vel_limits: -0.0001
-             Episode_Reward/action_rate: -0.9137
-     Episode_Reward/completely_airborne: -0.3384
-           Episode_Reward/ankle_torques: -0.0051
-        Episode_Reward/illegal_contacts: -0.0021
-    Episode_Reward/joint_tracking_error: -0.0681
-               Curriculum/adaptive_lift: 1.0000
-           Curriculum/polish_not_moving: -1.0000
-  Episode_Reward/feet_distance_standing: -0.0056
-         Episode_Reward/severely_tilted: -0.0012
-      Episode_Reward/joint_deviation_l1: -0.0286
-        Curriculum/random_fallen_states: 0.0000
-              Episode_Reward/not_moving: -0.0500
-        Episode_Reward/action_rate_rate: -0.3944
-        Episode_Reward/joint_pos_limits: -0.0002
-         Episode_Reward/ground_unloaded: -0.0142
-              Curriculum/terrain_levels: 0.0000
-           Episode_Reward/forward_pitch: -0.0114
-             Episode_Reward/ground_slam: -0.0783
-           Episode_Termination/time_out: 0.0164
-           Episode_Reward/feet_yaw_mean: -0.0122
-              Episode_Reward/torso_slam: -0.1299
-        Episode_Reward/joint_torques_l2: -0.0200
-       Episode_Reward/base_height_rough: 0.0341
-            Metrics/height/height_error: 0.0000
-              Episode_Reward/relaxation: -0.1325
-          Curriculum/polish_ground_slam: -1.0000
-              Episode_Reward/feet_slide: -0.0148
-      Episode_Termination/invalid_state: 0.0006
-            Episode_Reward/joint_acc_l2: -0.0032
-         Curriculum/polish_joint_vel_l2: -0.0010
-           Episode_Reward/torque_limits: -0.0245
-            Episode_Reward/joint_vel_l2: -0.0324
-           Curriculum/polish_torso_slam: -5.0000
-               Episode_Reward/flat_feet: -0.0297
-              Episode_Reward/torso_roll: -0.0299
-      Episode_Reward/base_height_medium: 0.0502
-     Curriculum/polish_action_rate_rate: -0.1500
-           Episode_Reward/feet_distance: -0.0038
-        Episode_Reward/base_height_fine: 0.0769
---------------------------------------------------------------------------------
-                         Iteration time: 2.64s
-                           Time elapsed: 0:00:02
-                                    ETA: 0:02:35
-
-nefc overflow - please increase njmax to 422
-Traceback (most recent call last):
-  File "/workspace/WBC-AGILE-NEWTON/scripts/train.py", line 221, in <module>
-    main()
-  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_tasks/utils/hydra.py", line 485, in wrapper
-    _run_hydra(task, env_cfg, agent_cfg, hydra_args, lambda e, a: func(e, a, *args, **kwargs))
-  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_tasks/utils/hydra.py", line 426, in _run_hydra
-    callback(env_cfg, agent_cfg)
-  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaaclab_tasks/utils/hydra.py", line 485, in <lambda>
-    _run_hydra(task, env_cfg, agent_cfg, hydra_args, lambda e, a: func(e, a, *args, **kwargs))
-                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/workspace/WBC-AGILE-NEWTON/scripts/train.py", line 213, in main
-    runner.learn(num_learning_iterations=agent_cfg.max_iterations, init_at_random_ep_len=True)
-  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/runners/on_policy_runner.py", line 100, in learn
-    check_nan(obs, rewards, dones)
-  File "/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/rsl_rl/utils/utils.py", line 279, in check_nan
-    raise ValueError(
-ValueError: The observation group 'policy' returned by the environment contains NaN values. This usually indicates a bug in the environment's step() or reset() function.
+[bu:E_noenv_noclamp] env={'AGILE_NEWTON_VEL_CLAMP': '0', 'AGILE_NEWTON_DC_ENVELOPE': '0', 'AGILE_NEWTON_SUBSTEPS': None, 'AGILE_NEWTON_LIMIT_KD': None, 'AGILE_NEWTON_INTEGRATOR': 'implicitfast'}
+[bu:E_noenv_noclamp] step 0: max|qd|=36.5 max|qfrc_act|=139.0 max|qfrc_con|=38.1 min_dist=+0.0000 ncon=0
+nefc overflow - please increase njmax to 372
+nefc overflow - please increase njmax to 390
+[bu:E_noenv_noclamp] NON-FINITE at step 18  first bad newton dof=76 (joint_label=left_hip_pitch_joint)
+[bu:E_noenv_noclamp] step before: {'step': 17, 'max_qd': 594123.5, 'max_qfa': 139.0, 'max_qfc': 1598556032.0, 'min_dist': -12.405744552612305, 'ncon': 106, 'finite': True}
+[INFO]: SimulationContext cleared
 EXIT=0
