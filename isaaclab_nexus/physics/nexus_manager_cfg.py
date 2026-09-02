@@ -1,0 +1,64 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+from isaaclab.physics import PhysicsCfg
+from isaaclab.utils.configclass import configclass
+
+
+@configclass
+class NexusMjcfCfg:
+    """Spawn description for a Nexus articulation: one MJCF, replicated per env.
+
+    Replaces Isaac Lab's USD ``spawn`` for this backend. Nothing here touches a
+    USD stage; the robot is inserted straight into the Nexus state with
+    ``NexusState.insert_mjcf_headless(path, env)`` once per environment.
+    """
+
+    mjcf_path: str = ""
+    """Path to the MJCF scene."""
+
+    num_envs: int = 1
+    """Number of batched environments (Nexus batches == Isaac Lab envs)."""
+
+    translation: tuple[float, float, float] | None = None
+    """Spawn translation applied to every robot body (e.g. to start above terrain). None = as in the MJCF."""
+
+    auto_floor: bool = True
+    """Let the loader add a flat floor under the robot. Set False when the scene provides terrain."""
+
+
+@configclass
+class NexusCfg(PhysicsCfg):
+    """Physics configuration selecting the Nexus CUDA backend.
+
+    ``SimulationContext`` reads ``class_type`` and calls
+    ``class_type.initialize(self)``; ``__post_init__`` binds it to
+    :class:`NexusManager` so the manager is resolved without string lookup.
+    ``backend_utils._get_backend`` maps the manager name to ``"nexus"`` and
+    the factories then import ``isaaclab_nexus.<subpath>``.
+    """
+
+    backend_kind: str = "cuda"
+    """Nexus backend kind: ``"cuda"`` (zero-copy views) or ``"webgpu"`` (staging copies)."""
+
+    substeps: int = 1
+    """Physics substeps per ``step()``. Isaac Lab's ``decimation`` sits above this."""
+
+    solver_iterations: int = 4
+    """Multibody solver iterations per substep (engine default 4). The engine's contact
+    sensor reports the per-iteration normal impulse; the backend scales it by this value."""
+
+    contact_reduction: bool = True
+    """Merge every collider pair's manifolds into one deepest-``MAX_MANIFOLD_POINTS``
+    manifold before the solvers. Off in the engine by default; needed on terrain, where
+    a foot touches many triangles and each emits its own manifold."""
+
+    collisions_capacity: int = 256
+    """Rigid contact-manifold capacity per env. Nexus's default (4096) costs ~11 MiB/env;
+    a humanoid on terrain uses well under 256, which costs ~0.8 MiB/env."""
+
+    def __post_init__(self):
+        from .nexus_manager import NexusManager
+
+        self.class_type = NexusManager
