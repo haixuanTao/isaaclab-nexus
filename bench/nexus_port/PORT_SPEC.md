@@ -850,3 +850,11 @@ Consequences, stated plainly:
   under the bug and are not meaningful. Restarted as `train_nexus_10k_v3_...log`.
 - The rising `base_height_*` rewards at 3000 iterations were consistent with robots on a flat
   floor; the recorded `model_3000` policy does not stand (0% of envs above 0.5 m at 8 s).
+
+**Cost of the fix, like-for-like (same GPU sharing, same partner process):** buggy v2 ran at
+4.67 s/iter; the corrected v3 runs at **4.91 s/iter** (iters 5-24; collection 4.44 s) — **+5%**.
+Robots now collide with the trimesh instead of the flat backstop, and it barely shows, which is
+consistent with the earlier finding that after the hull/Coriolis fixes the step is dominated by
+state-independent articulated dynamics, not contacts. Extrapolated to an idle GPU that is
+~2.57 s/iter (~38 k env-steps/s) against PhysX's 3.99 s — but that stays an extrapolation until
+measured with the GPU idle.
