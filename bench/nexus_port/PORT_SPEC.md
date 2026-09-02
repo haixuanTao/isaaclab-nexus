@@ -825,3 +825,28 @@ illegal-contact penalties vanished, i.e. the base is rising and staying upright:
 Mean reward −511 (it 100) → −139 (it 2000) → −135 (it 3000); `terrain_levels` stays 0 on this
 backend (curriculum is static, stated limitation). Allocator and engine stats are flat every
 250 iterations: `torch reserved 2.81 GiB, retries 0 | engine cap/batch 256, max_colors 8`.
+
+## BUG (fixed 22:15 UTC): fallen-state resets dropped 78% of robots through the terrain
+Found while checking whether the 3000-iteration policy stands. With training-style resets, the
+recorded base height across 64 envs went 0.48 m at t=0 to **-0.58 m mean from 0.5 s on** (78%
+of envs below zero, resting at -0.80 m on the backstop floor half a metre under the tile).
+Cause: AGILE's `reset_from_fallen_dataset` places the robot at
+`root_pos_rel + terrain.terrain_origins[level, type]` — Isaac's **global** tile origins, tens of
+metres apart — while this backend keeps every env in tile-local coordinates with its collider
+centred at XY = 0. Dataset resets therefore landed outside the 8 x 8 m collider and fell
+through. Fix: `NexusTerrainImporter.terrain_origins` now has XY = 0 and keeps the generator's Z
+(the tile meshes keep world Z), which covers every AGILE reader of it (dataset collection, the
+reset, the out-of-bounds termination all work origin-relative). Verified: 0% below ground at
+t = 0 / 0.5 / 2 / 8 s, min 0.06 m, median 0.17 m.
+
+Consequences, stated plainly:
+- The zero-action benchmarks (`profile_env_step.py`, the substep / hull / Coriolis A/Bs, the
+  contact-sensor and foot-gap checks) never load the dataset and were **not affected**.
+- Every **training-loop** number (the 2.45 s/iter, 40,124 env-steps/s headline, the 1024/2048
+  points, the 100-iteration trend) ran with most robots colliding with a flat cuboid instead of
+  the trimesh. Those must be re-measured with the fix; they are likely worse. Not restated until
+  measured on an idle GPU (currently shared with a second 4096-env run from another session).
+- The 10k checkpoints from `logs/2026-09-02_17-53-58_nexus` (3,250 iterations) were learned
+  under the bug and are not meaningful. Restarted as `train_nexus_10k_v3_...log`.
+- The rising `base_height_*` rewards at 3000 iterations were consistent with robots on a flat
+  floor; the recorded `model_3000` policy does not stand (0% of envs above 0.5 m at 8 s).

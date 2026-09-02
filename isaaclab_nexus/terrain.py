@@ -130,7 +130,12 @@ class NexusTerrainImporter:
         mat = getattr(cfg, "physics_material", None)
         fric = float(getattr(mat, "static_friction", 1.0)) if mat is not None else None
         self.terrain = NexusTerrain(gcfg, self.num_envs, tiles=tiles, device=device, friction=fric)
-        self.terrain_origins = torch.as_tensor(self.terrain.terrain_origins, device=device, dtype=torch.float32)
+        # Isaac's terrain origins are GLOBAL tile positions (metres apart); this backend keeps every env in
+        # tile-local coordinates with its tile collider centred at XY=0. Consumers that place states
+        # relative to a tile origin (AGILE's fallen-state reset: root_pos_rel + terrain_origins[level, type])
+        # must therefore see XY = 0 here, with the generator's Z kept (the tile meshes keep world Z).
+        self.terrain_origins = torch.as_tensor(self.terrain.terrain_origins, device=device, dtype=torch.float32).clone()
+        self.terrain_origins[..., :2] = 0.0
         self.env_origins = torch.zeros(self.num_envs, 3, device=device)        # envs live in local coordinates
         self._flat_patches = {k: torch.as_tensor(v, device=device) for k, v in getattr(self.terrain.gen, "flat_patches", {}).items()}
         self._level_changes = 0

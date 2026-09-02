@@ -17,21 +17,27 @@ env_cfg.scene.num_envs = N; env_cfg.seed = 7
 nexusify(env_cfg, G1)
 env = gym.make(TASK, cfg=env_cfg); base = env.unwrapped
 robot = base.scene.articulations["robot"]; terr = base.scene.terrain.terrain
+pre = gym.spec(TASK).kwargs.get("pre_learn_entry_point")          # fallen-state dataset, as in training
+if pre and os.environ.get("NEXUS_RECORD_PRELEARN", "1") == "1":
+    import importlib; mod, fn = pre.split(":"); getattr(importlib.import_module(mod), fn)(base, TASK, agent_cfg); base.reset()
 wenv = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)
 runner = make_rsl_rl_runner(wenv, agent_cfg, log_dir=None, device=agent_cfg.device)
 runner.load(CKPT); policy = runner.get_inference_policy(device=agent_cfg.device)
 obs = wenv.get_observations()
-K = 4; root_pos, root_quat, jpos = [], [], []
+K = 4; root_pos, root_quat, jpos, zall = [], [], [], []
 with torch.inference_mode():
     for i in range(STEPS):
         act = policy(obs)
         obs, _, _, _ = wenv.step(act)
         d = robot.data
         root_pos.append(d.root_link_pos_w.torch[:K].cpu().numpy()); root_quat.append(d.root_link_quat_w.torch[:K].cpu().numpy())
-        jpos.append(d.joint_pos.torch[:K].cpu().numpy())
+        jpos.append(d.joint_pos.torch[:K].cpu().numpy()); zall.append(d.root_link_pos_w.torch[:, 2].cpu().numpy())
 tiles = [tuple(x) for x in np.asarray([[int(r), int(c)] for r, c in zip(base.scene.terrain.terrain_levels.tolist(), base.scene.terrain.terrain_types.tolist())])]
 V, F = terr.tile_vertices[tiles[0]], terr.tile_faces[tiles[0]]
 np.savez("/workspace/bench/video/nexus_rollout.npz", root_pos=np.stack(root_pos), root_quat=np.stack(root_quat), joint_pos=np.stack(jpos),
-         joint_names=np.array(robot.joint_names), terrain_v=np.asarray(V, np.float32), terrain_f=np.asarray(F, np.int32), dt=float(base.step_dt))
+         joint_names=np.array(robot.joint_names), root_z_all=np.stack(zall), terrain_v=np.asarray(V, np.float32), terrain_f=np.asarray(F, np.int32), dt=float(base.step_dt))
+za = np.stack(zall); t8 = min(int(8 / float(base.step_dt)), len(za) - 1)
+print(f"ALL {za.shape[1]} envs: root z mean at t=0/2/4/8 s = " + " / ".join(f"{za[min(int(t/float(base.step_dt)),len(za)-1)].mean():.2f}" for t in (0,2,4,8))
+      + f" | fraction with z>0.5 at t=8s: {(za[t8] > 0.5).mean():.2f} | max z at t=8s: {za[t8].max():.2f}")
 print(f"recorded {STEPS} steps x {K} envs -> bench/video/nexus_rollout.npz | terrain tile {tiles[0]} {len(F)} faces | quat order (w,x,y,z)")
 env.close(); app.close()
