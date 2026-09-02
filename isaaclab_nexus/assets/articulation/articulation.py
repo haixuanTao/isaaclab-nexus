@@ -659,11 +659,14 @@ class Articulation(BaseArticulation):
     # ------------------------------------------------------------------ reset
     def reset(self, env_ids=None, env_mask=None) -> None:
         st, be = NexusManager.state(), NexusManager.backend()
-        e = self._env_ids(env_ids, env_mask).tolist()
+        ids = self._env_ids(env_ids, env_mask)
+        e = ids.tolist()
         if not e:
             return
-        st.reset_envs(be, [int(i) for i in e], [[0.0, 0.0, 0.0]] * len(e), [0.0] * (len(e) * self._lay["dofs_per_batch"]))
-        ei = torch.tensor(e, device=_DEV)
+        # zero offsets / dof velocities are the binding's default: passing them
+        # explicitly marshals len(e) * dofs Python floats per reset
+        st.reset_envs(be, e)
+        ei = ids.to(_DEV)
         self._effort[:, ei] = 0.0
         d = self._data
         for buf in (d._joint_pos_target, d._joint_vel_target, d._joint_effort_target, d._computed_torque, d._applied_torque, d._joint_acc):
@@ -672,7 +675,8 @@ class Articulation(BaseArticulation):
         for act in self.actuators.values():
             act.reset(e)
         self.permanent_wrench_composer.reset(env_ids=ei); self.instantaneous_wrench_composer.reset(env_ids=ei)
-        NexusManager.synchronize()
+        # no synchronize(): the reset is queued on the same stream as the step,
+        # and every reader (`update`) already syncs before it touches the views
 
     # base-class hooks that do not apply here
     def _initialize_impl(self): pass

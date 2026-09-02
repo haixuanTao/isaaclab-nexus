@@ -13,7 +13,7 @@ from isaaclab_tasks.utils import load_cfg_from_registry
 from isaaclab_nexus.envs import nexusify
 from isaaclab_nexus.physics.nexus_manager import NexusManager
 
-TASK = "HeightTracking-G1-v0"; G1 = "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml"
+TASK = "HeightTracking-G1-v0"; G1 = os.environ.get("NEXUS_G1_MJCF", "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml")
 N = int(sys.argv[1]) if len(sys.argv) > 1 else 2048
 STEPS = int(sys.argv[2]) if len(sys.argv) > 2 else 40
 REDUCE = bool(int(sys.argv[3])) if len(sys.argv) > 3 else True

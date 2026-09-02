@@ -582,3 +582,48 @@ but training only reaches 8,684, so **more than half of the training step is no 
 physics**. That is the next thing to profile (actuator model, resets, managers under real
 actions — the step-breakdown above was measured with zero actions and is no longer
 representative).
+
+## The second setup bug: 1,087-vertex collision hulls
+The unitree G1 MJCF has no simplified collision geoms — its 25 colliding geoms are the full
+visual STLs, and `MeshConverter::ConvexHull` keeps every hull vertex. Measured hulls:
+mean **1,087 vertices**, pelvis **5,583 vertices / 11,162 faces**. PhysX's
+`convexHullVertexLimit` defaults to **64**, so the AGILE/PhysX G1 collides hulls an order of
+magnitude simpler than the ones we handed the GPU narrow phase — which then clips those
+features against every terrain triangle a fallen robot touches.
+
+`make_convex_mjcf.py N` rewrites the MJCF's colliding mesh assets as support-mapped hulls of
+at most N vertices (support point per direction on a Fibonacci sphere, then hull): total hull
+vertices 27,179 -> 1,481 (18.4x), max per hull 5,583 -> 64.
+
+## Cumulative: 2x in training, and where the two fixes landed
+4096 envs, `HeightTracking-G1-v0`, same seed. Plain step loop (30 control steps, zero actions)
+and the full rsl_rl training loop (10 iterations, median of 5..9):
+
+| configuration | physics ms/step | loop env-steps/s | train s/iter | train env-steps/s |
+|---|---:|---:|---:|---:|
+| 4 substeps, full hulls | 454.0 | 7,628 | 15.48 | 6,350 |
+| 1 substep, full hulls | 166.0 | 16,415 | 11.32 | 8,684 |
+| **1 substep, 64-vertex hulls** | **107.0** | **21,746** | **7.76** | **12,668** |
+| PhysX / AGILE baseline | — | — | 3.99 | 24,638 |
+
+Reward curves are identical across all three (-46/-101/-154/-212/-264/-315), and the
+foot-to-terrain gap is unchanged (p05/p50 0.016/0.030 m), so neither fix trades physics for
+speed — both remove work the task never asked for. Remaining gap to PhysX: **1.95x**, down
+from 3.9x.
+
+## Training-loop breakdown (4096 envs, 1 substep, full hulls)
+Real PPO loop, every manager term timed (`profile_train_step.py`):
+
+| section | ms/ctrl step | % |
+|---|---:|---:|
+| physics | 340.5 | 69.2% |
+| `_reset_idx` total (18.5 of it `Articulation.reset`, rest Isaac's managers) | 46.2 | 9.4% |
+| write + actuators | 28.5 | 5.8% |
+| reward / obs / sensors / events / actions | 55.9 | 11.5% |
+| PPO + policy | 28.2 | 5.7% |
+
+Physics costs 340 ms here against 166 ms in the settled zero-action loop, because AGILE's
+stand-up task **spawns robots fallen** — lying on the mesh is the steady state, not an edge
+case. Note also that no GPU heightfield exists (`TypedShape::HeightField => todo!()` in
+`src_rbd/shapes/shape.rs`), so terrain must be a trimesh; a heightfield collider would be the
+structural fix for the narrow phase.

@@ -8,7 +8,7 @@ import agile.rl_env.tasks  # noqa: registers tasks + patches
 from isaaclab_tasks.utils import load_cfg_from_registry
 from agile.rl_env.rsl_rl import RslRlVecEnvWrapper, make_rsl_rl_runner
 from isaaclab_nexus.envs import nexusify
-TASK = "HeightTracking-G1-v0"; G1 = "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml"
+TASK = "HeightTracking-G1-v0"; G1 = os.environ.get("NEXUS_G1_MJCF", "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml")
 NENV = int(sys.argv[1]) if len(sys.argv) > 1 else 1024; ITERS = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
 env_cfg.scene.num_envs = NENV; env_cfg.seed = agent_cfg.seed; agent_cfg.max_iterations = ITERS; agent_cfg.run_name = "nexus"
