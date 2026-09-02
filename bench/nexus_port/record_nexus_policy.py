@@ -1,0 +1,37 @@
+"""Roll the trained policy on the Nexus backend and record env poses for offline rendering.
+usage: record_nexus_policy.py <checkpoint.pt> [steps] [num_envs]
+Writes bench/video/nexus_rollout.npz: per-step root pose + joint angles for the first 4 envs,
+joint names, and env 0's terrain tile mesh (tile-local XY, world Z — the frame the poses are in)."""
+import os, sys, numpy as np
+from isaaclab.app import AppLauncher
+app = AppLauncher(headless=True).app
+import gymnasium as gym, torch
+import agile.rl_env.tasks  # noqa
+from isaaclab_tasks.utils import load_cfg_from_registry
+from agile.rl_env.rsl_rl import RslRlVecEnvWrapper, make_rsl_rl_runner
+from isaaclab_nexus.envs import nexusify
+CKPT = sys.argv[1]; STEPS = int(sys.argv[2]) if len(sys.argv) > 2 else 400; N = int(sys.argv[3]) if len(sys.argv) > 3 else 64
+TASK = "HeightTracking-G1-v0"; G1 = os.environ.get("NEXUS_G1_MJCF", "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml")
+env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
+env_cfg.scene.num_envs = N; env_cfg.seed = 7
+nexusify(env_cfg, G1)
+env = gym.make(TASK, cfg=env_cfg); base = env.unwrapped
+robot = base.scene.articulations["robot"]; terr = base.scene.terrain.terrain
+wenv = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)
+runner = make_rsl_rl_runner(wenv, agent_cfg, log_dir=None, device=agent_cfg.device)
+runner.load(CKPT); policy = runner.get_inference_policy(device=agent_cfg.device)
+obs = wenv.get_observations()
+K = 4; root_pos, root_quat, jpos = [], [], []
+with torch.inference_mode():
+    for i in range(STEPS):
+        act = policy(obs)
+        obs, _, _, _ = wenv.step(act)
+        d = robot.data
+        root_pos.append(d.root_link_pos_w.torch[:K].cpu().numpy()); root_quat.append(d.root_link_quat_w.torch[:K].cpu().numpy())
+        jpos.append(d.joint_pos.torch[:K].cpu().numpy())
+tiles = [tuple(x) for x in np.asarray([[int(r), int(c)] for r, c in zip(base.scene.terrain.terrain_levels.tolist(), base.scene.terrain.terrain_types.tolist())])]
+V, F = terr.tile_vertices[tiles[0]], terr.tile_faces[tiles[0]]
+np.savez("/workspace/bench/video/nexus_rollout.npz", root_pos=np.stack(root_pos), root_quat=np.stack(root_quat), joint_pos=np.stack(jpos),
+         joint_names=np.array(robot.joint_names), terrain_v=np.asarray(V, np.float32), terrain_f=np.asarray(F, np.int32), dt=float(base.step_dt))
+print(f"recorded {STEPS} steps x {K} envs -> bench/video/nexus_rollout.npz | terrain tile {tiles[0]} {len(F)} faces | quat order (w,x,y,z)")
+env.close(); app.close()

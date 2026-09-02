@@ -741,3 +741,33 @@ run (11.2 -> 16.1 s) because the contact path dominated and crumpled robots emit
 now the narrow phase is 8% of GPU time and the remaining cost (articulated-body dynamics, even
 explicit) is per-link and state-independent. A cheaper step from "the robots stand up" would
 need the contact path to matter again, and it no longer does.
+
+## Correction: the like-for-like Zealot comparison is the G1-on-terrain row, not the 12-DOF headline
+Zealot's `docs/benchmarks.md` (lines 275-279) has exactly this comparison — full-body G1 with
+AGILE-matched actuator delay/history and a port of AGILE's terrain curriculum — and it is the
+one to quote, not the 99.5 k biped number I quoted earlier:
+
+| N | Zealot full-body +realism +terrain | WBC-AGILE (terrain) | this port (Isaac Lab on Nexus) |
+|---:|---:|---:|---:|
+| 2048 | 25.4 k | 20.6 k | **28.1 k** |
+| 4096 | 30.7 k | 32.3 k | **40.1 k** |
+
+Caveat that makes this a fair reading rather than a win: Zealot's G1 rows run `solver-iters 8`
+(its choice to mirror PhysX's TGS budget — in Nexus those are substeps, 8x the integration
+work); this port runs 1 at the same 200 Hz `dt`, with the reward curve unchanged against the
+engine's default of 4. Per substep the two are roughly the same engine efficiency. The task also
+differs (AGILE's `Velocity-G1-History-v0` there, `HeightTracking-G1-v0` here).
+
+## Video
+`record_nexus_policy.py <ckpt>` rolls a checkpoint on the Nexus backend and stores per-step root
+pose + joint angles for 4 envs plus env 0's terrain tile; `render_nexus_video.py` renders that
+with MuJoCo's offscreen renderer (OSMesa; EGL is not usable headless on this box) using the G1's
+real visual meshes on the actual tile. Nexus's own viewer path (`insert_mjcf` + `NexusViewer`)
+would render natively, but this backend builds its state through `insert_mjcf_headless`, which
+registers no render data — wiring that is the cleaner long-term route.
+
+## Long run
+`train_nexus.py 4096 10000` started 2026-09-02 17:30 UTC, shipped config, detached (`setsid`);
+log `bench/results/train_nexus_10k_HeightTracking-G1-v0_n4096.log`, checkpoints every 250
+iterations under `bench/nexus_port/logs/<timestamp>_nexus/`. Expected ~7 h at 2.45 s/iter.
+Note `/workspace` is not a volume on this instance: copy checkpoints off-box.
