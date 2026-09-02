@@ -377,8 +377,149 @@ MuJoCo and PhysX. Not done, by design: USD/cloner, `ManagerBasedRLEnv` end-to-en
 (needs the G1 MJCF + every mdp term audited against the Nexus data API), and the engine-side fixes listed
 under "③ root causes" (per-iteration sensor impulse; 4-point per-pair manifolds).
 
+## Where the code is
+Engine side: **`Haixuantao/nexus`, branch `isaac-backend`** (8 commits on top of
+`27ba35e`). Backend side: `isaaclab_nexus/` in this repo.
+
 ## Persistence
 `/workspace` is not a volume on this instance. Everything is in `/workspace/bench/nexus_port_bundle.tar.gz`
 (isaaclab_nexus/, bench/nexus_port/ incl. tests + this spec) and the fork diff `nexus_fork_isaac_backend.patch`
 (apply on Haixuantao/nexus at the checked-out commit). The AGILE venv patch is `isaaclab/utils/backend_utils.py`
 (one `startswith("nexus")` line; original kept as `backend_utils.py.orig`).
+
+---
+
+# END TO END: AGILE's G1 task TRAINS on the Nexus backend — 2026-09-02 (final)
+
+`train_nexus.py` = AGILE's `scripts/train.py` without hydra: the real
+`HeightTracking-G1-v0` env cfg, the real `rsl_rl` PPO runner, `nexusify()` swapping
+physics/spawns, the G1 29-DOF MJCF (`unitree_mujoco/unitree_robots/g1/g1_29dof.xml`)
+in place of the USD.
+
+    [nexus] env built in 6.6s
+    scene NexusScene(num_envs=N, entities=['robot','contact_forces','height_measurement_sensor','terrain'])
+    obs groups ['policy','critic'] | action dim 29
+    Learning iteration 0..9   (24 rollout steps x N envs, 5 epochs x 4 minibatches)
+    TRAIN ON NEXUS OK
+
+What runs: `ManagerBasedRLEnv` with AGILE's own action/observation/reward/termination/
+event/curriculum managers, `DelayedDCMotor` actuators, fallen-state reset dataset,
+rough-terrain curriculum, height-scan `RayCaster` and `ContactSensor`, PPO update.
+Dropped by `nexusify` (no Nexus equivalent, warned): `randomize_physics_material`,
+`randomize_base_com`.
+
+## Spawn cost: MJCF parsed once per batch, not once per env
+`insert_mjcf_headless` re-parses the XML and rebuilds every convex hull per environment
+(~0.45 s/env for the G1: 512 envs = 230 s, 4096 = 30 min). Added
+`NexusState.insert_mjcf_headless_range(path, env_start, env_end, translation, auto_floor)`
+— one parse, N inserts:
+
+| envs | scene build, per-env parse | scene build, one parse |
+|---:|---:|---:|
+| 128 | 59.1 s | — |
+| 512 | ~230 s (extrapolated) | **6.1 s** |
+| 4096 | ~30 min (extrapolated) | **~8 s** |
+
+## Throughput: the same task, same hardware, PhysX vs Nexus
+`train_nexus.py N 10` vs `bench/results/train_HeightTracking-G1-v0_n*.log`; both are
+rsl_rl's own timers, median of the steady iterations (Nexus: iters 5..9, PhysX: 5..29).
+One iteration = 24 rollout steps x N envs + 5 epochs x 4 minibatches.
+
+| envs | PhysX iter (s) | Nexus iter (s) | PhysX env-steps/s | Nexus env-steps/s | ratio |
+|---:|---:|---:|---:|---:|---:|
+| 1024 | 2.160 | 5.580 | 11,378 | 4,404 | 0.39x |
+| 2048 | 2.810 | 9.120 | 17,492 | 5,389 | 0.31x |
+| 4096 | 3.990 | 16.130 | 24,638 | 6,094 | 0.25x |
+
+Rollout share: PhysX 94%, Nexus **98%** (PPO update 0.15-0.32 s, same as PhysX).
+At 4096 envs: 12.7 GB GPU memory, 91-100% utilization, **314-334 W** (PhysX: 182 W / 60%).
+
+So the Nexus backend is a working but slower path for this task today: it burns nearly
+twice the power at 4x the wall-clock. That is the opposite of the flat-floor comparison
+(§④ nsys: 34 k vs 24.6 k env-steps/s for a 21-DOF humanoid on a plane) and the
+difference is the terrain: every env carries its own 8 x 8 m tile collider (2,048
+triangles after the backend's 0.25 m collider rasterization), the Nexus narrow phase emits
+one manifold per touched triangle, and the per-multibody contact loop walks them serially. Iteration time also
+grows within a run (11.2 s -> 16.1 s over 10 iterations) as episodes progress and more
+links crumple onto the mesh, which is the same signature.
+
+## New engine knob: per-collider-pair contact reduction
+`RbdPipeline.contact_reduction` (upstream default `false`) merges every manifold a
+collider pair emits into one manifold of the deepest `MAX_MANIFOLD_POINTS` points — the
+fix for a trimesh emitting one manifold per touched triangle. It had no Python entry
+point; added `NexusPipeline.set_contact_reduction(backend, enabled)` and wired it to
+`NexusCfg.contact_reduction` (default on, applied in `NexusManager.finalize`).
+
+## Where the Nexus-backed env step actually goes (`profile_env_step.py 4096 30`)
+Wall time per control step (4096 envs, decimation 4, zero actions), sections timed with
+`torch.cuda.synchronize()` around them:
+
+| section | ms / control step | share | with contact reduction |
+|---|---:|---:|---:|
+| physics (`NexusManager.step` x4) | 426.8 | 90.0% | **393.7 (-7.7%)** |
+| everything else (obs/reward/termination managers, PPO-side torch) | 33.4 | 7.0% | 33.7 |
+| `Articulation.write_data_to_sim` (actuators + scatter) | 9.4 | 2.0% | 9.5 |
+| sensors (contact + ray caster) | 4.5 | 0.9% | 4.5 |
+| `Articulation.update` | 0.3 | 0.1% | 0.3 |
+| **total** | **474.4** (8,634 env-steps/s) | | **441.8** (9,272 env-steps/s) |
+
+**The backend glue is not the cost — the engine step is.** Zero-copy views, the write
+path and both sensors together are 3% of the step; 90% is inside
+`NexusPipeline.simulate`. Any further gain has to come from the engine
+(narrow phase / contact solve on the per-env terrain trimesh), not from `isaaclab_nexus`.
+
+Contact reduction is worth +7.4% throughput here and costs nothing in fidelity
+(foot-to-terrain gap p05/p50/p95 = 0.013 / 0.033 / 1.143 m with, 0.015 / 0.034 / 1.145
+without — the robots rest ON the terrain in the real env; the deep-penetration case from
+the earlier standalone drop test does not appear here). It is on by default in `NexusCfg`.
+
+## Fidelity fix: terrain friction
+Terrain colliders were built with rapier's default friction (0.5) while AGILE's
+`TerrainImporterCfg.physics_material` asks for 1.0 (the robot's own colliders already get
+1.0 from the MJCF geoms, which the rapier MJCF loader applies). `NexusTerrainImporter` now
+passes `physics_material.static_friction` down to every tile collider and the fallback floor.
+
+## What is still missing for a like-for-like AGILE run
+1. **Terrain curriculum is static.** An env's tile collider is chosen at construction;
+   `update_env_origins` records level changes but the geometry does not follow. AGILE's
+   curriculum therefore does not bite on this backend.
+2. **Dropped domain randomization**: `randomize_rigid_body_material` (friction 0.2-1.5 per env)
+   and `randomize_base_com`. Both need per-collider / per-body writes after finalize.
+3. **Engine, not backend**: the contact-sensor readout is a per-solver-iteration impulse
+   (the backend scales it by `solver_iterations`); a proper fix accumulates in the engine.
+
+## nsys: which kernels the 90% is (4096 envs, AGILE G1 task on Nexus, contact reduction on)
+`traces/nexus_agile_g1_n4096.nsys-rep` — 34.8 s window of `profile_env_step.py 4096`,
+CUDA tracing only. GPU busy **93.9%** of wall, 167,127 launches, mean kernel 196 us.
+
+| kernel | ms | % GPU busy | calls |
+|---|---:|---:|---:|
+| `gpu_narrow_phase_pfm_pfm` | 10,398 | **31.8%** | 203 |
+| `gpu_mb_integrate_and_dynamics_pre` | 9,866 | **30.2%** | 609 |
+| `gpu_mb_finalize_contact_constraints` | 4,488 | 13.7% | 812 |
+| `gpu_mb_compute_dynamics_pre` | 3,333 | 10.2% | 204 |
+| `gpu_mb_gravity_and_lu` | 963 | 2.9% | 813 |
+| `gpu_mb_init_contact_constraints` | 772 | 2.4% | 812 |
+| `gpu_mb_solve_constraints` | 767 | 2.3% | 1,624 |
+| `gpu_mb_init_joint_constraints` | 659 | 2.0% | 812 |
+| `gpu_bf_compute_aabbs` | 589 | 1.8% | 204 |
+| `gpu_mb_sense_contact_impulses` (contact sensor) | 81 | 0.2% | 406 |
+| `gpu_reduce_contacts` (the new knob) | 68 | 0.2% | 203 |
+| all torch elementwise/index kernels | 54 | 0.2% | 23,868 |
+
+Grouped: **contacts ~50%** (narrow phase 31.8 + finalize/init/warmstart 16.4 + AABBs 1.8),
+**multibody dynamics ~43%** (integrate_and_dynamics_pre 30.2 + compute_dynamics_pre 10.2 +
+gravity_and_lu 2.9), everything else < 3%. One `gpu_narrow_phase_pfm_pfm` call costs
+**51 ms** — one dispatch per physics step across all 4096 envs against their terrain tiles.
+
+Two consequences:
+1. The Isaac Lab layer is free here — torch is 0.2% of GPU time against 6.2% in the
+   PhysX/AGILE trace (which spent 51% of its *launches* on torch elementwise work).
+   Nexus's problem is the opposite of PhysX's: few, long kernels rather than many short ones.
+2. Closing the 4x gap to PhysX on this task means the trimesh narrow phase and the
+   multibody dynamics pre-pass, in that order. Neither is reachable from `isaaclab_nexus`.
+
+## Final configuration, measured (4096 envs, contact reduction + terrain friction 1.0)
+`train_nexus_final_HeightTracking-G1-v0_n4096.log`: 15.48 s/iter median (iters 5-9),
+**6,350 env-steps/s**, PPO update 0.32 s. Against the same run without either fix
+(16.13 s, 6,094 env-steps/s) that is +4.2%; against PhysX's 3.99 s / 24,638 it is 0.26x.

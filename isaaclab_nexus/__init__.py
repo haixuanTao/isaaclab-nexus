@@ -1,16 +1,18 @@
 """Isaac Lab physics backend for Nexus (dimforge, Haixuantao fork) on CUDA.
 
-Backend spike. What is real:
-  * ``NexusCfg`` / ``NexusManager`` -- a ``PhysicsManager`` that owns one
-    headless Nexus CUDA state and steps it.
-  * ``assets.articulation.Articulation`` / ``ArticulationData`` -- serve
-    joint / root / body state as **zero-copy torch views** of Nexus GPU memory
-    (``__cuda_array_interface__``), no staging buffer, no host round-trip.
+Runs Isaac Lab manager-based environments on Nexus instead of PhysX/Newton:
+no USD, no Fabric, no cloner. Robots load from MJCF straight into the Nexus
+state, one Nexus batch per Isaac Lab environment.
 
-What is not: every ``BaseArticulation`` method that is not implemented raises
+Validated end to end: WBC-AGILE's ``HeightTracking-G1-v0`` (Unitree G1 29-DOF,
+rough terrain, height-scan + contact sensors) trains with ``rsl_rl`` PPO on
+this backend -- see README.md and /workspace/bench/nexus_port/PORT_SPEC.md.
+
+State is served as **zero-copy torch views** of Nexus GPU memory
+(``__cuda_array_interface__``): no staging buffer, no host round-trip. Every
+``BaseArticulation`` method that is not implemented raises
 ``NotImplementedError`` naming itself, so a caller hits a clear wall instead
-of a silent wrong answer. Contacts, raycasts, terrain, MJCF->Isaac name maps
-and the write path are the remaining work; see /workspace/bench/nexus_port.
+of a silent wrong answer.
 
 Layout is dictated by ``isaaclab.utils.backend_utils.FactoryBase``: for a
 factory defined in ``isaaclab.<subpath>.<mod>`` it imports

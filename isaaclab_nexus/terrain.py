@@ -32,7 +32,7 @@ class NexusTerrain:
 
     def __init__(self, terrain_generator_cfg, num_envs: int, tiles: list[tuple[int, int]] | None = None,
                  tile: tuple[int, int] = (0, 0), grid_res: float = 0.05, floor_half: float = 50.0,
-                 device: str = "cuda", collider_res: float | None = 0.25):
+                 device: str = "cuda", collider_res: float | None = 0.25, friction: float | None = None):
         from isaaclab.terrains import TerrainGenerator
         import nexus3d, trimesh
 
@@ -71,11 +71,16 @@ class NexusTerrain:
             else:
                 Vt_c, Ft_c = Vt, Ft
             self.tile_vertices[(r, c)], self.tile_faces[(r, c)] = Vt_c, Ft_c
-            colliders.append(nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in Vt_c], [tuple(map(int, f)) for f in Ft_c]).build())
+            cb = nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in Vt_c], [tuple(map(int, f)) for f in Ft_c])
+            # rapier's default is 0.5; Isaac terrains carry their own material (AGILE: 1.0)
+            colliders.append((cb.friction(float(friction)) if friction is not None else cb).build())
         self.grid_res, self.grid_x0, self.grid_y0 = grid_res, float(xs[0]), float(ys[0])
         self.height = torch.stack(heights)                                  # (T, nx, ny)
         self.num_faces = int(len(next(iter(self.tile_faces.values()))))
-        floor = nexus3d.ColliderBuilder.cuboid(floor_half, floor_half, 0.5).build() if floor_half > 0 else None
+        _fb = nexus3d.ColliderBuilder.cuboid(floor_half, floor_half, 0.5) if floor_half > 0 else None
+        if _fb is not None and friction is not None:
+            _fb = _fb.friction(float(friction))
+        floor = _fb.build() if _fb is not None else None
         for env in range(self.num_envs):
             st.insert_rigid_body_in(env, nexus3d.RigidBodyBuilder.fixed().build(), colliders[int(self.tile_of_env[env])])
             if floor is not None:
@@ -118,7 +123,9 @@ class NexusTerrainImporter:
         self.terrain_levels = torch.randint(0, max_init + 1, (self.num_envs,), device=device)
         self.terrain_types = torch.div(torch.arange(self.num_envs, device=device), (self.num_envs / cols), rounding_mode="floor").long()
         tiles = [(int(r), int(c)) for r, c in zip(self.terrain_levels.tolist(), self.terrain_types.tolist())]
-        self.terrain = NexusTerrain(gcfg, self.num_envs, tiles=tiles, device=device)
+        mat = getattr(cfg, "physics_material", None)
+        fric = float(getattr(mat, "static_friction", 1.0)) if mat is not None else None
+        self.terrain = NexusTerrain(gcfg, self.num_envs, tiles=tiles, device=device, friction=fric)
         self.terrain_origins = torch.as_tensor(self.terrain.terrain_origins, device=device, dtype=torch.float32)
         self.env_origins = torch.zeros(self.num_envs, 3, device=device)        # envs live in local coordinates
         self._flat_patches = {k: torch.as_tensor(v, device=device) for k, v in getattr(self.terrain.gen, "flat_patches", {}).items()}
