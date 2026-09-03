@@ -1,14 +1,14 @@
 """AGILE env on Nexus: right after reset (default reset, then fallen-state dataset reset), which bodies are
 below the local terrain, by how much, and where the root is. Steps 20 physics steps after each reset to see
 whether penetration self-corrects."""
-import os, numpy as np
+import os, sys, glob, numpy as np
 from isaaclab.app import AppLauncher
 app = AppLauncher(headless=True).app
 import gymnasium as gym, torch
 import agile.rl_env.tasks  # noqa
 from isaaclab_tasks.utils import load_cfg_from_registry
 from isaaclab_nexus.envs import nexusify
-TASK = "HeightTracking-G1-v0"; N = 256
+TASK = "HeightTracking-G1-v0"; N = int(sys.argv[1]) if len(sys.argv) > 1 else 256
 env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
 env_cfg.scene.num_envs = N; env_cfg.seed = 7
 nexusify(env_cfg, os.environ.get("NEXUS_G1_MJCF", "/workspace/bench/nexus_port/g1_29dof_convex64.xml"), agent_cfg=agent_cfg)
@@ -30,6 +30,9 @@ steps(1); report("default reset, +1 env step"); steps(20); report("default reset
 pre = gym.spec(TASK).kwargs.get("pre_learn_entry_point")
 if pre:
     import importlib; mod, fn = pre.split(":"); getattr(importlib.import_module(mod), fn)(base, TASK, agent_cfg); base.reset()
+    for f in sorted(glob.glob("/workspace/WBC-AGILE/fallen_states_cache_nexus/*.pt")):
+        D = torch.load(f, map_location="cpu", weights_only=False); st0 = D["states_by_level"][0]; jv = st0["joint_vel"].abs()
+        print(f"[collected dataset N={N}] level-0 states {len(jv)} | root_pos_rel z median {st0['root_pos_rel'][:,2].median():.2f} max {st0['root_pos_rel'][:,2].max():.2f} | joint_vel p99 {jv.flatten().kthvalue(int(0.99*jv.numel())).values:.1f} max {jv.max():.1f} | root_lin_vel max {st0['root_lin_vel'].norm(dim=-1).max():.2f}")
     report("dataset reset, t=0"); steps(1); report("dataset reset, +1 env step"); steps(20); report("dataset reset, +21 env steps")
     # where does the reset put the root relative to the surface?
     rz = robot.data.root_link_pos_w.torch[:, 2]; bp0 = robot.data.body_link_pos_w.torch; hz = terr.heights_at(bp0[..., :2].reshape(N, -1, 2)).reshape(N, -1)[:, 0]

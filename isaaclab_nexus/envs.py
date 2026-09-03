@@ -88,6 +88,16 @@ def _nexus_dataset_cache(agent_cfg) -> None:
     A cache collected on PhysX stores `joint_pos` in the USD (breadth-first) joint order; replayed here in MJCF
     order it scrambles the pose (legs through the terrain). Keep this backend's dataset in its own directory so
     it is collected on Nexus, in this articulation's joint order."""
-    ds = getattr(agent_cfg, "fallen_state_dataset_cfg", None)
-    if ds is not None and hasattr(ds, "cache_dir") and not str(ds.cache_dir).endswith("_nexus"):
-        ds.cache_dir = str(ds.cache_dir) + "_nexus"
+    import os
+    try:
+        import importlib.util
+        loc = importlib.util.find_spec("agile").submodule_search_locations[0]            # `agile` is a namespace package
+        root = os.path.dirname(os.path.abspath(loc))                                     # the AGILE repo
+    except Exception:
+        root = os.getcwd()
+    for name in [n for n in dir(agent_cfg) if n.startswith("fallen_state_dataset") and n.endswith("_cfg")]:
+        ds = getattr(agent_cfg, name, None)
+        if ds is not None and hasattr(ds, "cache_dir") and not str(ds.cache_dir).endswith("_nexus"):
+            # AGILE resolves `cache_dir` relative to the process cwd; anchor it so a run started from another
+            # directory neither misses the cache nor picks up a stale one.
+            ds.cache_dir = os.environ.get("NEXUS_DATASET_CACHE_DIR", os.path.join(root, os.path.basename(str(ds.cache_dir)) + "_nexus"))

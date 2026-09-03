@@ -1344,3 +1344,36 @@ at >= 1.3 m — the earlier "upright" case spawned the feet 27 cm under the floo
 `probe_rb_offset_trimesh.py` (free rigid bodies are inert in this pipeline; use an MJCF free body) are the
 supporting probes. **v12**: v11's exact configuration, restarted on the fixed backend with a
 Nexus-collected dataset. Every earlier training result (v1..v11) is superseded.
+
+**Like-for-like baseline: the same clearance metric on stock PhysX** (`probe_clearance_physx.py`, 64 envs,
+same policy checkpoint, AGILE's PhysX cache, terrain re-rasterized exactly as the Nexus backend does):
+
+| fraction of envs with a body < -5 cm / < -20 cm under the terrain | t=0.1 s | 1 s | 2 s | 4 s | 8 s |
+|---|---:|---:|---:|---:|---:|
+| PhysX, zero actions | 0.33 / 0.20 | 0.20 / 0.08 | 0.20 / 0.09 | 0.16 / 0.05 | 0.12 / 0.05 |
+| PhysX, policy | 0.20 / 0.17 | 0.17 / 0.08 | 0.12 / 0.06 | 0.06 / 0.05 | 0.03 / 0.03 |
+| Nexus (4096-env dataset, see below), zero actions | 0.23 / 0.14 | 0.25 / 0.19 | 0.23 / 0.17 | 0.27 / 0.23 | 0.33 / 0.25 |
+| Nexus, policy | 0.27 / 0.19 | 0.31 / 0.25 | 0.39 / 0.33 | 0.45 / 0.36 | 0.52 / 0.45 |
+
+So right after AGILE's dataset resets PhysX *also* has a body 20-50 cm under the terrain in ~20% of envs
+(p1 of the metric -0.48 m) — the reset pipeline itself puts limbs into the ground — but PhysX pushes them
+out over the episode while this backend keeps them (a thin trimesh never ejects a body that is fully past
+it; and a 4-substep run did not change the Nexus numbers, so it is not tunnelling in the episode).
+
+**Collection bug found by instrumenting the shim (`NEXUS_SHIM_LOG=1`)**: the shim called the full
+`write_data_to_sim()`, which re-applies the wrench composer's buffers — AGILE's LiftAction harness force
+from the last env step, up to 0.9x body weight upward — on every raw collection step. On PhysX nothing
+pushes external forces during collection. Robots hovered near their 2.8 m spawn (dataset root z median
+2.3 m, joint speeds to 100 rad/s) — the 4096-env dataset v12 briefly trained on. Fixed: the shim applies
+actuator torques only and zeroes the root wrench columns. v12 was stopped at iteration 169.
+
+**Two more traps closed before v13.** (1) AGILE resolves `cache_dir` relative to the process cwd: a run
+started from another directory neither finds the cache nor writes it there, and can silently load a stale
+one (that is how the 4096-env garbage dataset got reused by a later 256-env run). `nexusify` now anchors
+the Nexus cache at the AGILE repo root (`agile` is a namespace package: resolved via `find_spec`), for
+both the primary and the secondary (`fallen_state_dataset_secondary_cfg`, random-spawn) datasets — the G1
+task's own `pre_learn` loads both. (2) With the torque-only shim the 256-env collection is sane:
+primary set root z median 0.05 m (was 2.3 m hovering), joint_vel p99 16 rad/s (PhysX cache: 7), root
+speed < 1 m/s; secondary (random spawn with initial velocity) root z median 0.20 m, joint_vel p99 14.
+Dataset resets on it: 0% of envs with a body >5 cm under at +1 step, 2% after 0.4 s (feet, max 25 cm),
+0% >20 cm. **v13** launched 18:10 (v11's exact config; collects its own 4096-env datasets on Nexus).

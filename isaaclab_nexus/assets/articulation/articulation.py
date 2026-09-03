@@ -507,9 +507,11 @@ class Articulation(BaseArticulation):
     @property
     def _ALL_INDICES(self): return torch.arange(self.num_instances, device=_DEV)
     @property
-    def root_view(self): return _NexusRootView(self)
+    def root_view(self):
+        if getattr(self, "_root_view_obj", None) is None: self._root_view_obj = _NexusRootView(self)
+        return self._root_view_obj
     @property
-    def root_physx_view(self): return _NexusRootView(self)
+    def root_physx_view(self): return self.root_view
 
     def _link_of_body(self, body_index: int) -> int:
         return int(body_index)
@@ -755,11 +757,21 @@ class _NexusRootView:
         e = a._ids(indices, a.num_instances)
         if f.shape[0] == a.num_instances: f = f[e]
         a._data._joint_effort_target[e] = f.reshape(len(e), a._num_joints).to(torch.float32)
-        a.write_data_to_sim()                                  # PD from the current state + the new explicit efforts
+        # Actuator torques only. NOT `write_data_to_sim()`: that would also re-apply the wrench composer's
+        # buffers -- AGILE's LiftAction harness force from the last env step (up to 0.9x body weight, upward)
+        # -- on every collection step, which on PhysX is never pushed during collection (no write_data_to_sim
+        # there). It kept robots hovering near their 2.8 m spawn and exploded joints.
+        a._apply_actuator_model(); a._effort[a._cols, :] = a._data._applied_torque.T; a._effort[a._root_cols, :] = 0.0
         # DEVIATION (collection only): the terrain trimesh is a thin surface and the 2 m collection drops hit it
         # at ~6 m/s = 3 cm per 200 Hz step, past the 2 cm contact margin, so limbs tunnel and a resting body is
         # never pushed back out; the recorded "fallen" state then has a leg under the terrain. Cap the root's
         # downward speed during these raw collection steps (NEXUS_COLLECTION_VZ_MAX m/s, 0 disables).
+        n = getattr(self, "_calls", 0) + 1; self._calls = n
+        if os.environ.get("NEXUS_SHIM_LOG") == "1" and n % 40 == 1:
+            from isaaclab_nexus.physics.nexus_manager import NexusManager as _NM
+            jv = a.data.joint_vel.torch.abs().max(1).values; rz = a.data.root_link_pos_w.torch[:, 2]; rv = a.data.root_link_vel_w.torch
+            rs = _NM._state.rbd_resize_stats() if hasattr(_NM._state, "rbd_resize_stats") else {}
+            print(f"[shim] call {n}: root z median {rz.median():.2f} min {rz.min():.2f} max {rz.max():.2f} | envs jv>50: {int((jv > 50).sum())} jv max {jv.max():.0f} | |v| max {rv[:, :3].norm(dim=-1).max():.1f} |w| max {rv[:, 3:].norm(dim=-1).max():.1f} | contacts cap {rs.get('capacity_per_batch')} colors {rs.get('max_colors')}", flush=True)
         vmax = float(os.environ.get("NEXUS_COLLECTION_VZ_MAX", "3.5"))
         if vmax > 0:
             v = a.data.root_link_vel_w.torch if hasattr(a.data, "root_link_vel_w") else a.data.root_vel_w.torch

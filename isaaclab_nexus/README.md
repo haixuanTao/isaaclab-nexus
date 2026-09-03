@@ -134,3 +134,6 @@ about that path are backend-specific; all are in `PORT_SPEC.md` with the measure
 
 Residual after all of this: after a dataset reset ~4% of envs have a hand or foot pressed up to 16 cm
 into the terrain (PhysX's own cache shows the same order of penetration).
+
+The Nexus cache is anchored at the AGILE repo root (override with `NEXUS_DATASET_CACHE_DIR`) because
+AGILE resolves `cache_dir` relative to the process cwd. Collection-time diagnostics: `NEXUS_SHIM_LOG=1`.
