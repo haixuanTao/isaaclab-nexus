@@ -41,7 +41,7 @@ def install() -> None:
     _installed = True
 
 
-def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, implicit_coriolis: bool = False, collisions_resize_policy: str = "grow", cuda_graph_warmup: int = 0, drop_terms: set[str] | None = None):
+def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, implicit_coriolis: bool = False, collisions_resize_policy: str = "grow", cuda_graph_warmup: int = 0, critic_force_clip_n: float | None = 5000.0, drop_terms: set[str] | None = None):
     install()
     env_cfg.sim.physics = NexusCfg(collisions_capacity=collisions_capacity, solver_iterations=solver_iterations, contact_reduction=contact_reduction, implicit_coriolis=implicit_coriolis, collisions_resize_policy=collisions_resize_policy, cuda_graph_warmup=cuda_graph_warmup)
     scene = env_cfg.scene
@@ -66,5 +66,17 @@ def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_
                 setattr(g, name, None); dropped.append(f"{group}.{name} ({fname})")
     if dropped:
         warnings.warn("nexusify dropped terms without a Nexus implementation: " + ", ".join(dropped))
+    # Critic-only observation clip on raw contact-force magnitudes. AGILE clips `contact_force_norm`
+    # at ±25 kN, which PhysX's impulsive per-step forces hit routinely (typical per-step max 31 kN),
+    # so its critic is trained on the clipped value. Nexus's impacts are milder (typical 11 kN),
+    # making a clipped input a rare outlier the critic never fits; three continuations from a
+    # 4000-iteration checkpoint diverged within 16-231 iterations, and the same checkpoint trained
+    # on with this clip. Rewards, policy inputs and physics are untouched.
+    if critic_force_clip_n:
+        for gname in ("critic",):
+            grp = getattr(getattr(env_cfg, "observations", None), gname, None)
+            term = getattr(grp, "contact_forces", None) if grp is not None else None
+            if term is not None and getattr(term, "clip", None) is not None:
+                term.clip = (-float(critic_force_clip_n), float(critic_force_clip_n))
     env_cfg.sim.render_interval = env_cfg.decimation
     return env_cfg

@@ -13,7 +13,7 @@ NENV = int(sys.argv[1]) if len(sys.argv) > 1 else 1024; ITERS = int(sys.argv[2])
 env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
 env_cfg.scene.num_envs = NENV; env_cfg.seed = int(os.environ.get("NEXUS_SEED", agent_cfg.seed)); agent_cfg.seed = env_cfg.seed; agent_cfg.max_iterations = ITERS; agent_cfg.run_name = "nexus"
 nexusify(env_cfg, G1)
-FCLIP = float(os.environ.get("NEXUS_DIAG_FORCE_CLIP", "0") or 0)        # DIAGNOSTIC: tighten the critic's contact-force clip
+FCLIP = float(os.environ.get("NEXUS_DIAG_FORCE_CLIP", "0") or 0)        # override of nexusify's critic_force_clip_n (default 5000 N)
 if FCLIP:
     env_cfg.observations.critic.contact_forces.clip = (-FCLIP, FCLIP); print(f"[nexus] DIAGNOSTIC critic contact_forces clip = ±{FCLIP} N")
 t0 = time.perf_counter(); env = gym.make(TASK, cfg=env_cfg); print(f"[nexus] env built in {time.perf_counter()-t0:.1f}s")

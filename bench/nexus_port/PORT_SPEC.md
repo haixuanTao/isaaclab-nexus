@@ -982,3 +982,27 @@ has never fit — and a critic meeting rare 125s after 4,000 iterations of ~60s 
 milder engine is the *worse* one here. Diagnostic run v6: resume `model_4000`, seed 7, critic
 contact-force clip tightened to ±5 kN (`NEXUS_DIAG_FORCE_CLIP`, a diagnostic, not the shipped
 config). Trains on => mechanism confirmed; diverges => it is something else.
+
+## DIVERGENCE ROOT CAUSE — confirmed: the critic's raw contact-force observation
+v6 (resume `model_4000`, seed 7 — identical to v5 except the critic's `contact_forces` clip
+tightened ±25 kN -> ±5 kN) trained straight through the region where every other continuation
+died: iteration 4100 value loss 0.039, 4200 0.044, **4300 0.039**, reward -153 / -163 / -156.
+v5 (same seed, ±25 kN) was at value loss 1,900 by 4020; v4 diverged at +231; v3 (fresh) at 4044.
+
+Mechanism: AGILE's critic observes `contact_force_norm` over all 30 bodies, scale 5e-3, clip
+±25 kN. On PhysX the per-step impulsive force routinely exceeds the clip (measured under the same
+policy: typical per-step max 31 kN, peak 95 kN), so the critic is trained on the clipped 125 as a
+common input. On Nexus the same quantity is milder (typical max 11 kN, peak 17 kN at 1 substep),
+so the clipped 125 is a rare outlier arriving after thousands of iterations of ~60s — the critic
+extrapolates, the value loss explodes, the policy follows. Rewards, physics and policy inputs
+were bounded throughout; nothing in the engine broke. A task tuned to the other engine's spikes.
+
+Shipped: `nexusify(..., critic_force_clip_n=5000.0)` — a critic-only observation clip; rewards,
+policy observations and physics are unchanged. This is a documented deviation from AGILE's cfg
+on this backend. Every throughput number in this document was measured with the unmodified cfg
+(the clip does not affect step cost).
+
+Along the way: the contact-sensor substep scaling bug (fixed, `ddb889f`), and the fact that
+AGILE's polish curriculum is gated on `terrain_levels >= 4`, which this backend's static terrain
+curriculum never reaches — AGILE's polish phase does not run here (stated limitation, now with
+a concrete consequence).
