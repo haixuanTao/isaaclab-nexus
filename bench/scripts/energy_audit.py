@@ -70,7 +70,7 @@ W = {k: torch.zeros(args_cli.envs, device=u.device) for k in ("qfrc_actuator", "
 ke0, pe0 = mech_energy(); E0 = ke0 + pe0; Eprev = E0.clone()
 worst = []; resid_pos = torch.zeros(args_cli.envs, device=u.device); n_reset = 0; n_acc = 0
 acc_max = torch.zeros(args_cli.envs, device=u.device); vprev = None
-flight_resid = torch.zeros(args_cli.envs, device=u.device); flight_steps = 0; flight_worst = (0.0, 0, 0)
+flight_resid = torch.zeros(args_cli.envs, device=u.device); flight_steps = 0; flight_worst = (0.0, 0, 0); flight_vals = []
 com_vprev = None; mom_viol = []; mj_ke_err = []
 total_mass = mass.sum(-1)
 with torch.inference_mode():
@@ -83,6 +83,13 @@ with torch.inference_mode():
             e = torch.as_tensor(mjd.energy.numpy(), device=u.device); E = e[:, 0] + e[:, 1]
         else:
             E = ke + pe
+        if step == 0:
+            # baseline from the same energy source as every later step; skip step-0 accounting
+            Eprev = E.clone(); E0 = E.clone(); vprev = tt(robot.data.root_lin_vel_w).clone()
+            vb0 = tt(robot.data.body_com_lin_vel_w) if hasattr(robot.data, "body_com_lin_vel_w") else tt(robot.data.body_lin_vel_w)
+            com_vprev = (mass.unsqueeze(-1) * vb0).sum(1) / total_mass.unsqueeze(-1)
+            obs_hold = obs
+            continue
         dE = E - Eprev; Eprev = E
         work = {k: v * dt for k, v in P.items()}
         resid = dE - sum(work.values())
@@ -97,6 +104,7 @@ with torch.inference_mode():
         flight_steps += int(fly.sum())
         r_f = torch.where(fly, resid, torch.zeros_like(resid)); flight_resid += r_f
         if fly.any():
+            flight_vals.append(resid[fly].detach().cpu())
             jf = int(r_f.abs().argmax())
             if abs(float(r_f[jf])) > abs(flight_worst[0]): flight_worst = (float(r_f[jf]), step, jf)
         # --- cross-checks ---
@@ -136,7 +144,8 @@ tot = lambda k: float(W[k].sum())
 dEm = float((E1 - E0).sum())
 print(f"[{args_cli.label}] steps accounted={n_acc}  reset steps excluded={n_reset}   peak pelvis acceleration={float(acc_max.max()):.1f} m/s^2 ({float(acc_max.max())/9.81:.1f} g)")
 print(f"[{args_cli.label}] TOTAL over all envs:  dE_mech={dEm:10.0f} J | W_actuator={tot('qfrc_actuator'):10.0f} J  W_passive={tot('qfrc_passive'):10.0f} J  W_constraint={tot('qfrc_constraint'):10.0f} J  W_applied={tot('qfrc_applied'):10.0f} J")
-print(f"[{args_cli.label}] FLIGHT (no contact) steps={flight_steps}: energy residual sum={float(flight_resid.sum()):.1f} J, worst single step {flight_worst[0]:+.2f} J (step {flight_worst[1]} env {flight_worst[2]})")
+fv = torch.cat(flight_vals) if flight_vals else torch.zeros(1)
+print(f"[{args_cli.label}] FLIGHT (no contact) env-steps={flight_steps}: per-step residual median={fv.median():+.4f} J  p99={fv.quantile(0.99):+.3f} J  max={fv.max():+.3f} J  min={fv.min():+.3f} J  sum={float(fv.sum()):+.1f} J   (actuator work in flight: {float(W['qfrc_actuator'].sum()):.0f} J total run)")
 print(f"[{args_cli.label}] residual (dE - sum of work) = {dEm - sum(tot(k) for k in W):10.0f} J   positive-residual accumulated = {float(resid_pos.sum()):10.0f} J")
 worst.sort(reverse=True)
 if mj_ke_err: print(f"[{args_cli.label}] MuJoCo kinetic energy vs my body-based KE: max abs difference {max(mj_ke_err):.2f} J")
