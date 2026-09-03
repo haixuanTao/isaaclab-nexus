@@ -31,7 +31,7 @@ class NexusTerrain:
     """All tiles of a generated terrain, one collider per env for its assigned tile."""
 
     def __init__(self, terrain_generator_cfg, num_envs: int, tiles: list[tuple[int, int]] | None = None,
-                 tile: tuple[int, int] = (0, 0), grid_res: float = 0.05, floor_half: float = 50.0,
+                 tile: tuple[int, int] = (0, 0), grid_res: float = 0.05, floor_half: float = 8.0,
                  device: str = "cuda", collider_res: float | None = None, friction: float | None = None):
         import os
         from isaaclab.terrains import TerrainGenerator
@@ -54,7 +54,7 @@ class NexusTerrain:
 
         st = NexusManager.state(); NexusManager.ensure_envs(self.num_envs)
         heights, colliders = [], []
-        self.tile_vertices, self.tile_faces = {}, {}
+        self.tile_vertices, self.tile_faces, self.tile_zmin = {}, {}, {}
         for (r, c) in uniq:
             o = self.terrain_origins[r, c]
             lo, hi = o[:2] - np.array([sx, sy]) / 2, o[:2] + np.array([sx, sy]) / 2
@@ -75,20 +75,44 @@ class NexusTerrain:
             else:
                 Vt_c, Ft_c = Vt, Ft
             self.tile_vertices[(r, c)], self.tile_faces[(r, c)] = Vt_c, Ft_c
+            self.tile_zmin[(r, c)] = float(Vt[:, 2].min())                                # this tile's own lowest point
             cb = nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in Vt_c], [tuple(map(int, f)) for f in Ft_c])
             # rapier's default is 0.5; Isaac terrains carry their own material (AGILE: 1.0)
             colliders.append((cb.friction(float(friction)) if friction is not None else cb).build())
         self.grid_res, self.grid_x0, self.grid_y0 = grid_res, float(xs[0]), float(ys[0])
         self.height = torch.stack(heights)                                  # (T, nx, ny)
         self.num_faces = int(len(next(iter(self.tile_faces.values()))))
-        _fb = nexus3d.ColliderBuilder.cuboid(floor_half, floor_half, 0.5) if floor_half > 0 else None
+        # Thick slab: a limb that tunnels through the thin trimesh (fast drops during AGILE's dataset
+        # collection) must find the slab's TOP as its nearest face and be ejected up to the tile's lowest
+        # point. A 1 m slab left such limbs resting at its mid-plane, 0.5 m under the surface.
+        BACK = 10.0
+        _fb = nexus3d.ColliderBuilder.cuboid(floor_half, floor_half, BACK) if floor_half > 0 else None
         if _fb is not None and friction is not None:
             _fb = _fb.friction(float(friction))
         floor = _fb.build() if _fb is not None else None
+        # Off-tile apron: a flat trimesh at each tile's lowest point over the whole backstop extent. Robots that
+        # roll off the 8x8 m tile (AGILE's dataset collection spawns them up to 3 m off-centre) land on it as
+        # they do on the tile itself; the deep cuboid slab below is only a last resort (hull-vs-cuboid contact
+        # let falling robots sink ~0.8 m into it, hull-vs-triangle does not).
+        aprons = {}
+        if floor is not None:
+            ax = np.arange(-floor_half, floor_half + 1e-6, 1.0, dtype=np.float32); na = len(ax)
+            AX, AY = np.meshgrid(ax, ax, indexing="ij"); aa = (np.arange(na - 1)[:, None] * na + np.arange(na - 1)[None, :]).ravel()
+            Fa = np.concatenate([np.stack([aa, aa + 1, aa + na + 1], 1), np.stack([aa, aa + na + 1, aa + na], 1)], 0)[:, [0, 2, 1]]
+            for t, zt in self.tile_zmin.items():
+                Va = np.stack([AX.ravel(), AY.ravel(), np.full(AX.size, zt - 0.005, np.float32)], 1)
+                ab = nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in Va], [tuple(map(int, f)) for f in Fa])
+                aprons[t] = (ab.friction(float(friction)) if friction is not None else ab).build()
         for env in range(self.num_envs):
             st.insert_rigid_body_in(env, nexus3d.RigidBodyBuilder.fixed().build(), colliders[int(self.tile_of_env[env])])
+            if aprons:
+                st.insert_rigid_body_in(env, nexus3d.RigidBodyBuilder.fixed().build(), aprons[uniq[int(self.tile_of_env[env])]])
             if floor is not None:
-                st.insert_rigid_body_in(env, nexus3d.RigidBodyBuilder.fixed().translation(nexus3d.Vec3(0.0, 0.0, zmin - 0.5 - 1e-3)).build(), floor)
+                # Backstop top flush with THIS tile's lowest point (was the global terrain minimum, i.e. up to the
+                # roughest level's pit depth below a flat tile): the trimesh is a thin surface, so a body that gets
+                # under it is only caught here, and this bounds the sink to the tile's own height range.
+                zb = self.tile_zmin[uniq[int(self.tile_of_env[env])]]
+                st.insert_rigid_body_in(env, nexus3d.RigidBodyBuilder.fixed().translation(nexus3d.Vec3(0.0, 0.0, zb - BACK - 1e-3)).build(), floor)
         self.env_origins = torch.zeros(self.num_envs, 3, device=device)
         NexusManager.set_terrain(self)
 

@@ -112,3 +112,25 @@ same task (medians of iterations 5-29, GPU idle, fallen-state resets correct): 1
   (rapier's own default is 0.5), robot colliders take the MJCF geom friction (MuJoCo default 1.0).
 - `ArticulationData` implements the properties AGILE's task needs; anything else
   raises `NotImplementedError` naming the property.
+
+## Fallen-state dataset and terrain: what this backend does differently (and why)
+
+AGILE resets most episodes from a cached dataset of fallen poses collected by 2 m drops. Three things
+about that path are backend-specific; all are in `PORT_SPEC.md` with the measurements.
+
+- **Collect the dataset on Nexus.** Pass `agent_cfg` to `nexusify(...)`: it moves
+  `fallen_state_dataset_cfg.cache_dir` to `<dir>_nexus`. AGILE's cache key does not include the physics
+  backend, and a cache collected on PhysX stores `joint_pos` in the USD breadth-first joint order —
+  replayed on the MJCF articulation (depth-first) it scrambles the pose (legs through the terrain).
+  The articulation provides the PhysX-view hooks the collection loop calls
+  (`_joint_effort_target_sim`, `root_view.set_dof_actuation_forces`, `_ALL_INDICES`).
+- **`NEXUS_COLLECTION_VZ_MAX`** (default 3.5 m/s, `0` disables): during the raw collection steps the
+  root's downward speed is capped. The terrain trimesh is a thin surface; at the 6 m/s of an uncapped
+  2 m drop (3 cm per 200 Hz step, beyond the engine's 2 cm contact margin) limbs tunnel through it and are
+  never pushed back out, and the recorded "fallen" state has a leg under the ground.
+- **Terrain construction**: one trimesh tile per env (tile-local XY), a flat 1 m-grid apron at the
+  tile's lowest height out to ±8 m for robots that roll off the tile, and a deep cuboid slab under both
+  as a last resort. The apron matters: falling robots sink into a cuboid, not into a trimesh.
+
+Residual after all of this: after a dataset reset ~4% of envs have a hand or foot pressed up to 16 cm
+into the terrain (PhysX's own cache shows the same order of penetration).

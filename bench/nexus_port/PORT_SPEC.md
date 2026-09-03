@@ -1249,3 +1249,98 @@ Reward -240 (it 250) -> -233 (500) -> **-152 (750)** — the buggy runs needed ~
 reach -152. `model_1000` rolled on 64 envs with training-style resets: mean base height 0.28-0.31 m
 (every buggy checkpoint: 0.15-0.17), **12% of envs above 0.5 m at 8 s, max 0.87 m** — the first
 standing checkpoint on this backend, with the lift harness active as in training at that stage.
+
+## Bodies "sunk into the ground" (user report on the v11 video) — measured, and two causes found
+The render was first suspected (all four envs drawn on env 0's tile; fixed: per-env tiles,
+`terrain_v{k}/f{k}`, flat tiles need `inertia="shell"` in MuJoCo). The physics was then measured
+directly: per step, per env, the lowest body's height above the local terrain (`terr.heights_at`)
+in `record_nexus_policy.py` (`clearance`). `model_1000`, 64 envs, 8 s:
+
+| t | median | p10 | envs with a body >5 cm under | >20 cm | >40 cm (through the tile) |
+|---|---:|---:|---:|---:|---:|
+| 0 s | +0.070 | -0.206 | 25% | 11% | 0% |
+| 1 s | +0.020 | -0.426 | 34% | 23% | 17% |
+| 8 s | -0.267 | -0.498 | 66% | 56% | 34% |
+
+Real, and growing over the episode. Visual-hull deviation is not it (visual meshes extend at most
+1.5 cm beyond the 64-vertex hulls, median 0.4 cm).
+
+**Eliminated, with numbers** (`probe_trimesh_fallthrough.py`, bare engine, G1 dropped onto a flat
+8x8 m trimesh vs a cuboid floor, PD to the default pose): 4 substeps (no change), contact capacity
+256 -> 2048 (no change; `rbd_resize_stats` never grew), trimesh resolution 0.25 vs 1.0 m (no
+change), deterministic contact sort off (no change), foot-corner geoms as spheres / 5 mm boxes /
+1-4 cm boxes (identical), face winding (no change). Contact reduction OFF made lying poses sink too
+(-0.12..-0.21 m), so the per-multibody contact budget matters with fine meshes, but it is not the cause.
+`probe_freebody_trimesh.py`: a single free body carrying the G1's exact four corner spheres, a box,
+an offset box, or a shin hull comes to rest at the correct height on the trimesh — every variant.
+
+**Probe artefact, not an engine bug:** the "upright" drop put the *pelvis* at 0.5 m, i.e. the feet
+27 cm *under* the floor. A cuboid ejects them (+0.03 m), a trimesh — a thin surface — correctly
+never pushes out a body that starts on its far side. Spawned at 1.3 m the upright robot lands
+cleanly (min +0.01 m at impact, +0.03 m at rest). The engine's trimesh contact is sound.
+
+**Cause 1 (backend, fixed):** `terrain.py` placed every env's backstop floor at the *global*
+minimum height of the whole generated terrain (all curriculum levels), so on a flat tile the
+backstop sat ~0.5 m below the surface — the -0.50 m clearances are exactly that. Now the backstop
+top is flush with each tile's own lowest point (`tile_zmin`), which bounds any sink to the tile's
+height range (flat tiles: ~0).
+
+**Cause 2 (how bodies get under a thin surface in the first place):** under investigation with
+`probe_reset_penetration.py` — per-body clearance right after the default reset and after AGILE's
+fallen-state dataset reset (the dataset is collected on this backend by 2 m drops in `pre_learn`; a
+state recorded with a limb already through the trimesh is replayed at every reset).
+
+**Cause 2 — found: AGILE's fallen-state dataset was collected on PhysX and replayed in the wrong joint order.**
+`probe_reset_penetration.py`: after the *default* reset every body is above the terrain (min +0.6 cm once
+settled); after the *dataset* reset, one step in, 23% of envs have a body >5 cm under and 11% >20 cm —
+almost always a foot (`ankle_roll_link`: 57 of 60 cases) at -0.45..-0.50 m with the whole lower leg
+(6 bodies) below, root at +0.2 m: a straight leg pointing down through the floor. Backstop thickness
+(1 m -> 10 m) changed nothing (identical numbers), so no contact was involved — the *state itself* is wrong.
+The dataset is a disk cache (`fallen_states_cache/*.pt`, 09-02 03:37) and AGILE's collection loop calls
+PhysX-only hooks (`robot._joint_effort_target_sim`, `robot.root_view.set_dof_actuation_forces`) that this
+backend lacked, so collection on Nexus had never run: every Nexus run (v1..v11) loaded a PhysX cache.
+PhysX/USD enumerates joints breadth-first (`left_hip_pitch, right_hip_pitch, waist_yaw, left_hip_roll, ...`);
+the MJCF articulation is depth-first (`left_hip_pitch, left_hip_roll, left_hip_yaw, left_knee, ...`).
+MuJoCo FK of the cached states: read in BFS order the lowest body is 7-9 cm below the root (a robot lying
+on the ground); read in MJCF order it is 25-27 cm below, p10 -0.45 m, min -0.7 m — the legs in the video.
+Subset `env_ids` writes were verified correct (`probe_subset_writes.py`), so it is purely the ordering.
+
+Fix (backend only): `nexusify(..., agent_cfg=agent_cfg)` points `fallen_state_dataset_cfg.cache_dir` to
+`<dir>_nexus`, and the articulation gained a minimal PhysX-view shim (`_joint_effort_target_sim` warp
+buffer, `_ALL_INDICES`, `root_view/root_physx_view.set_dof_actuation_forces` = explicit effort target +
+actuator model recomputed from the current state, since PhysX's implicit drives keep acting during
+collection) so AGILE collects the dataset on Nexus, in this articulation's joint order. The cache key
+does not include the backend; a PhysX cache must never be reused here.
+Consequence: v1..v11 trained with ~1/4 of dataset resets starting from a scrambled pose. v11 is superseded.
+
+**Verification of the fix** (`probe_reset_penetration.py`, 256 envs, dataset collected on Nexus):
+
+| dataset reset | envs with a body >5 cm under | >20 cm under | worst |
+|---|---:|---:|---:|
+| PhysX cache, MJCF order (before) | 23% | 11% | -0.50 m (feet, whole lower leg under) |
+| Nexus-collected, no other change | 12% | 4% | -0.94 m (robots recorded inside the backstop slab) |
+| + collection vertical-speed cap 2.0 m/s | 0% (+1 step) | 0% | but root z mean 1.65 m: robots still airborne at capture |
+| + cap 3.5 m/s, tile-sized slab | 1% | 0% | -0.04 m at +1 step; off-tile robots sink into the slab later |
+| **+ off-tile apron trimesh (final)** | **1% at +1 step, 4% after 0.4 s** | **0%** | **-0.16 m** (a hand/foot pressed in; PhysX's own cache has -0.16 too) |
+
+Three more backend changes were needed to get there, all documented deviations that touch only AGILE's
+dataset collection or the terrain construction:
+1. `NEXUS_COLLECTION_VZ_MAX` (default 3.5 m/s): during the raw collection steps (the only place the shim
+   is called) the root's downward speed is capped. The 2 m drops otherwise hit the thin terrain trimesh
+   at ~6 m/s = 3 cm per 200 Hz step, beyond the engine's 2 cm contact margin, and limbs tunnel; a resting
+   body is never pushed back out of a thin surface. 3.5 m/s = 1.75 cm/step keeps landings under the margin
+   and still lands the robots inside AGILE's 1 s collection window (2 m/s did not). A per-step substep
+   boost would be the principled version, but `set_rbd_solver_iterations`/`set_rbd_dt` flag the state
+   dirty and the next `finalize()` rebuilds the GPU state from the CPU worlds (spawn poses) — a live
+   sim-params setter in the engine (mirroring `insertion_removal.rs`) would allow it.
+2. Backstop slab: top flush with each tile's own minimum height (was the global terrain minimum, 0.5 m
+   below flat tiles), 8 m half-extent (was 50 m).
+3. Off-tile apron: a flat 1 m-grid trimesh at each tile's minimum height over the slab's extent. Robots
+   that roll off the 8x8 m tile (collection spawns them up to 3 m off-centre) land on it like on the tile;
+   falling robots sank ~0.8 m into the cuboid slab itself (hull-vs-cuboid), not into the trimesh.
+
+`probe_subset_writes.py`, `probe_freebody_trimesh.py`, `probe_trimesh_fallthrough.py` (spawn the pelvis
+at >= 1.3 m — the earlier "upright" case spawned the feet 27 cm under the floor) and
+`probe_rb_offset_trimesh.py` (free rigid bodies are inert in this pipeline; use an MJCF free body) are the
+supporting probes. **v12**: v11's exact configuration, restarted on the fixed backend with a
+Nexus-collected dataset. Every earlier training result (v1..v11) is superseded.

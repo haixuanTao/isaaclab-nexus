@@ -53,7 +53,14 @@ if MESHDIR:
             asset.set("file", os.path.join(SRCD, MESHDIR, asset.get("file")))
     for c in root.iter("compiler"):
         c.attrib.pop("meshdir", None)
+# Nexus (GPU narrow phase) produces no contacts for BALL vs TRIMESH (ball -> degenerate-capsule PFM
+# subshape -> GJK/EPA vs each triangle fails), so the G1's foot-corner spheres fall through terrain.
+# Same-size boxes collide correctly; cuboid-vs-triangle is a well-formed PFM pair.
+spheres = [g for g in root.iter("geom") if g.get("type") is None and g.get("mesh") is None and g.get("size") and len(g.get("size").split()) == 1 and g.get("contype") != "0"]
+for g in spheres:
+    r = g.get("size"); g.set("type", "box"); g.set("size", f"{r} {r} {r}")
 tree.write(OUT)
+print(f"rewrote {len(spheres)} sphere geoms (foot corners) as boxes of the same half-size")
 before = sum(s[1] for s in stats); after = sum(s[2] for s in stats)
 print(f"rewrote {len(stats)} colliding meshes -> {OUT}")
 print(f"hull vertices total {before} -> {after}  ({before/max(after,1):.1f}x fewer), "

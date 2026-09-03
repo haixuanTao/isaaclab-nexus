@@ -36,6 +36,7 @@ from collections.abc import Sequence
 from typing import Any
 
 import torch
+import os
 import warp as wp
 
 from isaaclab.assets.articulation.base_articulation import BaseArticulation
@@ -491,10 +492,24 @@ class Articulation(BaseArticulation):
     def fixed_tendon_names(self) -> list[str]: return []
     @property
     def spatial_tendon_names(self) -> list[str]: return []
+    # ---- PhysX-view compatibility for AGILE's fallen-state collection loop ------------------------
+    # `FallenStateDataset.collect` bypasses `write_data_to_sim` and, before every raw physics step, does
+    #   wp.to_torch(robot._joint_effort_target_sim)[:] = 0.0
+    #   robot.root_view.set_dof_actuation_forces(robot._joint_effort_target_sim, robot._ALL_INDICES)
+    # On PhysX that zeroes the explicit actuation force while the implicit joint drives keep acting. Here
+    # the drives are Python PD models applied in `write_data_to_sim`, so the equivalent is: take the given
+    # forces as the explicit effort target and recompute the actuator model from the current state.
     @property
-    def root_view(self): return None
+    def _joint_effort_target_sim(self):
+        if getattr(self, "_effort_target_sim_wp", None) is None:
+            self._effort_target_sim_wp = wp.zeros((self.num_instances, self._num_joints), dtype=wp.float32, device=str(_DEV))
+        return self._effort_target_sim_wp
     @property
-    def root_physx_view(self): return None
+    def _ALL_INDICES(self): return torch.arange(self.num_instances, device=_DEV)
+    @property
+    def root_view(self): return _NexusRootView(self)
+    @property
+    def root_physx_view(self): return _NexusRootView(self)
 
     def _link_of_body(self, body_index: int) -> int:
         return int(body_index)
@@ -729,3 +744,26 @@ for _name in sorted(getattr(BaseArticulation, "__abstractmethods__", ())):
     if _name not in Articulation.__dict__:
         setattr(Articulation, _name, _stub(_name))
 Articulation.__abstractmethods__ = frozenset()
+
+
+class _NexusRootView:
+    """Minimal stand-in for `ArticulationView` used by AGILE's dataset collection (see `root_view`)."""
+    def __init__(self, art): self._art = art
+    def set_dof_actuation_forces(self, forces, indices=None):
+        a = self._art
+        f = wp.to_torch(forces) if isinstance(forces, wp.array) else _t(forces)
+        e = a._ids(indices, a.num_instances)
+        if f.shape[0] == a.num_instances: f = f[e]
+        a._data._joint_effort_target[e] = f.reshape(len(e), a._num_joints).to(torch.float32)
+        a.write_data_to_sim()                                  # PD from the current state + the new explicit efforts
+        # DEVIATION (collection only): the terrain trimesh is a thin surface and the 2 m collection drops hit it
+        # at ~6 m/s = 3 cm per 200 Hz step, past the 2 cm contact margin, so limbs tunnel and a resting body is
+        # never pushed back out; the recorded "fallen" state then has a leg under the terrain. Cap the root's
+        # downward speed during these raw collection steps (NEXUS_COLLECTION_VZ_MAX m/s, 0 disables).
+        vmax = float(os.environ.get("NEXUS_COLLECTION_VZ_MAX", "3.5"))
+        if vmax > 0:
+            v = a.data.root_link_vel_w.torch if hasattr(a.data, "root_link_vel_w") else a.data.root_vel_w.torch
+            fast = torch.nonzero(v[:, 2] < -vmax).flatten()
+            if len(fast):
+                vv = v[fast].clone(); vv[:, 2] = -vmax; a.write_root_velocity_to_sim(vv, env_ids=fast)
+    def set_dof_actuation_forces_mask(self, forces, mask): self.set_dof_actuation_forces(forces, torch.nonzero(_t(mask)).flatten())

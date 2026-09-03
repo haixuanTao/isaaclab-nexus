@@ -46,6 +46,7 @@ class NexusManager(PhysicsManager):
     _assets: ClassVar[dict[str, Any]] = {}     # prim_path prefix -> Articulation
     _terrain: ClassVar[Any] = None
     _graph: ClassVar[bool] = False   # a CUDA graph of one physics step has been captured
+    _substep_override: ClassVar[int] = 0   # set by `request_substeps`; consumed by the next `step()`
     _steps: ClassVar[int] = 0
 
     # ------------------------------------------------------------------ lifecycle
@@ -76,6 +77,10 @@ class NexusManager(PhysicsManager):
         return None
 
     @classmethod
+    def request_substeps(cls, n: int) -> None:
+        cls._substep_override = max(int(n), 0)
+
+    @classmethod
     def step(cls) -> None:
         if not cls._finalized:
             cls.finalize()
@@ -84,6 +89,13 @@ class NexusManager(PhysicsManager):
         # skips `auto_resize_buffers`, so it only happens after `warmup` normal
         # steps -- and never before the contact/coloring buffers have stopped
         # growing (`cuda_graph_warmup` in NexusCfg).
+        if cls._substep_override:
+            # A per-step substep change is NOT possible live: `set_rbd_solver_iterations`/`set_rbd_dt` mark the
+            # state dirty and the next `finalize()` rebuilds the GPU state from the CPU worlds (spawn poses),
+            # which would reset the simulation. Left as a no-op until the engine exposes a live sim-params
+            # setter (mirroring `insertion_removal.rs`: sim_params write + mb.set_num_solver_iterations +
+            # set_constraint_softness).
+            cls._substep_override = 0
         if cls._graph:
             if cls._pipeline.replay_cuda_graph():
                 PhysicsManager._sim_time += cls.get_physics_dt()

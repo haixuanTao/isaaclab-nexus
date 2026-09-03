@@ -41,8 +41,9 @@ def install() -> None:
     _installed = True
 
 
-def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, implicit_coriolis: bool = False, collisions_resize_policy: str = "grow", cuda_graph_warmup: int = 0, critic_force_clip_n: float | None = 5000.0, drop_terms: set[str] | None = None):
+def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, implicit_coriolis: bool = False, collisions_resize_policy: str = "grow", cuda_graph_warmup: int = 0, critic_force_clip_n: float | None = 5000.0, drop_terms: set[str] | None = None, agent_cfg=None):
     install()
+    if agent_cfg is not None: _nexus_dataset_cache(agent_cfg)
     env_cfg.sim.physics = NexusCfg(collisions_capacity=collisions_capacity, solver_iterations=solver_iterations, contact_reduction=contact_reduction, implicit_coriolis=implicit_coriolis, collisions_resize_policy=collisions_resize_policy, cuda_graph_warmup=cuda_graph_warmup)
     scene = env_cfg.scene
     for name in list(vars(scene)):
@@ -80,3 +81,13 @@ def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_
                 term.clip = (-float(critic_force_clip_n), float(critic_force_clip_n))
     env_cfg.sim.render_interval = env_cfg.decimation
     return env_cfg
+
+
+def _nexus_dataset_cache(agent_cfg) -> None:
+    """AGILE's fallen-state dataset is cached on disk under a key that does not include the physics backend.
+    A cache collected on PhysX stores `joint_pos` in the USD (breadth-first) joint order; replayed here in MJCF
+    order it scrambles the pose (legs through the terrain). Keep this backend's dataset in its own directory so
+    it is collected on Nexus, in this articulation's joint order."""
+    ds = getattr(agent_cfg, "fallen_state_dataset_cfg", None)
+    if ds is not None and hasattr(ds, "cache_dir") and not str(ds.cache_dir).endswith("_nexus"):
+        ds.cache_dir = str(ds.cache_dir) + "_nexus"
