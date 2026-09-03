@@ -16,7 +16,7 @@ Conventions (validated in bench/nexus_port/test_write_path.py, test_g1_articulat
     the free root: coords 0-2 = world position, orientation = quad WS_JOINT_ROT (xyzw);
   * generalized velocities: ``dof_state[0]`` (D, NB); the root's 6 = linear (world) then
     angular (world), from the integrator's ``disp * joint_rot`` update;
-  * quaternions are xyzw in Nexus and wxyz in Isaac Lab; every quat is converted on read/write;
+  * quaternions are (x, y, z, w) in both Nexus and Isaac Lab 3.0 -- passed through unchanged;
   * ACTUATION: Isaac Lab's actuator models (Implicit / DCMotor / Delayed...) run in Python
     exactly as on PhysX; the resulting ``applied_effort`` is written as a generalized force
     (``external_gen_forces``) every ``write_data_to_sim``. Engine motors are disabled (gains 0)
@@ -68,12 +68,17 @@ def _match(names: list[str], keys, preserve_order: bool = False) -> tuple[list[i
 
 
 def _xyzw_to_wxyz(q: torch.Tensor) -> torch.Tensor:
-    return q[..., [3, 0, 1, 2]]
-
+    """Identity. The engine stores quaternions as (x, y, z, w) and so does Isaac Lab 3.0 (see
+    `isaaclab.utils.math.quat_apply_inverse`: "quaternion in (x, y, z, w)", `InitialStateCfg.rot`
+    default (0, 0, 0, 1), `isaaclab_physx` ArticulationData). This backend was first written to the
+    pre-3.0 (w, x, y, z) convention; the conversion scrambled every quaternion crossing the boundary
+    -- robots spawned yawed 180 degrees and every body-frame observation of a non-upright robot was
+    computed from the wrong rotation. Kept as a named no-op so every call site stays visible."""
+    return q
 
 def _wxyz_to_xyzw(q: torch.Tensor) -> torch.Tensor:
-    return q[..., [1, 2, 3, 0]]
-
+    """Identity -- see `_xyzw_to_wxyz`."""
+    return q
 
 def _t(x) -> torch.Tensor:
     if isinstance(x, ProxyArray):
@@ -81,6 +86,13 @@ def _t(x) -> torch.Tensor:
     if isinstance(x, wp.array):
         return wp.to_torch(x)
     return torch.as_tensor(x, device=_DEV)
+
+
+def _quat_apply(q: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
+    """Rotate vectors v (..., 3) by unit quaternions q (..., 4) in (x, y, z, w) order (Isaac Lab 3.0 / engine)."""
+    xyz, w = q[..., :3], q[..., 3:]
+    t = 2.0 * torch.cross(xyz, v, dim=-1)
+    return v + w * t + torch.cross(xyz, t, dim=-1)
 
 
 class ArticulationData:
@@ -178,7 +190,7 @@ class ArticulationData:
     @property
     def soft_joint_vel_limits(self): return _proxy(self._joint_vel_limits)
 
-    # ---- root state (link 0), Isaac conventions: pos xyz, quat wxyz, vel [lin, ang] world ----
+    # ---- root state (link 0), Isaac Lab 3.0 conventions: pos xyz, quat (x, y, z, w), vel [lin, ang] world ----
     @property
     def root_link_pos_w(self): return _proxy(self._a._quad(self._a._lay["WS_LTW"] + 1)[:, 0, :3])
     @property
@@ -393,10 +405,10 @@ class Articulation(BaseArticulation):
             for pat, v in (ist.joint_vel or {}).items():
                 ids, _ = _match(self._joint_names, pat); jv[:, ids] = float(v)
             pos = torch.tensor(list(ist.pos), device=_DEV, dtype=torch.float32)
-            rot = torch.tensor(list(ist.rot), device=_DEV, dtype=torch.float32)            # wxyz
+            rot = torch.tensor(list(ist.rot), device=_DEV, dtype=torch.float32)            # (x, y, z, w), Isaac Lab 3.0
             lin = torch.tensor(list(ist.lin_vel), device=_DEV); ang = torch.tensor(list(ist.ang_vel), device=_DEV)
         else:
-            pos = torch.zeros(3, device=_DEV); rot = torch.tensor([1.0, 0, 0, 0], device=_DEV); lin = ang = torch.zeros(3, device=_DEV)
+            pos = torch.zeros(3, device=_DEV); rot = torch.tensor([0.0, 0, 0, 1.0], device=_DEV); lin = ang = torch.zeros(3, device=_DEV)
         origins = getattr(self._spawn, "env_origins", None)
         pose = torch.cat([pos, rot]).expand(N, 7).clone()
         if origins is not None:
@@ -560,9 +572,24 @@ class Articulation(BaseArticulation):
         wr = torch.zeros(self.num_instances, 6, device=_DEV)
         for comp in (self.permanent_wrench_composer, self.instantaneous_wrench_composer):
             if comp.active:
-                F = wp.to_torch(comp.global_force_w); T = wp.to_torch(comp.global_torque_w)      # (N, B, 3) world
-                r = self._data.body_link_pos_w.torch - self._data.root_link_pos_w.torch[:, None, :]
-                wr[:, :3] += F.sum(1); wr[:, 3:] += (T + torch.cross(r, F, dim=-1)).sum(1)
+                # The composer's OUTPUT is the total wrench per body in the BODY frame (global + local
+                # inputs combined; `set_external_force_and_torque` fills the local buffers by default,
+                # so reading the raw global buffers -- as this did before -- saw nothing at all).
+                # Rotate to world, then transport every body's wrench to the root: F_root = sum F,
+                # tau_root = sum (tau + (p_body_com - p_root) x F).
+                # Compose in torch from the input buffers (the composer's own warp kernel wants vec3f-typed
+                # views this backend does not provide): world = global + R(body) * local. The torque
+                # buffers already carry the moment of any position offsets given at set time.
+                q = self._data.body_link_quat_w.torch                                            # (N, B, 4) xyzw
+                Fw = (wp.to_torch(comp.global_force_w) + wp.to_torch(comp.global_force_at_com_w)
+                      + _quat_apply(q, wp.to_torch(comp.local_force_b)))
+                Tw = wp.to_torch(comp.global_torque_w) + _quat_apply(q, wp.to_torch(comp.local_torque_b))
+                r = self._data.body_com_pos_w.torch - self._data.root_link_pos_w.torch[:, None, :]
+                wr[:, :3] += Fw.sum(1); wr[:, 3:] += (Tw + torch.cross(r, Fw, dim=-1)).sum(1)
+        # The engine's free-joint generalized forces are expressed in the ROOT LINK frame (measured:
+        # a world +X force at a 180-degree-yawed root produced -vx). Rotate the world wrench into it.
+        qr = self._data.root_link_quat_w.torch
+        wr = torch.cat([math_utils.quat_apply_inverse(qr, wr[:, :3]), math_utils.quat_apply_inverse(qr, wr[:, 3:])], dim=1)
         self._effort[self._root_cols, :] = wr.T
         self.instantaneous_wrench_composer.reset()
 

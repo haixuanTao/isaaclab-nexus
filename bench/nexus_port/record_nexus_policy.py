@@ -31,7 +31,7 @@ with torch.inference_mode():
         act = policy(obs)
         obs, _, _, _ = wenv.step(act)
         d = robot.data
-        root_pos.append(d.root_link_pos_w.torch[:K].cpu().numpy()); root_quat.append(d.root_link_quat_w.torch[:K].cpu().numpy())
+        root_pos.append(d.root_link_pos_w.torch[:K].cpu().numpy()); root_quat.append(d.root_link_quat_w.torch[:K][:, [3, 0, 1, 2]].cpu().numpy())   # (x,y,z,w) -> MuJoCo (w,x,y,z)
         jpos.append(d.joint_pos.torch[:K].cpu().numpy()); zall.append(d.root_link_pos_w.torch[:, 2].cpu().numpy())
         jv = d.joint_vel.torch.abs().max().item(); rv = d.root_lin_vel_w.torch.norm(dim=-1).max().item() if hasattr(d, 'root_lin_vel_w') else float('nan')
         ext.append((jv, rv))

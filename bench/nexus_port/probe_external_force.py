@@ -23,9 +23,11 @@ def run(label, F, T, steps=100):
     z0 = float(robot.data.root_link_pos_w.torch[:, 2].mean()); out = []
     for i in range(steps):
         robot.set_joint_position_target(q0); robot.set_external_force_and_torque(f, t, body_ids=torso); robot.write_data_to_sim(); NexusManager.step(); robot.update(DT)
-        if i in (9, 24, 49, 99): out.append(f"t={(i+1)*DT:.2f}s z {float(robot.data.root_link_pos_w.torch[:,2].mean()):.3f} vz {float(robot.data.root_lin_vel_w.torch[:,2].mean()):+.2f} wx {float(robot.data.root_ang_vel_w.torch[:,0].mean()):+.2f}")
+        if i in (4, 9, 24, 49, 99): w = robot.data.root_ang_vel_w.torch.mean(0); out.append(f"t={(i+1)*DT:.2f}s z {float(robot.data.root_link_pos_w.torch[:,2].mean()):.3f} vz {float(robot.data.root_lin_vel_w.torch[:,2].mean()):+.2f} w=({float(w[0]):+.2f},{float(w[1]):+.2f},{float(w[2]):+.2f})")
     print(f"[{label}] z0 {z0:.3f} | " + " | ".join(out))
 run("no external force   ", (0, 0, 0), (0, 0, 0))
 run("+500 N up on torso  ", (0, 0, 500.0), (0, 0, 0))
 run("+2000 N up on torso ", (0, 0, 2000.0), (0, 0, 0))
-run("+100 Nm x-torque    ", (0, 0, 0), (100.0, 0, 0))
+run("+100 Nm x-torque    ", (0, 0, 0), (100.0, 0, 0), steps=25)
+run("+100 Nm y-torque    ", (0, 0, 0), (0, 100.0, 0), steps=25)
+run("+100 Nm z-torque    ", (0, 0, 0), (0, 0, 100.0), steps=25)

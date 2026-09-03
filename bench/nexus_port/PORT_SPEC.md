@@ -1191,3 +1191,30 @@ push events**; the PhysX/Newton baselines had them. This explains, in order: the
 (PhysX 81% up at 0.5 s with its lift, Nexus 0%), the slower learning (-160 vs -75 at 2000), the
 policy never standing, the critic's narrow distribution, and the divergence at ~4,000. The
 observation-normalization default stays (harmless, proven stable), but it treated a symptom.
+
+## THE ROOT CAUSE: quaternion order. Isaac Lab 3.0 is (x, y, z, w); this backend converted to (w, x, y, z)
+Found while fixing the harness. `isaaclab.utils.math.quat_apply_inverse`: "quaternion in (x, y, z,
+w)"; `isaaclab_physx` `ArticulationData`: "(x, y, z, w) format"; `InitialStateCfg.rot` default
+`(0, 0, 0, 1)`. This backend was written to the pre-3.0 (w, x, y, z) convention and converted every
+quaternion on read (`_xyzw_to_wxyz`) and write (`_wxyz_to_xyzw`). Measured consequences:
+- Every robot spawned **yawed 180°**: the identity (0,0,0,1) written through the conversion became
+  (0,0,1,0) = 180° about z (raw root `JOINT_ROT` after init and after every reset; left hip at +y
+  in world while the MJCF faces +x).
+- Every quaternion handed to Isaac Lab -- `root_link_quat_w`, `body_link_quat_w` -- was scrambled,
+  so every body-frame observation (`projected_gravity`, `base_lin_vel`, `base_ang_vel`, heading,
+  the ray caster's yaw alignment) was computed from the **wrong rotation whenever the robot was not
+  upright** -- which, in a stand-up-from-fallen task, is most of the time. PhysX/Newton computed
+  them correctly. The policy never learned to stand and the critic diverged on inconsistent
+  observation/return pairs. The earlier fidelity checks were blind to this: the zero-action and
+  torque probes did not involve Isaac's quaternion math, and the upright-only orientation checks
+  cancel at identity.
+- Fallen-state dataset resets wrote a scrambled orientation, so the reset pose was not the
+  dataset's pose.
+- The external-wrench fix could not work: `quat_apply_inverse` saw the scrambled root quaternion.
+
+Fix: the conversions are now identity (kept as named no-ops so every site stays visible),
+`init_state.rot` is read as (x, y, z, w), the composer helper rotates with (x, y, z, w), and the
+video recorder converts to MuJoCo's (w, x, y, z) itself. Every training result in this document
+(v1..v10) was produced with scrambled body-frame observations and without the harness. The
+throughput numbers are unaffected (the step cost does not depend on observation correctness).
+Verification and a corrected long run follow.
