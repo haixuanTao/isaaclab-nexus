@@ -22,6 +22,7 @@ parser.add_argument("--num_envs", type=int, default=9)
 parser.add_argument("--seconds", type=float, default=12.0)
 parser.add_argument("--checkpoint", type=str, required=True)
 parser.add_argument("--keep-assist", action="store_true", help="keep the training-only lift/harness actions (default: removed, as in eval.py)")
+parser.add_argument("--assist-scale", type=float, default=None, help="with --keep-assist: scale the lift force to this fraction (e.g. the training-time curriculum value)")
 parser.add_argument("--out", type=str, required=True)
 parser.add_argument("--width", type=int, default=1280)
 parser.add_argument("--height", type=int, default=720)
@@ -55,6 +56,11 @@ def main():
 
     env_cfg.seed = 42
     env = gym.make(args_cli.task, cfg=env_cfg)
+    if args_cli.keep_assist and args_cli.assist_scale is not None:
+        term = env.unwrapped.action_manager._terms.get("lift")
+        if term is not None and hasattr(term, "scale_forces"):
+            term.scale_forces(float(args_cli.assist_scale))
+            print(f"[assist] lift kept at scale {args_cli.assist_scale}", flush=True)
     unwrapped = env.unwrapped
     robot = unwrapped.scene["robot"]
     # The raw env hands back a TensorDict the TorchScript policy won't accept;
