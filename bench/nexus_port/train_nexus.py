@@ -11,7 +11,7 @@ from isaaclab_nexus.envs import nexusify
 TASK = "HeightTracking-G1-v0"; G1 = os.environ.get("NEXUS_G1_MJCF", "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml")
 NENV = int(sys.argv[1]) if len(sys.argv) > 1 else 1024; ITERS = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
-env_cfg.scene.num_envs = NENV; env_cfg.seed = agent_cfg.seed; agent_cfg.max_iterations = ITERS; agent_cfg.run_name = "nexus"
+env_cfg.scene.num_envs = NENV; env_cfg.seed = int(os.environ.get("NEXUS_SEED", agent_cfg.seed)); agent_cfg.seed = env_cfg.seed; agent_cfg.max_iterations = ITERS; agent_cfg.run_name = "nexus"
 nexusify(env_cfg, G1)
 t0 = time.perf_counter(); env = gym.make(TASK, cfg=env_cfg); print(f"[nexus] env built in {time.perf_counter()-t0:.1f}s")
 pre = gym.spec(TASK).kwargs.get("pre_learn_entry_point")

@@ -954,3 +954,17 @@ why 4 substeps read ~4x higher than 1.
 Open: whether PhysX reports comparable per-step impulsive forces under the same policy (the
 task's ±25 kN clip suggests spikes are expected there too). Control probe on the stock PhysX env
 with the same checkpoint follows.
+
+**PhysX control (stock env, same `model_4000` policy, 2048 envs x 200 steps):** peak contact force
+**95,460 N**, median per-step max 31,130 N, p99.9 12,479 N — critic input pinned at the ±25 kN clip
+every step. Isaac Lab's PhysX sensor is the same quantity (`get_net_contact_forces(dt=physics_dt)`,
+impulse over one physics step). So tens-of-kN impulsive forces are AGILE-normal, and this
+backend's force inputs to the critic are *milder* than PhysX's (1 substep: 17 kN peak). The
+scaling fix is verified: 4 substeps now reads 24,704 N peak instead of 91,110 N. **Contact forces
+are not the Nexus-specific cause of the divergence.**
+
+Status of the divergence: not physics extremes, not rewards, not forces (milder than PhysX), not
+chunked logging. v4's reproduction was not an independent trial — it resumed with the same env
+seed (42), replaying a correlated reset sequence. Next: resume from `model_4000` with a different
+seed (v5, `NEXUS_SEED=7`), value-loss alarm armed. Recurrence near iteration 4000-4300 would make
+it systematic to this config; a clean continuation would make it a stochastic PPO blow-up.
