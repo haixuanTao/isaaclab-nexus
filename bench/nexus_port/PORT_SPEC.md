@@ -1243,3 +1243,9 @@ exact configuration (`empirical_normalization=False`, no critic force clip), see
 iterations — the honest test. If it trains through ~4,000 without the earlier collapse, the two
 deviations (normalization, clip) were treating a symptom of the quaternion bug and can be dropped;
 if not, they stay. Every earlier training result (v1..v10) is superseded.
+
+## v11 (fixed backend, AGILE's exact cfg): the robot stands
+Reward -240 (it 250) -> -233 (500) -> **-152 (750)** — the buggy runs needed ~3,000 iterations to
+reach -152. `model_1000` rolled on 64 envs with training-style resets: mean base height 0.28-0.31 m
+(every buggy checkpoint: 0.15-0.17), **12% of envs above 0.5 m at 8 s, max 0.87 m** — the first
+standing checkpoint on this backend, with the lift harness active as in training at that stage.
