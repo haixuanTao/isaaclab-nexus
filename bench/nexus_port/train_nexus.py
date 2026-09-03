@@ -16,7 +16,7 @@ env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_
 # NEXUS_EMP_NORM=0 restores AGILE's setting.
 if os.environ.get("NEXUS_EMP_NORM", "1") != "0": agent_cfg.empirical_normalization = True; print("[nexus] empirical observation normalization ON (actor + critic) -- backend default, deviation from AGILE's cfg")
 env_cfg.scene.num_envs = NENV; env_cfg.seed = int(os.environ.get("NEXUS_SEED", agent_cfg.seed)); agent_cfg.seed = env_cfg.seed; agent_cfg.max_iterations = ITERS; agent_cfg.run_name = "nexus"
-nexusify(env_cfg, G1)
+nexusify(env_cfg, G1, critic_force_clip_n=(None if os.environ.get("NEXUS_FORCE_CLIP", "5000") in ("0", "none", "None") else float(os.environ.get("NEXUS_FORCE_CLIP", "5000"))))
 FCLIP = float(os.environ.get("NEXUS_DIAG_FORCE_CLIP", "0") or 0)        # override of nexusify's critic_force_clip_n (default 5000 N)
 if FCLIP:
     env_cfg.observations.critic.contact_forces.clip = (-FCLIP, FCLIP); print(f"[nexus] DIAGNOSTIC critic contact_forces clip = ±{FCLIP} N")

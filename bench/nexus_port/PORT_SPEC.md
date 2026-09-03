@@ -1229,3 +1229,17 @@ Verification and a corrected long run follow.
 - Known residual: non-root body poses are refreshed by the next physics step, not by `forward()`,
   so the first observation after a reset sees one step of stale link positions for non-root bodies
   (root pose and joint state are fresh). An FK-only `forward()` would close it.
+
+**AGILE-env standing hold after the fixes** (`probe_standing_hold.py`, zero actions, lift active):
+
+| | 0.5 s | 1 s | 2 s | 5 s |
+|---|---:|---:|---:|---:|
+| Nexus before (scrambled quats, no harness) | 9% up | 1% | 0% | 0% |
+| **Nexus after** | **100% up** | 22% | 25% | **27%** |
+| PhysX | 81% up | 44% | 33% | 25% |
+
+The two engines now agree on this test. **v11**: fresh long run on the fixed backend with AGILE's
+exact configuration (`empirical_normalization=False`, no critic force clip), seed 42, 10,000
+iterations — the honest test. If it trains through ~4,000 without the earlier collapse, the two
+deviations (normalization, clip) were treating a symptom of the quaternion bug and can be dropped;
+if not, they stay. Every earlier training result (v1..v10) is superseded.
