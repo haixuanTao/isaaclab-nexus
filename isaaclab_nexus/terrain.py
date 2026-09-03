@@ -31,7 +31,7 @@ class NexusTerrain:
     """All tiles of a generated terrain, one collider per env for its assigned tile."""
 
     def __init__(self, terrain_generator_cfg, num_envs: int, tiles: list[tuple[int, int]] | None = None,
-                 tile: tuple[int, int] = (0, 0), grid_res: float = 0.05, floor_half: float = 8.0,
+                 tile: tuple[int, int] = (0, 0), grid_res: float = 0.05, floor_half: float = 16.0,
                  device: str = "cuda", collider_res: float | None = None, friction: float | None = None):
         import os
         from isaaclab.terrains import TerrainGenerator

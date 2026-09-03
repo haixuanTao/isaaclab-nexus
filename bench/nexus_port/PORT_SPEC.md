@@ -1405,3 +1405,18 @@ synchronizes before observations are read.)
 spawn, initial velocity 1 m/s) root z median 0.20, joint_vel p99 11.2. Dataset resets: 0% of envs with a
 body >5 cm under at +1 step, 1% after 0.4 s (feet, max 30 cm), 0% >20 cm. **v15** launched on these
 datasets (loaded from the anchored cache; v11's exact config). v12-v14 are void.
+
+**Episode rollouts on the Nexus-collected dataset** (`record_nexus_policy.py`, v11 `model_2000`, 64 envs,
+8 s; fraction of on-tile envs with a body < -5 cm / < -20 cm under the terrain):
+
+| | t=0.1 s | 1 s | 2 s | 4 s | 8 s | all samples < -20 cm |
+|---|---:|---:|---:|---:|---:|---:|
+| Nexus, policy | 0.00 / 0.00 | 0.03 / 0.02 | 0.06 / 0.02 | 0.03 / 0.02 | 0.02 / 0.00 | 1.3% |
+| Nexus, zero actions | 0.00 / 0.00 | 0.00 / 0.00 | 0.05 / 0.00 | 0.03 / 0.02 | 0.09 / 0.02 | 0.9% |
+| PhysX, policy (own cache) | 0.20 / 0.17 | 0.17 / 0.08 | 0.12 / 0.06 | 0.06 / 0.05 | 0.03 / 0.03 | 5.9% |
+| PhysX, zero actions | 0.33 / 0.20 | 0.20 / 0.08 | 0.20 / 0.09 | 0.16 / 0.05 | 0.12 / 0.05 | 6.6% |
+
+The "sunk bodies" are gone: the backend now sits *below* PhysX on this metric. Residual: feet pressed up to
+~30 cm into the terrain in 1-2% of envs mid-episode (thin trimesh, no ejection), and one env that walked
+off its tile beyond the 8 m apron and fell (min z -5 m) — apron/slab half-extent raised to 16 m.
+The same checkpoint now stands in 25% of envs at 8 s (16% with the scrambled resets).
