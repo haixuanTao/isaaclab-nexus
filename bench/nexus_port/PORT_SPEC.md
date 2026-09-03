@@ -923,3 +923,12 @@ What remains is an RL-side instability of AGILE's PPO setup at this point (adapt
 normalization) — engine-independent as far as these measurements can tell. Action: stopped v3,
 resumed from `model_4000.pt` (last good) as **v4**, unchunked, same config, 6,000 iterations, with
 the watch flagging any value loss over 100 so a recurrence is caught at onset.
+
+**v4 reproduced it.** Resumed from `model_4000` with a fresh random stream, unchunked: value loss
+crosses 100 at iteration **4231** and the reward slides (-200 -> -315 within 15 iterations). v3
+diverged at 4044 from the same weights. Systematic, not stochastic. Since a 64-env x 15 s rollout
+cannot see a one-in-ten-thousand-episode outlier while training sees 24M env-steps per 250
+iterations, the rare-physics-outlier hypothesis is back on the table; `probe_outliers.py` rolls
+`model_4000` on 4096 envs with training-style resets and logs, per step, the minimum reward over
+envs, the physics extremes, and — for the worst (env, step) pairs — which reward terms produced
+them. v4 stopped at 4245.
