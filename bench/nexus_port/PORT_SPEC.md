@@ -903,3 +903,23 @@ the two shared the GPU — the learn time doubling to 0.63 s gave it away. Disca
 This supersedes every earlier training-loop table in this document (all taken under the reset
 bug). The zero-action loop numbers, the substep / hull / Coriolis A/Bs and the fidelity checks
 were never affected and stand as written.
+
+## v3 diverged at iteration ~4044 — diagnosed, physics exonerated, resumed from model_4000
+Mean reward -166 (it 4000) -> -3,900 (it 5000). Onset is a **critic** event: `Mean value loss`
+spikes briefly at 3956 (12) and 3972 (67) with reward unchanged, then 4036 (80) -> 4044 (**3,740**)
+and never recovers; the policy decays afterwards while action std and entropy stay flat. Every
+physics-driven penalty (`joint_vel_limits` 0, `torque_limits` -0.01, `joint_tracking_error` -0.5,
+`completely_airborne` -0.45) is flat through all three spikes and only rises after 4044 — the
+environment did not blow up first. No NaN, no invalid-state terminations, engine buffers untouched.
+
+Ruled out:
+- **the fast physics config** — `model_4000` rolled 64 envs x 750 steps at 1 vs 4 substeps: max
+  |joint_vel| 19.5 vs 17.6 rad/s, max root speed 3.68 vs 3.71 m/s, z range 0.02-0.92 vs
+  0.06-0.92, identical height trajectories. No outliers at either setting.
+- **the chunked stats logging** — the earlier chunked run showed no such spikes in 3,250
+  iterations, and this rsl_rl's `learn()` re-initializes nothing between calls.
+
+What remains is an RL-side instability of AGILE's PPO setup at this point (adaptive LR, reward
+normalization) — engine-independent as far as these measurements can tell. Action: stopped v3,
+resumed from `model_4000.pt` (last good) as **v4**, unchunked, same config, 6,000 iterations, with
+the watch flagging any value loss over 100 so a recurrence is caught at onset.

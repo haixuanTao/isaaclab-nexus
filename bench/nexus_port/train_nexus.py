@@ -20,6 +20,9 @@ if pre:
 env = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)
 log_dir = os.path.abspath(os.path.join("/workspace/bench/nexus_port/logs", time.strftime("%Y-%m-%d_%H-%M-%S") + "_nexus"))
 runner = make_rsl_rl_runner(env, agent_cfg, log_dir=log_dir, device=agent_cfg.device)
+RESUME = os.environ.get("NEXUS_RESUME")                                   # checkpoint to continue from
+if RESUME:
+    runner.load(RESUME); print(f"[nexus] resumed from {RESUME} at iteration {runner.current_learning_iteration}")
 t0 = time.perf_counter()
 CHUNK = int(os.environ.get("NEXUS_STATS_EVERY", "0") or 0)          # >0: learn in chunks and log allocator/engine stats between them
 if CHUNK:
