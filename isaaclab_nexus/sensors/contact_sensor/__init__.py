@@ -77,9 +77,15 @@ class ContactSensor(BaseContactSensor):
         self._b = len(ids)
         self._hist_len = int(getattr(cfg, "history_length", 0) or 0)
         self._dt = float(NexusManager.get_physics_dt())
-        # measured: the engine's readout is the per-solver-iteration normal impulse (sum/weight = 1/iterations)
+        # The readout is the accumulated normal impulse. In IMPLICIT-Coriolis mode the engine rebuilds
+        # contact constraints every substep, so the readout is the LAST substep's impulse and must be
+        # scaled by the substep count (measured: sum/weight = 1/iterations). In EXPLICIT mode the
+        # constraints are built once per step and the impulse accumulates over the whole step: no
+        # scaling. (Same rule Zealot applies: `sensor_inv_dt`.) Scaling in explicit mode over-reported
+        # forces 4x at 4 substeps and pinned AGILE's critic observation at its +-25 kN clip.
         from ...physics.nexus_manager import PhysicsManager as _PM
-        self._iters = int(getattr(_PM._cfg, "solver_iterations", 4))
+        _implicit = bool(getattr(_PM._cfg, "implicit_coriolis", False))
+        self._iters = int(getattr(_PM._cfg, "solver_iterations", 4)) if _implicit else 1
         self._threshold = float(getattr(cfg, "force_threshold", 1.0) or 1.0)
         self._data = ContactSensorData(self._n, self._b, self._hist_len)
         self._data._pos.copy_(self._art.data.body_link_pos_w.torch[:, ids, :])

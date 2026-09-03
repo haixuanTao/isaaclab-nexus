@@ -932,3 +932,25 @@ iterations, the rare-physics-outlier hypothesis is back on the table; `probe_out
 `model_4000` on 4096 envs with training-style resets and logs, per step, the minimum reward over
 envs, the physics extremes, and — for the worst (env, step) pairs — which reward terms produced
 them. v4 stopped at 4245.
+
+## Divergence root cause candidate: contact forces into the critic (and a sensor scaling bug)
+Training-scale probe (`probe_contact_extremes.py`, `model_4000`, 4096 envs x 300 steps):
+
+| substeps | peak contact force | median per-step max | p99.9 | critic input max (scale 5e-3, clip ±25 kN) |
+|---:|---:|---:|---:|---:|
+| 1 | 17,049 N (49x weight) | 11,507 N | 3,741 N | 85.2 |
+| 4 | 91,110 N (263x weight) | 71,278 N | 17,897 N | **125.0 — pinned at the clip** |
+
+Rewards and physics extremes were bounded in the same rollouts; the only consumer of raw force
+magnitude in AGILE's task is the **critic** observation `contact_force_norm` over all 30 bodies —
+so a critic-only blow-up with flat reward penalties is exactly what these numbers predict.
+
+**Bug found:** the backend scaled the sensed impulse by `solver_iterations` unconditionally. That
+is the implicit-Coriolis rule (constraints rebuilt per substep, readout = last substep's impulse).
+In explicit mode the impulse accumulates over the whole step and must not be scaled (Zealot's
+`sensor_inv_dt` makes the same distinction). Fixed: scale only when `implicit_coriolis`. This is
+why 4 substeps read ~4x higher than 1.
+
+Open: whether PhysX reports comparable per-step impulsive forces under the same policy (the
+task's ±25 kN clip suggests spikes are expected there too). Control probe on the stock PhysX env
+with the same checkpoint follows.
