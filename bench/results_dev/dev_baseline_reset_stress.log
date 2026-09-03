@@ -1,0 +1,310 @@
+Loading user config located at: '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1788456919.013469  114717 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788456919.013503  114717 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+2026-09-03T17:35:19Z [0ms] [Warning] [omni.usd_config.extension] Enable omni.materialx.libs extension to use MaterialX
+2026-09-03T17:35:19Z [11ms] [Warning] [omni.platforminfo.plugin] failed to open the default display.  Can't verify X Server version.
+2026-09-03T17:35:19Z [48ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderHw.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-03T17:35:19Z [49ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libMaterialXRenderGlsl.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+2026-09-03T17:35:19Z [50ms] [Error] [omni.ext.plugin] Could not load the dynamic library from /workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/extscache/omni.usd.libs-1.0.3+6312fa25.lx64.r.cp312/bin/libusd_usdBakeMtlx.so. Error: libXt.so.6: cannot open shared object file: No such file or directory (note that this may be caused by a dependent library)
+Warp 1.16.0 initialized:
+   CUDA Toolkit 12.9, Driver 13.0
+   Devices:
+     "cpu"      : "x86_64"
+     "cuda:0"   : "NVIDIA GeForce RTX 5090" (31 GiB, sm_120, mempool enabled)
+   Kernel cache:
+     /root/.cache/warp/1.16.0
+[ISAACLAB] AppLauncher initialization complete
+[ISAACLAB] Kit version: 110.1.1+production.305458.6312fa25.gl
+[ISAACLAB] Kit kernel:  210.1.5+release.12978.b22b555f.gl
+[ISAACLAB] Kit hash:    6312fa25
+[INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
+2026-09-03T17:35:24Z [5,514ms] [Warning] [isaaclab.envs.manager_based_env] Seed not set for the environment. The environment creation may not be deterministic.
+2026-09-03T17:35:24Z [5,514ms] [Warning] [isaaclab.envs.common] env_cfg.viewer is deprecated. Set env_cfg.sim.default_visualizer_cfg = KitVisualizerCfg(eye=..., lookat=...) instead. The viewer values have been automatically forwarded for this run.
+[INFO]: Base environment:
+	Environment device    : cuda:0
+	Environment seed      : None
+	Physics step-size     : 0.005
+	Rendering step-size   : 0.02
+	Environment step-size : 0.02
+2026-09-03T17:35:26Z [6,813ms] [Warning] [isaaclab.terrains.terrain_importer] Visual material specified for ground plane but no diffuse color found. Preserving the ground plane's authored material.
+2026-09-03T17:35:26Z [7,346ms] [Warning] [isaaclab.utils.assets] Serving remote assets from the local cache under '/tmp'. Each copy is checked against the server before use; delete the directory to force a full re-download.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/default_ground_plane.usda' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/default_ground_plane.usda'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_emissive_mask.png' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_emissive_mask.png'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_emissive_color.png' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_emissive_color.png'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_albedo.png' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_albedo.png'.
+[INFO]: Registered backend 'newton' for factory Articulation.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/g1.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/g1.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_base.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_sensor.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_sensor.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_left_hand_inspire_left_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_left_hand_inspire_left_physics.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_hand.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_robot.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_base.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_physics.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_left_hand_three_finger_hand_physics_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_left_hand_three_finger_hand_physics_left.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_left.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_left.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_right.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_right.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand_robot.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/g1_29dof_NVBP.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/g1_29dof_NVBP.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_physics.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_base.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/Materials/DefaultMaterial.mdl' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/Materials/DefaultMaterial.mdl'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_robot.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_sensor.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_sensor.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_right_hand_inspire_right_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_right_hand_inspire_right_physics.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_hand.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_physics.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_base.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_robot.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_right_hand_three_finger_hand_physics_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_right_hand_three_finger_hand_physics_right.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_right_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_right_hand.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_right_hand_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_right_hand_robot.usd'.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics_simplified.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics_simplified.usd'.
+[INFO]: Setting variant selection 'PhysX' for variant set 'Physics' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'left_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Setting variant selection 'None' for variant set 'right_hand' on prim '/World/envs/env_0/Robot'.
+[INFO]: Registered backend 'newton' for factory ContactSensor.
+[INFO]: Registered backend 'newton' for factory RayCaster.
+/workspace/IsaacLab-dev/source/isaaclab_newton/isaaclab_newton/cloner/replicate.py:142: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
+  replace_newton_builder_shape_colors(builder, stage)
+/workspace/IsaacLab-dev/source/isaaclab_newton/isaaclab_newton/cloner/newton_clone_utils.py:148: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
+  replace_newton_builder_shape_colors(builder, stage)
+[INFO]: Time taken for scene creation Last: 6.459971 s, Mean: 6.459971 s, Std: 0.000000 s, N: 1
+[INFO]: Scene manager:  <class InteractiveScene>
+	Number of environments: 2048
+	Environment spacing   : 2.5
+	Source prim name      : /World/envs/env_0
+	Global prim paths     : ['/World/ground']
+	Replicate physics     : True
+[INFO]: Dispatching MODEL_INIT callbacks
+[INFO]: Finalizing model on device: cuda:0
+Finalize builder took: Last: 1.082388 s, Mean: 1.082388 s, Std: 0.000000 s, N: 1
+[INFO]: Dispatching PHYSICS_READY callbacks
+[INFO]: Simulation parameters for joints in /World/envs/env_[^/]+/Robot:
++-------------------------------------------------------------------------------------------------------------------------------------------+
+|                                   Simulation Joint Information (Prim path: /World/envs/env_[^/]+/Robot)                                   |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+| Index | Name                       | Stiffness | Damping | Armature | Static Friction | Position Limits | Velocity Limits | Effort Limits |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+|   0   | left_hip_pitch_joint       |  100.000  |  2.500  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   1   | left_hip_roll_joint        |  100.000  |  2.500  |  0.020   |      0.010      | [-0.524, 2.967] |      32.000     |     88.000    |
+|   2   | left_hip_yaw_joint         |  100.000  |  2.500  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   3   | left_knee_joint            |  100.000  |  2.500  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   4   | left_ankle_pitch_joint     |   20.000  |  1.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   5   | left_ankle_roll_joint      |   20.000  |  1.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   6   | right_hip_pitch_joint      |  100.000  |  2.500  |  0.020   |      0.010      | [-2.531, 2.880] |      32.000     |     88.000    |
+|   7   | right_hip_roll_joint       |  100.000  |  2.500  |  0.020   |      0.010      | [-2.967, 0.524] |      32.000     |     88.000    |
+|   8   | right_hip_yaw_joint        |  100.000  |  2.500  |  0.020   |      0.010      | [-2.758, 2.758] |      32.000     |     88.000    |
+|   9   | right_knee_joint           |  100.000  |  2.500  |  0.020   |      0.010      | [-0.087, 2.880] |      20.000     |    139.000    |
+|   10  | right_ankle_pitch_joint    |   20.000  |  1.000  |  0.020   |      0.010      | [-0.873, 0.524] |      37.000     |     50.000    |
+|   11  | right_ankle_roll_joint     |   20.000  |  1.000  |  0.020   |      0.010      | [-0.262, 0.262] |      37.000     |     50.000    |
+|   12  | waist_yaw_joint            |  100.000  |  2.500  |  0.020   |      0.010      | [-2.618, 2.618] |      32.000     |     88.000    |
+|   13  | waist_roll_joint           |  100.000  |  2.500  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   14  | waist_pitch_joint          |  100.000  |  2.500  |  0.020   |      0.010      | [-0.520, 0.520] |      37.000     |     50.000    |
+|   15  | left_shoulder_pitch_joint  |   20.000  |  0.500  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   16  | left_shoulder_roll_joint   |   20.000  |  0.500  |  0.020   |      0.010      | [-1.588, 2.251] |      37.000     |     25.000    |
+|   17  | left_shoulder_yaw_joint    |   20.000  |  0.500  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   18  | left_elbow_joint           |   20.000  |  0.500  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   19  | left_wrist_roll_joint      |   20.000  |  0.200  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   20  | left_wrist_pitch_joint     |   20.000  |  0.200  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   21  | left_wrist_yaw_joint       |   20.000  |  0.200  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   22  | right_shoulder_pitch_joint |   20.000  |  0.500  |  0.020   |      0.010      | [-3.089, 2.670] |      37.000     |     25.000    |
+|   23  | right_shoulder_roll_joint  |   20.000  |  0.500  |  0.020   |      0.010      | [-2.251, 1.588] |      37.000     |     25.000    |
+|   24  | right_shoulder_yaw_joint   |   20.000  |  0.500  |  0.020   |      0.010      | [-2.618, 2.618] |      37.000     |     25.000    |
+|   25  | right_elbow_joint          |   20.000  |  0.500  |  0.020   |      0.010      | [-1.047, 2.094] |      37.000     |     25.000    |
+|   26  | right_wrist_roll_joint     |   20.000  |  0.200  |  0.020   |      0.010      | [-1.972, 1.972] |      37.000     |     25.000    |
+|   27  | right_wrist_pitch_joint    |   20.000  |  0.200  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
+|   28  | right_wrist_yaw_joint      |   20.000  |  0.200  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
++-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
+[INFO]: Adding contact sensor for /World/envs/env_[^/]+/Robot/.* with filter all bodies/shapes
+Contact sensor construction took: Last: 0.030746 s, Mean: 0.030746 s, Std: 0.000000 s, N: 1
+[INFO]: Contact sensor initialized with 30 sensors.
+[INFO]: Creating buffers for contact sensor data with num_envs: 2048, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_contact_points: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Creating buffers for contact sensor data with num_envs: 2048, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_contact_points: False, track_air_time: True, track_pose: False, device: cuda:0
+Initialize solver took: Last: 1.831656 s, Mean: 1.831656 s, Std: 0.000000 s, N: 1
+[INFO]: Newton CUDA graph captured (standard Warp mode)
+CUDA graph took: Last: 2.305984 s, Mean: 2.305984 s, Std: 0.000000 s, N: 1
+[INFO]: Time taken for simulation start Last: 5.519036 s, Mean: 5.519036 s, Std: 0.000000 s, N: 1
+[INFO] Command Manager:  <CommandManager> contains 1 active terms.
++--------------------------------------+
+|         Active Command Terms         |
++-------+--------+---------------------+
+| Index | Name   |         Type        |
++-------+--------+---------------------+
+|   0   | height | SmoothHeightCommand |
++-------+--------+---------------------+
+
+[INFO] Event Manager:  <EventManager> contains 3 active terms.
++----------------------------------------+
+| Active Event Terms in Mode: 'startup'  |
++--------+-------------------------------+
+| Index  | Name                          |
++--------+-------------------------------+
+|   0    | randomize_physics_material    |
+|   1    | randomize_actuator_gains      |
+|   2    | randomize_bodies_mass         |
+|   3    | randomize_base_mass           |
+|   4    | randomize_base_com            |
++--------+-------------------------------+
++---------------------------------------------------------------------------+
+|                   Active Event Terms in Mode: 'interval'                  |
++-------+-----------------------------------------+-------------------------+
+| Index | Name                                    | Interval time range (s) |
++-------+-----------------------------------------+-------------------------+
+|   0   | push_robot                              |       (0.0, 10.0)       |
+|   1   | apply_external_force_torque             |       (0.0, 10.0)       |
+|   2   | apply_external_force_torque_extremities |       (0.0, 10.0)       |
++-------+-----------------------------------------+-------------------------+
++----------------------------------+
+| Active Event Terms in Mode: 'reset' |
++------------+---------------------+
+|   Index    | Name                |
++------------+---------------------+
+|     0      | reset_base          |
++------------+---------------------+
+
+[INFO] Recorder Manager:  <RecorderManager> contains 0 active terms.
++---------------------+
+| Active Recorder Terms |
++-----------+---------+
+|   Index   | Name    |
++-----------+---------+
++-----------+---------+
+
+[INFO]: Resolved joint names for the action term JointPositionAction: ['left_hip_pitch_joint', 'left_hip_roll_joint', 'left_hip_yaw_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint', 'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_yaw_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint', 'waist_yaw_joint', 'waist_roll_joint', 'waist_pitch_joint', 'left_shoulder_pitch_joint', 'left_shoulder_roll_joint', 'left_shoulder_yaw_joint', 'left_elbow_joint', 'left_wrist_roll_joint', 'left_wrist_pitch_joint', 'left_wrist_yaw_joint', 'right_shoulder_pitch_joint', 'right_shoulder_roll_joint', 'right_shoulder_yaw_joint', 'right_elbow_joint', 'right_wrist_roll_joint', 'right_wrist_pitch_joint', 'right_wrist_yaw_joint'] [tensor([ 0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,
+        18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], device='cuda:0',
+       dtype=torch.int32)]
+[INFO] Action Manager:  <ActionManager> contains 2 active terms.
++------------------------------------+
+|  Active Action Terms (shape: 29)   |
++--------+-------------+-------------+
+| Index  | Name        |   Dimension |
++--------+-------------+-------------+
+|   0    | joint_pos   |          29 |
+|   1    | lift        |           0 |
++--------+-------------+-------------+
+
+[INFO]: Captured Newton sensor graph with 1 task(s).
+[INFO] Observation Manager: <ObservationManager> contains 2 groups.
++----------------------------------------------+
+| Active Observation Terms in Group: 'policy'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | base_ang_vel           |   (5, 3)  |
+|    1    | projected_gravity      |   (5, 3)  |
+|    2    | joint_pos              |  (5, 29)  |
+|    3    | joint_vel              |  (5, 29)  |
+|    4    | actions                |  (5, 29)  |
+|    5    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
++----------------------------------------------+
+| Active Observation Terms in Group: 'critic'  |
++---------+------------------------+-----------+
+|  Index  | Name                   |   Shape   |
++---------+------------------------+-----------+
+|    0    | projected_gravity      |   (5, 3)  |
+|    1    | base_lin_vel           |   (5, 3)  |
+|    2    | base_ang_vel           |   (5, 3)  |
+|    3    | joint_pos              |  (5, 29)  |
+|    4    | joint_vel              |  (5, 29)  |
+|    5    | actions                |  (5, 29)  |
+|    6    | contact_forces         |  (5, 30)  |
+|    7    | base_height            |   (5, 1)  |
+|    8    | height_command         |   (5, 1)  |
++---------+------------------------+-----------+
+
+[INFO] Termination Manager:  <TerminationManager> contains 2 active terms.
++----------------------------------+
+|     Active Termination Terms     |
++-------+---------------+----------+
+| Index | Name          | Time Out |
++-------+---------------+----------+
+|   0   | time_out      |   True   |
+|   1   | invalid_state |  False   |
++-------+---------------+----------+
+
+[INFO] Reward Manager:  <RewardManager> contains 32 active terms.
++--------------------------------------------+
+|            Active Reward Terms             |
++-------+-------------------------+----------+
+| Index | Name                    |   Weight |
++-------+-------------------------+----------+
+|   0   | joint_torques_l2        |   -5e-05 |
+|   1   | torque_limits           |    -0.01 |
+|   2   | joint_acc_l2            | -2.5e-08 |
+|   3   | joint_pos_limits        |     -0.1 |
+|   4   | joint_vel_limits        |    -0.01 |
+|   5   | action_rate             |     -1.0 |
+|   6   | action_rate_rate        |    -0.15 |
+|   7   | joint_vel_l2            |   -0.001 |
+|   8   | joint_tracking_error    |     -0.5 |
+|   9   | base_height_rough       |      4.0 |
+|   10  | base_height_medium      |      8.0 |
+|   11  | base_height_fine        |     16.0 |
+|   12  | relaxation              |     -1.0 |
+|   13  | joint_deviation_l1      |     -0.5 |
+|   14  | joint_deviation_l1_arms |     -0.5 |
+|   15  | ankle_torques           |   -0.001 |
+|   16  | not_moving              |     -1.0 |
+|   17  | torso_upright           |     -1.0 |
+|   18  | severely_tilted         |     -5.0 |
+|   19  | torso_roll              |     -5.0 |
+|   20  | forward_pitch           |    -10.0 |
+|   21  | illegal_contacts        |     -2.0 |
+|   22  | feet_distance           |     -5.0 |
+|   23  | feet_distance_standing  |    -10.0 |
+|   24  | ground_unloaded         |     -2.0 |
+|   25  | flat_feet               |     -1.0 |
+|   26  | feet_slide              |     -1.0 |
+|   27  | feet_yaw_mean           |     -2.0 |
+|   28  | completely_airborne     |    -50.0 |
+|   29  | body_velocity           |     -0.1 |
+|   30  | ground_slam             |     -1.0 |
+|   31  | torso_slam              |     -5.0 |
++-------+-------------------------+----------+
+
+[INFO] Curriculum Manager:  <CurriculumManager> contains 8 active terms.
++---------------------------------+
+|     Active Curriculum Terms     |
++-------+-------------------------+
+| Index | Name                    |
++-------+-------------------------+
+|   0   | adaptive_lift           |
+|   1   | terrain_levels          |
+|   2   | polish_action_rate_rate |
+|   3   | polish_ground_slam      |
+|   4   | polish_torso_slam       |
+|   5   | polish_not_moving       |
+|   6   | polish_joint_vel_l2     |
+|   7   | random_fallen_states    |
++-------+-------------------------+
+
+/workspace/IsaacLab-dev/source/isaaclab/isaaclab/envs/mdp/events.py:964: UserWarning: In Newton, body com pose always has unit quaternion. Consider using body_com_pos_b instead.Querying this property requires appending a unit quaternion to the position which is expensive.
+  self.default_com = self.asset.data.body_com_pose_b.torch.clone()
+[INFO]: Completed setting up the environment...
+
+[rs] envs=2048 reset_frac=0.1 steps=1500 watchdog=None
+/workspace/bench/scripts/reset_stress_probe.py:55: DeprecationWarning: Reading the root state directly is deprecated since IsaacLab 3.0 and will be removed in a future version. Please use the default_root_pose and default_root_vel properties instead.
+  rp = tt(robot.data.default_root_state)[ids, :7].clone(); rp[:, :3] += u.scene.env_origins[ids]
+/workspace/bench/scripts/reset_stress_probe.py:58: DeprecationWarning: The function 'write_root_pose_to_sim' will be deprecated in a future release. Please use 'write_root_pose_to_sim_index' instead.
+  robot.write_root_pose_to_sim(rp, env_ids=ids)
+/workspace/bench/scripts/reset_stress_probe.py:59: DeprecationWarning: The function 'write_root_velocity_to_sim' will be deprecated in a future release. Please use 'write_root_velocity_to_sim_index' instead.
+  robot.write_root_velocity_to_sim(torch.zeros(ids.numel(), 6, device=u.device), env_ids=ids)
+/workspace/bench/scripts/reset_stress_probe.py:60: DeprecationWarning: The function 'write_joint_state_to_sim' will be deprecated in a future release. Please use 'write_joint_state_to_sim_index' instead.
+  robot.write_joint_state_to_sim(jp, jv, env_ids=ids)
+[rs] reset env 8: newton max|qd| before=14.8 after=0  isaac sim-bind joint_vel after=0  (state_0 id=138225949561472)
+[rs] step 0: max|joint_vel|=44.7  max|joint_pos|=0.56  resets so far=183
+[rs] reset env 19: newton max|qd| before=10.6 after=0  isaac sim-bind joint_vel after=0  (state_0 id=138225949561472)
+[rs] reset env 0: newton max|qd| before=24.6 after=0  isaac sim-bind joint_vel after=0  (state_0 id=138225949561472)
+[rs] reset env 2: newton max|qd| before=8.98 after=0  isaac sim-bind joint_vel after=0  (state_0 id=138225949561472)
+[rs] reset env 22: newton max|qd| before=17.5 after=0  isaac sim-bind joint_vel after=0  (state_0 id=138225949561472)
+nefc overflow - please increase njmax to 386
+nefc overflow - please increase njmax to 366
+[rs] NON-FINITE joint state at step 236 in 1 envs (first 9) after 48637 forced resets
+[INFO]: SimulationContext cleared

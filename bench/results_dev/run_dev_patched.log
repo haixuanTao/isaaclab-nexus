@@ -1,0 +1,34 @@
+--- drop
+    exit=0
+--- tilt
+    exit=0
+--- tilt_rigid
+    exit=0
+--- limit_push
+    exit=0
+--- blowup
+    exit=0
+--- reset_stress
+    exit=0
+######## dev_patched_blowup.log
+[bu:dev_patched] SURVIVED 200 steps  peak max|qd|=46.2  peak|qfrc_con|=8800.9
+######## dev_patched_drop.log
+[dev_patched] RESULT: peak contact force 9433 N (median over envs 8851)  |  peak COM accel 27.7 g (median 25.8)  |  bounce after landing 0.039 m (median 0.029)  |  final COM z 0.095 vs start 1.305
+######## dev_patched_limit_push.log
+[lp:dev_patched] step 225: max overshoot past limit=0.065 rad (left_hip_yaw_joint)  max|qd|=0.1  ncon=161
+[lp:dev_patched] step 250: max overshoot past limit=0.065 rad (left_hip_yaw_joint)  max|qd|=0.1  ncon=161
+[lp:dev_patched] step 275: max overshoot past limit=0.065 rad (left_hip_yaw_joint)  max|qd|=0.2  ncon=161
+[lp:dev_patched] step 299: max overshoot past limit=0.065 rad (left_hip_yaw_joint)  max|qd|=0.1  ncon=161
+######## dev_patched_reset_stress.log
+[rs] SURVIVED 1500 steps with 307498 forced resets
+######## dev_patched_tilt.log
+[dev_patched]   env 5: contact offset=-0.256 m, foot Fz at first contact=+1285 N -> expected dL_y +; measured dL_y=+1.46 kg m^2/s -> OK   | base d(pitch rate)=-0.16 rad/s   contacts ['left_ankle_roll_link', 'right_ankle_roll_link']
+[dev_patched]   env 6: contact offset=-0.255 m, foot Fz at first contact=+1282 N -> expected dL_y +; measured dL_y=+1.20 kg m^2/s -> OK   | base d(pitch rate)=-0.33 rad/s   contacts ['left_ankle_roll_link', 'right_ankle_roll_link']
+[dev_patched]   env 7: contact offset=-0.259 m, foot Fz at first contact=+1282 N -> expected dL_y +; measured dL_y=+1.30 kg m^2/s -> OK   | base d(pitch rate)=-0.31 rad/s   contacts ['left_ankle_roll_link', 'right_ankle_roll_link']
+[dev_patched] B) angular-momentum balance about COM (Newton): cosine(tau_contact, dL/dt) = +0.996   sign agreement 1024/1030 steps   |tau|/|dL/dt| ratio = 1.05
+######## dev_patched_tilt_rigid.log
+[dev_patched_rigid]   env 5: contact offset=-0.256 m, foot Fz at first contact=+1285 N -> expected dL_y +; measured dL_y=+5.41 kg m^2/s -> OK   | base d(pitch rate)=+1.83 rad/s   contacts ['left_ankle_roll_link', 'right_ankle_roll_link']
+[dev_patched_rigid]   env 6: contact offset=-0.254 m, foot Fz at first contact=+1281 N -> expected dL_y +; measured dL_y=+5.72 kg m^2/s -> OK   | base d(pitch rate)=+1.81 rad/s   contacts ['left_ankle_roll_link', 'right_ankle_roll_link']
+[dev_patched_rigid]   env 7: contact offset=-0.258 m, foot Fz at first contact=+1281 N -> expected dL_y +; measured dL_y=+5.45 kg m^2/s -> OK   | base d(pitch rate)=+1.87 rad/s   contacts ['left_ankle_roll_link', 'right_ankle_roll_link']
+[dev_patched_rigid] B) angular-momentum balance about COM (Newton): cosine(tau_contact, dL/dt) = +0.998   sign agreement 633/640 steps   |tau|/|dL/dt| ratio = 1.08
+DONE_PATCHED
