@@ -968,3 +968,17 @@ chunked logging. v4's reproduction was not an independent trial — it resumed w
 seed (42), replaying a correlated reset sequence. Next: resume from `model_4000` with a different
 seed (v5, `NEXUS_SEED=7`), value-loss alarm armed. Recurrence near iteration 4000-4300 would make
 it systematic to this config; a clean continuation would make it a stochastic PPO blow-up.
+
+**v5 (seed 7) diverged 16 iterations after the resume** — three for three, systematic. Ruled out
+since: the adaptive learning rate (1.7e-4 - 3.8e-4 at every checkpoint, inside the schedule's
+bounds) and AGILE's polish curriculum (its weights never changed; it is gated on
+`terrain_levels >= 4`, which this backend's static terrain curriculum never reaches — a semantic
+gap in its own right: **AGILE's polish phase never starts on this backend**).
+
+Remaining candidate, consistent with everything measured: the critic's `contact_force_norm`
+input. On PhysX the ±25 kN clip is hit routinely (typical per-step max 31 kN), so the critic is
+trained on 125s; on Nexus the typical max is 11 kN, so a clipped 125 is a rare outlier the critic
+has never fit — and a critic meeting rare 125s after 4,000 iterations of ~60s extrapolates. The
+milder engine is the *worse* one here. Diagnostic run v6: resume `model_4000`, seed 7, critic
+contact-force clip tightened to ±5 kN (`NEXUS_DIAG_FORCE_CLIP`, a diagnostic, not the shipped
+config). Trains on => mechanism confirmed; diverges => it is something else.
