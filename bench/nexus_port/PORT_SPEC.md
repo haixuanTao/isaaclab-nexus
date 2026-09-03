@@ -1038,3 +1038,23 @@ observation one — and would also explain why the PhysX/Newton baselines learn 
 times faster (-89 at 2000 iterations vs -163 here). `probe_standing_hold.py` isolates it:
 zero policy actions (default joint targets through AGILE's actuators), standing resets, no pushes
 — does the G1 stay up on each engine?
+
+## FIDELITY GAP FOUND: the G1 cannot stand on this backend under AGILE's actuators
+`probe_standing_hold.py`: zero policy actions (default joint targets through AGILE's
+`DelayedDCMotor` actuators), standing resets, no pushes, no DR, 256 envs:
+
+| | reset | 0.5 s | 1 s | 2 s | 5 s |
+|---|---:|---:|---:|---:|---:|
+| **Nexus** | z 0.90 | z 0.30, **9% up** | 0.21, 1% | 0.17, 0% | 0.17, 0% |
+| **PhysX** | z 0.91 | z 0.69, 81% up | 0.56, 44% | 0.38, 33% | 0.30, 25% |
+
+Under identical torques from AGILE's actuator model, Nexus drops every robot inside half a second;
+PhysX loses them over seconds (its default pose is not a perfect balance either — but the
+timescale differs by an order of magnitude). A half-second collapse from a standing pose is not
+"weaker" physics — it is the signature of wrong-sign or mis-routed joint torques, a unit/scale
+error on the effort path, or a DOF-map error between Isaac joint order and engine DOF slots.
+This, not the critic input, is the backend's real problem: it explains the slow learning
+(-163 at 2000 iterations vs the PhysX/Newton baselines' -89), the same policy standing on PhysX
+but not on Nexus, and it would make every reward curve on this backend suspect. The earlier
+write-path validation checked single joints; a per-joint torque-direction test through the real
+actuator path across all 29 joints (`probe_torque_direction.py`) follows.
