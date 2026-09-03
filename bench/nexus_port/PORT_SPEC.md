@@ -1105,3 +1105,12 @@ the CoM another ~0.14 m forward — off the sole. A pure PD hold of this pose is
 engine; AGILE's policy is what balances it, and on PhysX the zero-action hold also loses 75% of
 robots within 5 s. The PhysX flat-floor PD hold with identical gains (`probe_flat_hold_physx.py`)
 is the engine-vs-pose control.
+
+**Withdrawn: "the G1 cannot stand on this backend".** The PhysX control on the same flat ground
+with the identical PD hold (`probe_flat_hold_physx.py`, AGILE's G1 USD, ground plane, friction
+1.0, same gains): 100% up at 0.5 s, **0% up at 1.0 s** (z 0.55), z 0.12 by 2 s, median torque
+1.1 N·m — it topples too, slightly *sooner* than Nexus (100% up at 1.0 s, z 0.66). Joint dynamics,
+contacts and the pose's marginal balance behave the same on both engines; the earlier difference
+inside the AGILE env (PhysX 25% up at 5 s vs Nexus 0%) comes from AGILE's own actuator model and
+reset path interacting with a rough tile, not from a backend fidelity defect. The standing-hold
+section above stands as data; its conclusion does not.
