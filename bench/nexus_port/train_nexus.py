@@ -11,7 +11,10 @@ from isaaclab_nexus.envs import nexusify
 TASK = "HeightTracking-G1-v0"; G1 = os.environ.get("NEXUS_G1_MJCF", "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml")
 NENV = int(sys.argv[1]) if len(sys.argv) > 1 else 1024; ITERS = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
-if os.environ.get("NEXUS_EMP_NORM") == "1": agent_cfg.empirical_normalization = True; print("[nexus] DIAGNOSTIC empirical observation normalization ON (actor + critic)")
+# Empirical observation normalization ON by default on this backend (AGILE ships it off). Without it
+# every run collapsed at ~4,000 iterations (critic divergence); with it, v10 trained through cleanly.
+# NEXUS_EMP_NORM=0 restores AGILE's setting.
+if os.environ.get("NEXUS_EMP_NORM", "1") != "0": agent_cfg.empirical_normalization = True; print("[nexus] empirical observation normalization ON (actor + critic) -- backend default, deviation from AGILE's cfg")
 env_cfg.scene.num_envs = NENV; env_cfg.seed = int(os.environ.get("NEXUS_SEED", agent_cfg.seed)); agent_cfg.seed = env_cfg.seed; agent_cfg.max_iterations = ITERS; agent_cfg.run_name = "nexus"
 nexusify(env_cfg, G1)
 FCLIP = float(os.environ.get("NEXUS_DIAG_FORCE_CLIP", "0") or 0)        # override of nexusify's critic_force_clip_n (default 5000 N)
@@ -29,7 +32,7 @@ log_dir = os.path.abspath(os.path.join("/workspace/bench/nexus_port/logs", time.
 runner = make_rsl_rl_runner(env, agent_cfg, log_dir=log_dir, device=agent_cfg.device)
 RESUME = os.environ.get("NEXUS_RESUME")                                   # checkpoint to continue from
 if RESUME:
-    runner.load(RESUME, strict=(os.environ.get("NEXUS_EMP_NORM") != "1")); print(f"[nexus] resumed from {RESUME} at iteration {runner.current_learning_iteration}")
+    runner.load(RESUME, strict=(os.environ.get("NEXUS_EMP_NORM", "1") == "0")); print(f"[nexus] resumed from {RESUME} at iteration {runner.current_learning_iteration}")
 t0 = time.perf_counter()
 CHUNK = int(os.environ.get("NEXUS_STATS_EVERY", "0") or 0)          # >0: learn in chunks and log allocator/engine stats between them
 if CHUNK:

@@ -1162,3 +1162,17 @@ and the test in one. Recurrence at ~4,000 would rule out input scale entirely.
 3,900-4,084, reward -159.** v3 had spikes of 12 / 67 / 80 in that span and collapsed at 4,044;
 every resumed continuation went between +16 and +451. v10 shows no spike at all so far. Conclusion
 deferred to 4,500 (the clip-only run reached 4,451).
+
+## RESOLVED: the ~4,000-iteration divergence — observation normalization
+v10 (fresh, seed 42 as v3, `empirical_normalization=True`, critic force clip 5 kN, unchunked):
+iteration **4,500, value loss 0.041, reward -161, not a single alarm** — through and past every
+point where the earlier runs went (v3 at 4,044; resumed continuations at 4,016-4,451). Reward at
+4,250 was -137, the best of any run at that stage.
+
+Reading: on this backend the policy stands up more slowly, so the critic spends thousands of
+iterations on a narrow, mild-input distribution and then extrapolates when the policy moves —
+AGILE's config has no observation normalizer to absorb that shift, and PhysX/Newton never needed
+one because their policies stand earlier. Not an engine bug; a training-stack setting that this
+backend's data distribution requires. Shipped as the backend default in `train_nexus.py`
+(`NEXUS_EMP_NORM=0` restores AGILE's setting), documented in the README as a deviation. v10
+continues to 10,000 as the delivered long run.

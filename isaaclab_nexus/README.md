@@ -90,6 +90,17 @@ Net effect on AGILE's `HeightTracking-G1-v0` on an RTX 5090, PPO iteration time 
 same task (medians of iterations 5-29, GPU idle, fallen-state resets correct): 1024 envs 1.41 vs
 2.16 s, 2048 envs 1.85 vs 2.81 s, 4096 envs **2.71 vs 3.99 s — 36,275 vs 24,638 env-steps/s, 1.47x**. Numbers and method in `bench/nexus_port/PORT_SPEC.md`.
 
+## Training on this backend: two documented deviations from AGILE's config
+
+- **Observation normalization on** (`empirical_normalization=True`; AGILE ships it off). Without it,
+  every 10k run collapsed at ~4,000 iterations with a critic divergence that no physics, reward,
+  force, optimizer or reset measurement could pin on the engine; with it, training proceeds
+  cleanly past 4,500. `train_nexus.py` sets it by default (`NEXUS_EMP_NORM=0` restores AGILE's).
+- **Critic contact-force clip 5 kN** (`nexusify(critic_force_clip_n=5000)`): a critic-only
+  observation clip; rewards, policy inputs and physics are untouched. Nexus's impulsive contact
+  forces are milder than PhysX's, so AGILE's ±25 kN clip is met rarely here. Measured to delay,
+  not remove, the divergence above; kept as the milder input.
+
 ## Known limitations
 
 - No USD path, no cloner, no rendering; environments are Nexus batches in local
