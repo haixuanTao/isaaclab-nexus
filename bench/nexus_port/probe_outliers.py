@@ -14,7 +14,7 @@ TASK = "HeightTracking-G1-v0"; G1 = os.environ.get("NEXUS_G1_MJCF", "/workspace/
 env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
 if os.environ.get("NEXUS_EMP_NORM", "1") != "0": agent_cfg.empirical_normalization = True   # match train_nexus.py (checkpoints carry normalizer buffers)
 env_cfg.scene.num_envs = N; env_cfg.seed = 42
-nexusify(env_cfg, G1, solver_iterations=int(os.environ.get("NEXUS_SOLVER_ITERS", "1")))
+nexusify(env_cfg, G1, solver_iterations=int(os.environ.get("NEXUS_SOLVER_ITERS", "1")), agent_cfg=agent_cfg)
 env = gym.make(TASK, cfg=env_cfg); base = env.unwrapped
 pre = gym.spec(TASK).kwargs.get("pre_learn_entry_point"); mod, fn = pre.split(":"); getattr(importlib.import_module(mod), fn)(base, TASK, agent_cfg); base.reset()
 wenv = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions)

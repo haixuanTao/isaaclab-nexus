@@ -1377,3 +1377,14 @@ primary set root z median 0.05 m (was 2.3 m hovering), joint_vel p99 16 rad/s (P
 speed < 1 m/s; secondary (random spawn with initial velocity) root z median 0.20 m, joint_vel p99 14.
 Dataset resets on it: 0% of envs with a body >5 cm under at +1 step, 2% after 0.4 s (feet, max 25 cm),
 0% >20 cm. **v13** launched 18:10 (v11's exact config; collects its own 4096-env datasets on Nexus).
+
+**Correction (22:20).** `train_nexus.py`'s `nexusify` call had NOT been patched to pass `agent_cfg` (the
+regex patch reported calls *found*, not calls *changed*; the call has two levels of nested parentheses),
+and neither had `record_nexus_policy.py`. So v12 (briefly) and **v13 (2,754 iterations, reward -60..-72)
+trained on the PhysX BFS-order cache again**, and every recorder result above labelled "fixed backend"
+(the `model_2000_fixed` video, the zero-action / 2- and 4-substep rollouts, the on/off-tile split) was
+also rolled out on that cache — which is why those rollouts showed 19-23% of envs deep under at t=0.1 s
+regardless of actions or substeps: scrambled resets, not tunnelling. Only `probe_reset_penetration.py`
+had the Nexus cache. Fixed by explicit edits (verified by grep, not by a regex report). v13 stopped;
+**v14** launched 22:18 with the corrected script. The claim that the episode penetration is
+policy/substep-independent is withdrawn until re-measured on the Nexus-collected dataset.
