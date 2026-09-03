@@ -1176,3 +1176,18 @@ one because their policies stand earlier. Not an engine bug; a training-stack se
 backend's data distribution requires. Shipped as the backend default in `train_nexus.py`
 (`NEXUS_EMP_NORM=0` restores AGILE's setting), documented in the README as a deviation. v10
 continues to 10,000 as the delivered long run.
+
+## ROOT CAUSE, FOR REAL: external forces were a no-op on this backend — the harness never existed here
+`probe_external_force.py` (direct scene, G1 on a flat floor, PD hold): 0 N, **+500 N up on the
+torso, +2,000 N up, and a 100 N·m torque all give bit-identical trajectories.**
+`Articulation.set_external_force_and_torque` -> `WrenchComposer` -> `write_data_to_sim`'s projection
+onto the root free joint read the composer's *global*-frame input buffers, but the call fills the
+*local*-frame buffers by default, so the projection saw zeros. AGILE's G1 task is built around a
+harness: `LiftAction` applies a PD height support on `torso_link` capped at 0.9 x weight (~311 N)
+plus angular damping, decaying only once `height_error < 0.1`; our logs showed
+`Curriculum/adaptive_lift = 0.994` for the whole run — the lift never decayed because it never
+lifted. Every Nexus training run so far (v1..v10) trained **without the harness and without the
+push events**; the PhysX/Newton baselines had them. This explains, in order: the zero-action hold
+(PhysX 81% up at 0.5 s with its lift, Nexus 0%), the slower learning (-160 vs -75 at 2000), the
+policy never standing, the critic's narrow distribution, and the divergence at ~4,000. The
+observation-normalization default stays (harmless, proven stable), but it treated a symptom.
