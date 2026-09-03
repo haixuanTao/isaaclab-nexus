@@ -891,3 +891,15 @@ Rewards over the first six iterations with correct resets: -39, -87, -138, -190,
 This replaces the withdrawn 2.45 s / 40,124 / 1.63x. (A first attempt at this measurement read
 6.30 s: `pgrep` had returned the setsid wrapper, not the CUDA process, so v3 was never paused and
 the two shared the GPU — the learn time doubling to 0.63 s gave it away. Discarded.)
+
+## FINAL corrected scaling table (idle GPU, iterations 5..29, resets fixed)
+
+| envs | PhysX iter | Nexus iter | PhysX env-steps/s | Nexus env-steps/s | Nexus / PhysX |
+|---:|---:|---:|---:|---:|---:|
+| 1024 | 2.160 s | **1.410 s** | 11,378 | **17,430** | **1.53x** |
+| 2048 | 2.810 s | **1.850 s** | 17,492 | **26,569** | **1.52x** |
+| 4096 | 3.990 s | **2.710 s** | 24,638 | **36,275** | **1.47x** |
+
+This supersedes every earlier training-loop table in this document (all taken under the reset
+bug). The zero-action loop numbers, the substep / hull / Coriolis A/Bs and the fidelity checks
+were never affected and stand as written.
