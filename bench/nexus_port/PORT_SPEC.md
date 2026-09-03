@@ -1157,3 +1157,8 @@ inputs rescales everything they learned (value loss 33,507 at the first resumed 
 Normalization can only be evaluated from scratch. **v10**: fresh run, seed 42 (as v3), empirical
 observation normalization on, critic force clip 5 kN, unchunked, 10,000 iterations — the long run
 and the test in one. Recurrence at ~4,000 would rule out input scale entirely.
+
+**v10 interim (fresh, observation normalization on): iteration 4,084, value loss max 0.054 over
+3,900-4,084, reward -159.** v3 had spikes of 12 / 67 / 80 in that span and collapsed at 4,044;
+every resumed continuation went between +16 and +451. v10 shows no spike at all so far. Conclusion
+deferred to 4,500 (the clip-only run reached 4,451).
