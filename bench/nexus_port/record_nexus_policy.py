@@ -13,6 +13,7 @@ from isaaclab_nexus.envs import nexusify
 CKPT = sys.argv[1]; STEPS = int(sys.argv[2]) if len(sys.argv) > 2 else 400; N = int(sys.argv[3]) if len(sys.argv) > 3 else 64
 TASK = "HeightTracking-G1-v0"; G1 = os.environ.get("NEXUS_G1_MJCF", "/workspace/unitree_mujoco/unitree_robots/g1/g1_29dof.xml")
 env_cfg = load_cfg_from_registry(TASK, "env_cfg_entry_point"); agent_cfg = load_cfg_from_registry(TASK, "rsl_rl_cfg_entry_point")
+if os.environ.get("NEXUS_EMP_NORM", "1") != "0": agent_cfg.empirical_normalization = True   # match train_nexus.py (checkpoints carry normalizer buffers)
 env_cfg.scene.num_envs = N; env_cfg.seed = 7
 nexusify(env_cfg, G1, solver_iterations=int(os.environ.get('NEXUS_SOLVER_ITERS', '1')))
 env = gym.make(TASK, cfg=env_cfg); base = env.unwrapped
