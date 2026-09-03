@@ -86,9 +86,9 @@ vertices** (PhysX's default `convexHullVertexLimit`). The unitree G1 MJCF collid
 visual STLs (mean hull 1,087 vertices, pelvis 5,583); `bench/nexus_port/make_convex_mjcf.py 64`
 writes a copy with support-mapped hulls. 1.32x.
 
-Net effect on AGILE's `HeightTracking-G1-v0` on an RTX 5090, PPO iteration time vs PhysX on the
-same task: 1024 envs 1.36 vs 2.16 s, 2048 envs 1.75 vs 2.81 s, 4096 envs **2.45 vs 3.99 s** (medians of steady iterations)
-(40,124 vs 24,638 env-steps/s), with an identical reward curve at every step. Numbers and method in `bench/nexus_port/PORT_SPEC.md`.
+Net effect on AGILE's `HeightTracking-G1-v0` on an RTX 5090, 4096 envs, PPO iteration time vs PhysX
+on the same task (medians of iterations 5-29, GPU idle, fallen-state resets correct):
+**2.71 s vs 3.99 s — 36,275 vs 24,638 env-steps/s, 1.47x**. Numbers and method in `bench/nexus_port/PORT_SPEC.md`.
 
 ## Known limitations
 

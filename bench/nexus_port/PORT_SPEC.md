@@ -876,3 +876,18 @@ The withdrawn 2.45 s was measured with 78% of robots on a flat backstop; the hon
 2.89 s. The extrapolation from the like-for-like +5% (2.57 s) was optimistic — the shared-GPU
 comparison was also at a different point in training. A fresh iteration-5..29 measurement on the
 idle GPU (PhysX's own window) follows below.
+
+## FINAL corrected like-for-like: idle GPU, iterations 5..29 (PhysX's own window)
+v3 paused with SIGSTOP on the CUDA process (verified state `T`, GPU 0%), fresh
+`train_nexus.py 4096 30`, reset fix in, 64-vertex hulls, 1 substep, explicit Coriolis:
+
+| | iter | collect | learn | env-steps/s | vs PhysX |
+|---|---:|---:|---:|---:|---:|
+| **Nexus, corrected** | **2.710 s** | 2.394 | 0.317 | **36,275** | **1.47x** |
+| PhysX / AGILE | 3.990 s | 3.754 | 0.234 | 24,638 | |
+
+Rewards over the first six iterations with correct resets: -39, -87, -138, -190, -240, -293
+(the buggy runs read -46, -101, -154, -212, -264, -315 — a different curve, as it should be).
+This replaces the withdrawn 2.45 s / 40,124 / 1.63x. (A first attempt at this measurement read
+6.30 s: `pgrep` had returned the setsid wrapper, not the CUDA process, so v3 was never paused and
+the two shared the GPU — the learn time doubling to 0.63 s gave it away. Discarded.)
