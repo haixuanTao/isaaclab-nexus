@@ -1016,3 +1016,25 @@ seed, the critic's `contact_forces` term **removed** (`NEXUS_DIAG_NO_FORCE_OBS=1
 => the term is the whole cause and the shipping fix is a matter of scale; diverges => another
 critic input (candidates: `base_height_from_sensor` from this backend's ray caster, `base_lin_vel`).
 The `critic_force_clip_n=5000` default stays until v8 decides its final form.
+
+## Critic-input census, Nexus vs PhysX (same `model_4000` policy, 2048 envs x 200 steps, AGILE's own critic cfg)
+
+| critic term | Nexus max / p99.9 | PhysX max / p99.9 |
+|---|---:|---:|
+| base_lin_vel | 3.81 / 0.77 | 5.14 / 2.29 |
+| base_ang_vel | 11.2 / 2.93 | 43.8 / 11.2 |
+| joint_vel (x0.05) | 1.05 / 0.18 | 7.64 / 0.96 |
+| actions | 8.18 / 5.01 | 9.01 / 5.37 |
+| contact_forces (x5e-3, clip 125) | 83.6 / 22.9 | 125.0 / 58.8 |
+| base_height | 0.92 / **0.33** | 0.91 / **0.79** |
+
+Every input is *milder* on Nexus — no term is an outlier source PhysX does not have worse. Two
+readings. (1) The critic on Nexus is trained on narrower distributions across the board, so the
+occasional PhysX-normal value is an extrapolation for it — the ±5 kN clip delaying the collapse by
+450 iterations fits that, and v8 (term removed) tests whether the force term is the whole story.
+(2) `base_height` p99.9 is 0.33 m on Nexus and **0.79 m on PhysX under the same policy**: the
+standing-reset envs stay upright on PhysX and fall on Nexus. That is a dynamics difference, not an
+observation one — and would also explain why the PhysX/Newton baselines learn this task several
+times faster (-89 at 2000 iterations vs -163 here). `probe_standing_hold.py` isolates it:
+zero policy actions (default joint targets through AGILE's actuators), standing resets, no pushes
+— does the G1 stay up on each engine?
