@@ -1067,3 +1067,19 @@ Remaining suspects for the half-second collapse: the joint-velocity channel the 
 term reads (wrong scale or lag = no damping), torque authority under load (units), or the feet /
 contact model. `probe_velocity_and_authority.py` tests the first two; the same trace on PhysX
 gives the reference.
+
+**Joint dynamics match PhysX.** Same zero-g knee step through AGILE's actuator on both engines,
+first 12 physics steps: PhysX v = -3.36, +1.03, +3.89, +5.62, +6.51, +6.80, +6.67 ...; Nexus v =
+-3.08, +0.93, +3.47, +4.97, +5.74, +6.00, +5.92 ... ; torques -32.6/+44.0/+31.0/+20.8 vs
+-29.6/+40.7/+27.8/+18.3. Within ~10% throughout: effective inertia, delay and PD response agree.
+(A one-step torque-impulse comparison against MuJoCo's own integration of the MJCF gave joint
+I_eff ratios 0.65-1.6 and an implausibly uniform root response on the Nexus side — that harness
+is not trusted; the PhysX trace is the reference.) With gravity on, gains x5 do not help (12% up
+at 0.5 s, 0% by 3 s) and the actuators barely work (median |torque| 0.8 N·m at x1): the joints
+hold their pose while the **whole robot topples** — a support/contact problem at the feet, not a
+joint problem. Flat-floor hold test follows.
+
+**Caveat on the earlier "same policy on PhysX" probes:** the articulation joint order differs
+between backends (PhysX/USD breadth-first, Nexus/MJCF depth-first), so a Nexus-trained policy's
+joint observations are permuted on PhysX. The zero-action tests (standing hold, knee step) are
+unaffected; the force/critic censuses under the policy on PhysX are indicative only.
