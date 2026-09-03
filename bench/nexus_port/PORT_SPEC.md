@@ -862,3 +862,17 @@ measured with the GPU idle.
 went from -1.53 under the bug to **-0.36** with the fix — the "robots in free fall / on the
 backstop" signal is gone — and mean reward at 500 is -205 vs the buggy run's -175 at the same
 point: the corrected task is harder, as a rough-terrain stand-up should be.
+
+## Corrected training throughput (reset fix in, GPU idle) — the number that replaces 2.45 s
+The other session's baseline finished at ~iteration 2,300 of v3, leaving the GPU to the Nexus run
+alone. v3's steady iterations with correct resets, robots on the trimesh, mid-training state
+distribution (iterations ~2,470-2,535, 1-iteration granularity flat at 2.87-2.90 s):
+
+| | iter | collect | learn | env-steps/s | vs PhysX (3.99 s / 24,638) |
+|---|---:|---:|---:|---:|---:|
+| Nexus, corrected, mid-run | **2.89 s** | 2.57 | 0.32 | **34,015** | **1.38x** |
+
+The withdrawn 2.45 s was measured with 78% of robots on a flat backstop; the honest figure is
+2.89 s. The extrapolation from the like-for-like +5% (2.57 s) was optimistic — the shared-GPU
+comparison was also at a different point in training. A fresh iteration-5..29 measurement on the
+idle GPU (PhysX's own window) follows below.
