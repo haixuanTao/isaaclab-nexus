@@ -1083,3 +1083,25 @@ joint problem. Flat-floor hold test follows.
 between backends (PhysX/USD breadth-first, Nexus/MJCF depth-first), so a Nexus-trained policy's
 joint observations are permuted on PhysX. The zero-action tests (standing hold, knee step) are
 unaffected; the force/critic censuses under the policy on PhysX are indicative only.
+
+## Flat floor: the G1 stands for a second on Nexus, then topples — and the pose is the reason
+`probe_flat_hold_direct.py` (direct Nexus scene, cuboid floor, PD hold toward AGILE's default pose:
+legs k=150/d=5, ankles k=40/d=2, rest k=40/d=2), 64 envs:
+
+| floor friction | 0.12 s | 0.5 s | 1.0 s | 2.0 s | median torque |
+|---:|---:|---:|---:|---:|---:|
+| 1.0 | z 0.78, 100% up | 0.77, 100% | 0.66, 100% | 0.12, 0% | 1.2 N·m |
+| 0.5 | z 0.78, 100% up | 0.77, 100% | 0.66, 100% | 0.12, 0% | 0.9 N·m |
+
+Identical at both frictions, so friction is not the lever; and the joints are barely loaded while
+the robot goes over — a slow whole-body topple, not a joint collapse. On the rough tile inside the
+AGILE env it goes in 0.5 s; on the flat floor in ~1.5 s.
+
+MuJoCo's kinematics of the same MJCF at AGILE's default pose (hips -0.1, knees 0.3, ankles -0.2,
+root z 0.793): whole-robot CoM at x = +0.024 m, ankle axes at x = -0.026 m — the CoM sits **5 cm
+ahead of the ankles**, so standing still needs ~35.1 kg x 9.81 x 0.05 = **17 N·m of ankle-pitch
+torque**. At the probe's 40 N·m/rad ankle stiffness that means leaning ~0.2 rad first, which moves
+the CoM another ~0.14 m forward — off the sole. A pure PD hold of this pose is marginal on any
+engine; AGILE's policy is what balances it, and on PhysX the zero-action hold also loses 75% of
+robots within 5 s. The PhysX flat-floor PD hold with identical gains (`probe_flat_hold_physx.py`)
+is the engine-vs-pose control.
