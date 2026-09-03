@@ -1114,3 +1114,40 @@ contacts and the pose's marginal balance behave the same on both engines; the ea
 inside the AGILE env (PhysX 25% up at 5 s vs Nexus 0%) comes from AGILE's own actuator model and
 reset path interacting with a rough tile, not from a backend fidelity defect. The standing-hold
 section above stands as data; its conclusion does not.
+
+## Divergence: the force term is NOT the cause (v8b) — elimination table and what remains
+v8b (resume `model_4000`, seed 7, critic `contact_forces` term **zeroed**, input width preserved):
+critic spikes 18-51 from iteration 4105, full collapse by ~4200 (value loss ~4,000, reward -1,000).
+The ±5 kN clip's 450-iteration delay was real, but the term is a modulator, not the cause.
+
+Checkpoint audit (`model_1000..4000`): reward-normalizer std 0.21-0.22 and return correction 6.3
+-> 10.1, drifting slowly; critic |w|max 1.7 -> 5.7; Adam second moments ~0.01-0.04. Nothing
+pathological is stored in `model_4000`.
+
+**Control that matters:** the other session's Newton run of the same AGILE task and PPO config
+is at iteration 4,547 and healthy (value loss 0.07, reward -72..-103, one recovered spike to 15.6).
+The PPO configuration survives 4,000+ iterations on Newton; on Nexus every continuation from
+4,000 collapses. So it is Nexus-specific — yet every backend-specific mechanism tested is clean:
+
+| hypothesis | test | result |
+|---|---|---|
+| physics outliers (velocities, heights) | 64-env and 4096-env rollouts of `model_4000` | none, 1 vs 4 substeps identical |
+| reward outliers | per-step min over 2.4M env-steps | -1.99 worst |
+| contact-force magnitude into the critic | probe + PhysX control | PhysX larger; zeroing the term (v8b) still diverges |
+| adaptive learning rate | read from checkpoints | 1.7e-4..3.8e-4 |
+| curricula switching at ~4000 | weights in log; gating | polish gated on terrain level 4, never fires |
+| chunked logging | earlier chunked run + `learn()` source | no re-init |
+| normalizer state on resume | `save()` includes it | faithful |
+| first observation after reset stale | reset-time obs vs fresh recomputation | identical, every term |
+| mirror augmentation assuming PhysX joint order | `lr_mirror_G1` source | resolves by name |
+| torque sign / DOF map | 29-joint direction test | 29/29 correct |
+| joint dynamics vs PhysX | zero-g knee step trace | within 10% |
+| standing stability vs PhysX | flat-floor PD hold both engines | PhysX topples sooner |
+
+What remains is the **data distribution**: on Nexus the policy has not learned to stand by 4,000
+(reward -160; Newton -75, robots standing), so the critic is trained for thousands of iterations
+on a narrow lying-robot distribution and every input it sees is milder than PhysX's (census
+above). AGILE trains with `empirical_normalization = False` (no observation normalizer on actor or
+critic). v9 tests the standard remedy for exactly this failure mode: resume `model_4000` with
+empirical observation normalization on (a PPO setting, documented as a deviation), everything
+else unchanged.
