@@ -1058,3 +1058,12 @@ This, not the critic input, is the backend's real problem: it explains the slow 
 but not on Nexus, and it would make every reward curve on this backend suspect. The earlier
 write-path validation checked single joints; a per-joint torque-direction test through the real
 actuator path across all 29 joints (`probe_torque_direction.py`) follows.
+
+**Torque routing is clean.** `probe_torque_direction.py` (zero-g, robot in the air, one joint's
+target stepped +0.3 rad per env, 40 physics steps, AGILE's real actuator path): **29/29 joints move
+toward their target**, largest crosstalk on any other joint 0.048 rad; several overshoot (+0.38..
++0.42 for +0.30), i.e. an under-damped PD unloaded — expected. Not a sign, axis or DOF-map error.
+Remaining suspects for the half-second collapse: the joint-velocity channel the actuator's damping
+term reads (wrong scale or lag = no damping), torque authority under load (units), or the feet /
+contact model. `probe_velocity_and_authority.py` tests the first two; the same trace on PhysX
+gives the reference.
