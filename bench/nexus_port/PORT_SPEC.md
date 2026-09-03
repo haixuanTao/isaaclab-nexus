@@ -1218,3 +1218,14 @@ video recorder converts to MuJoCo's (w, x, y, z) itself. Every training result i
 (v1..v10) was produced with scrambled body-frame observations and without the harness. The
 throughput numbers are unaffected (the step cost does not depend on observation correctness).
 Verification and a corrected long run follow.
+
+**Verified after the quaternion + wrench fixes** (`probe_gravity_vs_fk.py`, `probe_force_frame.py`):
+- root quaternion after construction/reset: (0, 0, 0, 1) — identity; the 180° yaw is gone.
+- written pitch +30° / roll -45° / yaw +90° read back exactly; `projected_gravity` computed the
+  Isaac way equals the expected body-frame gravity in all three cases; the engine's FK rotates the
+  torso direction consistently with the read-back quaternion.
+- external wrench: +200 N along x/y/z gives +vx/+vy/+vz; +50 N·m about x/y/z gives +wx/+wy/+wz.
+  The harness path works, in the right frame.
+- Known residual: non-root body poses are refreshed by the next physics step, not by `forward()`,
+  so the first observation after a reset sees one step of stale link positions for non-root bodies
+  (root pose and joint state are fresh). An FK-only `forward()` would close it.
