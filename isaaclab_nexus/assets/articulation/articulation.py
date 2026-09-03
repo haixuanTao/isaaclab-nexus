@@ -753,6 +753,12 @@ class _NexusRootView:
     def __init__(self, art): self._art = art
     def set_dof_actuation_forces(self, forces, indices=None):
         a = self._art
+        # The collection loop calls this right after a raw `sim.step()`. The engine's step is asynchronous
+        # with respect to torch's stream and everything below reads/writes the zero-copy state buffers:
+        # without a sync the actuator model sees a half-written state (4096-env collections came out with
+        # joint speeds ~50 rad/s and hovering robots; with a per-step readback they were clean).
+        from isaaclab_nexus.physics.nexus_manager import NexusManager as _NM
+        _NM.synchronize()
         f = wp.to_torch(forces) if isinstance(forces, wp.array) else _t(forces)
         e = a._ids(indices, a.num_instances)
         if f.shape[0] == a.num_instances: f = f[e]

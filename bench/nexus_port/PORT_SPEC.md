@@ -1388,3 +1388,20 @@ regardless of actions or substeps: scrambled resets, not tunnelling. Only `probe
 had the Nexus cache. Fixed by explicit edits (verified by grep, not by a regex report). v13 stopped;
 **v14** launched 22:18 with the corrected script. The claim that the episode penetration is
 policy/substep-independent is withdrawn until re-measured on the Nexus-collected dataset.
+
+**Why the 4096-env collection was worse than the 256-env one: a stream race in the collection loop.**
+AGILE's loop does `shim -> sim.step() -> shim -> sim.step() ...` and calls `scene.update()` (which is where
+this backend synchronizes the engine's CUDA stream with torch) only once per `decimation` physics steps.
+Between them the shim's actuator model read joint state — and the speed cap wrote root velocities — into
+the zero-copy buffers while the previous step's kernels were still running. The longer the step (4096 envs),
+the wider the window: joint_vel p99 46 rad/s, robots hovering (v14's datasets); the same collection with
+`NEXUS_SHIM_LOG=1` (whose `rbd_resize_stats()` readback syncs every step) was clean: primary root z median
+0.05 m, joint_vel p99 18.5, resets 0% under at +1 step, 1% after 0.4 s, 0% >20 cm. The shim now
+synchronizes explicitly before touching state. (Training's own step path is safe: `Articulation.update()`
+synchronizes before observations are read.)
+
+**Verified (synced shim, 4096 envs, no logging readback):** primary dataset root z median 0.05 m, max
+0.08, joint_vel p99 10.7 rad/s (PhysX cache: 7.3), root speed <= 1 m/s (cap 3.5); secondary (random
+spawn, initial velocity 1 m/s) root z median 0.20, joint_vel p99 11.2. Dataset resets: 0% of envs with a
+body >5 cm under at +1 step, 1% after 0.4 s (feet, max 30 cm), 0% >20 cm. **v15** launched on these
+datasets (loaded from the anchored cache; v11's exact config). v12-v14 are void.
