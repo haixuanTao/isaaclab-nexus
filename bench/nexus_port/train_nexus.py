@@ -16,6 +16,8 @@ nexusify(env_cfg, G1)
 FCLIP = float(os.environ.get("NEXUS_DIAG_FORCE_CLIP", "0") or 0)        # override of nexusify's critic_force_clip_n (default 5000 N)
 if FCLIP:
     env_cfg.observations.critic.contact_forces.clip = (-FCLIP, FCLIP); print(f"[nexus] DIAGNOSTIC critic contact_forces clip = ±{FCLIP} N")
+if os.environ.get("NEXUS_DIAG_NO_FORCE_OBS") == "1":                     # DIAGNOSTIC: drop the critic's contact-force term entirely
+    env_cfg.observations.critic.contact_forces = None; print("[nexus] DIAGNOSTIC critic contact_forces observation REMOVED")
 t0 = time.perf_counter(); env = gym.make(TASK, cfg=env_cfg); print(f"[nexus] env built in {time.perf_counter()-t0:.1f}s")
 pre = gym.spec(TASK).kwargs.get("pre_learn_entry_point")
 if pre:

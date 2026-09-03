@@ -1006,3 +1006,13 @@ Along the way: the contact-sensor substep scaling bug (fixed, `ddb889f`), and th
 AGILE's polish curriculum is gated on `terrain_levels >= 4`, which this backend's static terrain
 curriculum never reaches — AGILE's polish phase does not run here (stated limitation, now with
 a concrete consequence).
+
+**Correction: the ±5 kN clip delays the collapse, it does not remove it.** v6 held to 4400
+(value loss 0.04-1.5, reward -136..-183) and then went at **4451**: value loss 10-20, reward
+-310..-493 — the same shape, 451 iterations after the resume instead of 16-231. The critic's
+contact-force input clearly moves the cliff, so it is *a* driver, but either ±5 kN (inputs up to
+25 against O(1)) is still too large or it is not the only one. Diagnostic v8: same resume, same
+seed, the critic's `contact_forces` term **removed** (`NEXUS_DIAG_NO_FORCE_OBS=1`). Trains through
+=> the term is the whole cause and the shipping fix is a matter of scale; diverges => another
+critic input (candidates: `base_height_from_sensor` from this backend's ray caster, `base_lin_vel`).
+The `critic_force_clip_n=5000` default stays until v8 decides its final form.
