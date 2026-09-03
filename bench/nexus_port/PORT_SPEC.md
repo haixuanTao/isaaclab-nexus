@@ -1151,3 +1151,9 @@ above). AGILE trains with `empirical_normalization = False` (no observation norm
 critic). v9 tests the standard remedy for exactly this failure mode: resume `model_4000` with
 empirical observation normalization on (a PPO setting, documented as a deviation), everything
 else unchanged.
+
+**v9 was invalid** — a freshly initialized empirical normalizer under networks trained on raw
+inputs rescales everything they learned (value loss 33,507 at the first resumed iteration).
+Normalization can only be evaluated from scratch. **v10**: fresh run, seed 42 (as v3), empirical
+observation normalization on, critic force clip 5 kN, unchunked, 10,000 iterations — the long run
+and the test in one. Recurrence at ~4,000 would rule out input scale entirely.
