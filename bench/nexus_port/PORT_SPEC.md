@@ -1495,3 +1495,11 @@ gone (7000) and climbs to level 5.6 of 8 by 8000, and with `terrain_levels >= 4`
 turns on (the action-rate penalty doubles after ~7500, hence the lower rewards from 8000). No run before
 v16 ever left level 0 or removed the harness. Wall clock 13.8 h at 5.0 s/iter (the per-substep hooks
 cost ~2 s/iter of that). 41 checkpoints in `logs/2026-09-04_08-08-43_nexus/`.
+
+**v16 rollouts** (64 envs, 8 s, level-0 tiles, mixed height commands): `model_6000` — joint speeds <= 37
+rad/s, bodies >20 cm under 0% at all times, 14% of envs with a hand/foot 5+ cm in at 4-8 s, 20% above
+0.5 m at 8 s; `model_9999` — 0-2% >20 cm, 16% above 0.5 m (the polished policy tracks *commanded* heights,
+many of them low). Residual in both: one env per rollout leaves its tile at ~9 m/s and ends ~0.9 m below
+the surface (`min z -0.9`): a fast body crossing the thin tile/apron trimesh (4.5 cm per step against the
+2 cm contact margin) is not caught and the cuboid slab does not eject it. PhysX's terrain is continuous,
+so robots there simply land on the next tile. Video: `nexus_g1_standup_v16_final.mp4`.
