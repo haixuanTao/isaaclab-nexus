@@ -1463,3 +1463,19 @@ solver-level limit, documented as such.
   (PhysX max root |w| 45.8 — just under AGILE's 50 rad/s cliff). v15's log shows the fraction rising from
   11% at iteration 1 to 94% at 100: the policy learns to end episodes via the cliff. PhysX training logs:
   0.05-0.14% at iteration 1.
+
+**Root angular-velocity distribution, random actions, 300 steps x 256 envs (pre-reset states):**
+
+| | p50 | p90 | p99 | p99.9 | max | env-steps > 50 | max joint |v| p99 |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| PhysX | 8.5 | 14.6 | 20.1 | 24.0 | 34.3 | 0 | 35 |
+| Nexus (clip + clamp + substep PD) | 11.0 | 23.8 | 43.7 | 57.0 | 78.0 | 0.38% | 34 |
+
+Same joint speeds, a pelvis tail ~2x heavier: the difference is in how contacts couple joint motion into
+the base (contact softness — the engine's `tgs_soft` defaults are 30 Hz / damping ratio 5 against PhysX's
+rigid TGS contacts — and/or friction), not in the actuators. Open item for the engine side.
+
+**Deviation (documented): `invalid_state.max_ang_vel` 50 -> 100 rad/s on this backend** (`nexusify(...,
+invalid_state_max_ang_vel=100.0)`; 100 is `mdp.invalid_state`'s own default; AGILE's cfg sets 50, which gives
+PhysX a 2x margin over its p99.9 and puts this backend's p99.9 inside the cliff). Without it a policy learns
+to end every episode through the cliff (v15) and no long-horizon behaviour is ever learned.

@@ -41,9 +41,16 @@ def install() -> None:
     _installed = True
 
 
-def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, implicit_coriolis: bool = False, collisions_resize_policy: str = "grow", cuda_graph_warmup: int = 0, critic_force_clip_n: float | None = 5000.0, drop_terms: set[str] | None = None, agent_cfg=None):
+def nexusify(env_cfg, mjcf_path: str, *, collisions_capacity: int = 256, solver_iterations: int = 1, contact_reduction: bool = True, implicit_coriolis: bool = False, collisions_resize_policy: str = "grow", cuda_graph_warmup: int = 0, critic_force_clip_n: float | None = 5000.0, drop_terms: set[str] | None = None, agent_cfg=None, invalid_state_max_ang_vel: float | None = 100.0):
     install()
     if agent_cfg is not None: _nexus_dataset_cache(agent_cfg)
+    # DEVIATION (documented): AGILE terminates on root |w| > 50 rad/s ("invalid_state"). Under identical random
+    # actions PhysX's pelvis angular-velocity tail is p99.9 = 24 rad/s (2x margin); this backend's is 57 with a
+    # max of 78 (contact coupling, joint speeds equal), so the 50 cliff sits inside the tail and a policy learns
+    # to end episodes through it (v15: 99.9% of episodes). 100 rad/s is `mdp.invalid_state`'s own default.
+    term = getattr(getattr(env_cfg, "terminations", None), "invalid_state", None)
+    if invalid_state_max_ang_vel is not None and term is not None and isinstance(getattr(term, "params", None), dict) and "max_ang_vel" in term.params:
+        term.params["max_ang_vel"] = float(invalid_state_max_ang_vel)
     env_cfg.sim.physics = NexusCfg(collisions_capacity=collisions_capacity, solver_iterations=solver_iterations, contact_reduction=contact_reduction, implicit_coriolis=implicit_coriolis, collisions_resize_policy=collisions_resize_policy, cuda_graph_warmup=cuda_graph_warmup)
     scene = env_cfg.scene
     for name in list(vars(scene)):

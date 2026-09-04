@@ -137,3 +137,10 @@ into the terrain (PhysX's own cache shows the same order of penetration).
 
 The Nexus cache is anchored at the AGILE repo root (override with `NEXUS_DATASET_CACHE_DIR`) because
 AGILE resolves `cache_dir` relative to the process cwd. Collection-time diagnostics: `NEXUS_SHIM_LOG=1`.
+
+**Actuators.** Isaac Lab's implicit actuator does not clip torques in Python (PhysX's drive does): this
+backend clips to `effort_limit_sim`, enforces `velocity_limit_sim` with a post-step clamp, and re-evaluates
+the PD law at every physics substep (`NEXUS_PD_SUBSTEP`, `NEXUS_JOINT_VEL_CLAMP`; both default on).
+**Termination deviation.** `nexusify` raises AGILE's `invalid_state.max_ang_vel` from 50 to 100 rad/s
+(`invalid_state_max_ang_vel=`; `None` keeps AGILE's value): the pelvis angular-velocity tail is ~2x heavier
+here than on PhysX under identical actions (contact coupling), and 50 sits inside it.
