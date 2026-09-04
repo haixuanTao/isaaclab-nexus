@@ -1479,3 +1479,14 @@ rigid TGS contacts — and/or friction), not in the actuators. Open item for the
 invalid_state_max_ang_vel=100.0)`; 100 is `mdp.invalid_state`'s own default; AGILE's cfg sets 50, which gives
 PhysX a 2x margin over its p99.9 and puts this backend's p99.9 inside the cliff). Without it a policy learns
 to end every episode through the cliff (v15) and no long-horizon behaviour is ever learned.
+
+## v16 (torque clip, velocity clamp, substep PD, max_ang_vel 100): healthy regime, harness withdrawing
+Reward -559 (10) / -514 (250) / -206 (500) / -108 (1000) / -89 (1500) / -84 (2000) / -102 (2500) / -94
+(3000); `invalid_state` 0.2% at iteration 10 and 0 from 250 on; episodes run to the 750-step timeout —
+iteration 10 matches PhysX's own start (reward -534, episode length 218, invalid 0.3%). `Curriculum/
+adaptive_lift` 0.68 (500) -> 0.33 (3000): the lift decays only while the EMA height error is below 0.1 m,
+so the plateau is the harness being withdrawn while tracking holds (height error 0.10-0.11 m).
+`model_3250` rollout: joint speeds <= 37 rad/s, bodies >20 cm under the terrain 0% to 4 s / 3% at 8 s.
+Cost: the per-substep hooks (two syncs + torch work per physics step) doubled the iteration time to
+6.0 s; the engine's force-based PD motors (`set_motor_gains` + batched `motor_target_group`) are the
+zero-cost replacement, to do once v16's outcome is known.
