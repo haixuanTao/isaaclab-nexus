@@ -1420,3 +1420,10 @@ The "sunk bodies" are gone: the backend now sits *below* PhysX on this metric. R
 ~30 cm into the terrain in 1-2% of envs mid-episode (thin trimesh, no ejection), and one env that walked
 off its tile beyond the 8 m apron and fell (min z -5 m) — apron/slab half-extent raised to 16 m.
 The same checkpoint now stands in 25% of envs at 8 s (16% with the scrambled resets).
+
+## v15 (clean datasets, synced shim): reward -10.8 at 1750, 47% standing
+Reward every 250 iterations: -95, -75, -57, -45 (1000), -27, -17, **-10.8 (1750)**; 3.05 s/iter at 4096
+envs. v11 (scrambled resets): -92 at 1000, -50 at 1750. `model_1750` rolled on 64 envs with
+training-style resets: root z mean 0.47 / 0.51 / 0.48 / 0.47 at 0 / 2 / 4 / 8 s, **47% of envs above
+0.5 m at 8 s** (v11 model_2000: 25%, model_1000: 12%), on-tile penetration 2-3% of envs > 5 cm and 0% >
+20 cm from 2 s on. Video: `nexus_g1_standup_v15_model_1750.mp4`.
