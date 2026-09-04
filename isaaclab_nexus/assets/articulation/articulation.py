@@ -343,6 +343,15 @@ class Articulation(BaseArticulation):
         self._data = ArticulationData(self)
         self._load_mjcf_properties(spawn.mjcf_path)
         self._ALL_JOINT_INDICES = torch.arange(self._num_joints, device=_DEV)
+        self._pd_kp = torch.zeros(NB, self._num_joints, device=_DEV); self._pd_kd = torch.zeros_like(self._pd_kp)
+        self._pd_ff = torch.zeros_like(self._pd_kp); self._pd_qt = torch.zeros_like(self._pd_kp)
+        if os.environ.get("NEXUS_PD_SUBSTEP", "1") == "1":
+            NexusManager.post_step_hooks.append(self._pd_substep)
+        # Joint velocity limits (`velocity_limit_sim` from the actuator cfgs; PhysX applies them as a hard joint
+        # drive limit inside its solver, the engine has no equivalent): clamp the generalized velocities after
+        # every physics step. NEXUS_JOINT_VEL_CLAMP=0 disables (diagnostics).
+        if os.environ.get("NEXUS_JOINT_VEL_CLAMP", "1") == "1":
+            NexusManager.post_step_hooks.append(self._clamp_joint_velocities)
         self._prev_v = torch.zeros(NB, self._num_joints, device=_DEV)
         self._pending = False
 
@@ -460,6 +469,18 @@ class Articulation(BaseArticulation):
     def _q_flat(self) -> torch.Tensor:              # (NB, J)
         return self._ws[self._rows, self._quad_of_slot, :, self._col_of_slot].T
 
+    def _pd_substep(self) -> None:
+        """Re-evaluate the actuators' PD law at the physics rate (see `_apply_actuator_model`)."""
+        d = self._data; q, v = self._q_flat(), self._v_flat()
+        tau = self._pd_kp * (self._pd_qt - q) - self._pd_kd * v + self._pd_ff
+        lim = d._joint_effort_limits
+        tau = torch.where(self._pd_kp > 0, torch.maximum(torch.minimum(tau, lim), -lim), d._applied_torque)
+        d._applied_torque[:] = tau; self._effort[self._cols, :] = tau.T
+    def _clamp_joint_velocities(self) -> None:
+        lim = self._data._joint_vel_limits                        # (NB, J), inf where unset
+        if not torch.isfinite(lim).any(): return
+        v = self._dof[0]; rows = self._cols                       # velocity section (D, NB); joint rows
+        v[rows] = torch.maximum(torch.minimum(v[rows], lim.T), -lim.T)
     def _v_flat(self) -> torch.Tensor:              # (NB, J) pure view of the velocity section
         return self._dof[0][self._cols].T
 
@@ -580,7 +601,15 @@ class Articulation(BaseArticulation):
                                      joint_efforts=d._joint_effort_target[:, j], joint_indices=j)
             act.compute(ca, joint_pos=q[:, j], joint_vel=v[:, j])
             d._computed_torque[:, j] = act.computed_effort
-            d._applied_torque[:, j] = act.applied_effort
+            lim = d._joint_effort_limits[:, j]                       # effort_limit_sim: PhysX's drive clips to it; be explicit here too
+            d._applied_torque[:, j] = torch.maximum(torch.minimum(act.applied_effort, lim), -lim)
+            # Effective PD target the actuator model used this control step (delay models etc. included):
+            # tau = kp (q_t - q) - kd v + ff  =>  q_t = q + (tau - ff + kd v) / kp. Re-evaluated at every physics
+            # substep by `_pd_substep` (PhysX's implicit drive acts at the physics rate; a 20 ms zero-order hold
+            # of an explicit torque with AGILE's lightly damped gains rings and whips the limbs).
+            kp, kd = act.stiffness, act.damping; ff = d._joint_effort_target[:, j]
+            qt = torch.where(kp > 0, q[:, j] + (act.computed_effort - ff + kd * v[:, j]) / torch.where(kp > 0, kp, torch.ones_like(kp)), q[:, j])
+            self._pd_kp[:, j], self._pd_kd[:, j], self._pd_ff[:, j], self._pd_qt[:, j] = kp, kd, ff, qt
 
     def write_data_to_sim(self) -> None:
         self._apply_actuator_model()

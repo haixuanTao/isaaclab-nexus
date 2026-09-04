@@ -1427,3 +1427,39 @@ envs. v11 (scrambled resets): -92 at 1000, -50 at 1750. `model_1750` rolled on 6
 training-style resets: root z mean 0.47 / 0.51 / 0.48 / 0.47 at 0 / 2 / 4 / 8 s, **47% of envs above
 0.5 m at 8 s** (v11 model_2000: 25%, model_1000: 12%), on-tile penetration 2-3% of envs > 5 cm and 0% >
 20 cm from 2 s on. Video: `nexus_g1_standup_v15_model_1750.mp4`.
+
+## v15 collapsed at ~4000 — and the reason is a missing joint-velocity limit
+Reward -95 (250) -> -45 (1000) -> -10.8 (1750) -> **-2.4 (3500)** -> -5.2 (4000) -> -80 (4250) -> -547
+(4500) -> -2932 (5750) -> -94 (7750). The log tells the story: **from iteration 1 to 4300, 99.9% of
+episodes ended by `invalid_state`** after 50-110 steps (1-2 s); at 4500 that fraction dropped to 29%,
+from 5000 on episodes ran to the 750-step timeout with -1000..-3000 reward (action_rate -13, relaxation
+-6, illegal_contacts -1.7: flailing for 15 s). The value function had only ever seen 2-second episodes.
+`probe_invalid_state.py` (model_3500, 256 envs, 300 steps, AGILE's termination re-implemented with
+per-condition counters on the pre-reset state): **850 of 850 terminations are root angular velocity
+> 50 rad/s**; joint speed (limit 100), height, xy, linear speed, NaN: 0. The datasets are not the source
+(root |w| max 8.7 / 21.7 rad/s, PhysX's 6.9 / 9.1). Rollouts reach joint speeds of 45-96 rad/s: this
+backend never enforced joint velocity limits — `_joint_vel_limits` was `inf` until the actuator cfgs
+filled it, and nothing acted on it — while PhysX applies AGILE's `velocity_limit_sim` (20-37 rad/s per
+joint, matching the USD) as a hard joint-drive limit inside its solver. Unlimited joint speeds whip the
+torso past 50 rad/s and end the episode; the policy optimized a 2-second horizon. Fix: a post-step hook
+(`NexusManager.post_step_hooks`, engine stream synced) clamps the generalized joint velocities to
+`velocity_limit_sim` after every physics step (`NEXUS_JOINT_VEL_CLAMP=0` disables). Not identical to a
+solver-level limit, documented as such.
+
+**Follow-up on the `invalid_state` terminations (2026-09-04 morning).**
+- The fired condition is root angular velocity > 50 rad/s, every time (850/850, 902/902, 919/919 across
+  runs); the readback is exact (free-flight spin: reported == finite-difference at every step), and at the
+  fired steps the finite-difference rotation agrees (40-54 rad/s): the pelvis really turns ~1 rad in 20 ms.
+- Not the datasets (root |w| max 8.7 / 21.7), not the lift harness (disabled: 815 terminations), not the
+  joint velocity limit alone (clamp on, joints at 32-37 rad/s: 919).
+- **Torques were never clipped**: Isaac Lab's `ImplicitActuator` returns `applied_effort = computed_effort`
+  (PhysX clips to `effort_limit_sim` inside the drive), so this backend applied stiffness x error with
+  errors of several radians against 5-139 N.m motors. Fixed (explicit clip in `_apply_actuator_model`);
+  the hip now peaks at exactly 88 N.m in the step test. The PD is also re-evaluated at every physics
+  substep now (`_pd_substep`, from the actuator's effective target), instead of a 20 ms zero-order hold.
+- Joint step responses (1 rad step, elbow and hip, AGILE env) match PhysX closely: elbow trajectory within
+  0.03 rad, hip peak velocity 13.5 vs 11.8 rad/s, same 88 N.m torque cap. Joint-level PD is not the gap.
+- Random (iteration-0) policy, 300 steps x 256 envs: **Nexus 281 angular-velocity terminations, PhysX 0**
+  (PhysX max root |w| 45.8 — just under AGILE's 50 rad/s cliff). v15's log shows the fraction rising from
+  11% at iteration 1 to 94% at 100: the policy learns to end episodes via the cliff. PhysX training logs:
+  0.05-0.14% at iteration 1.

@@ -47,6 +47,7 @@ class NexusManager(PhysicsManager):
     _terrain: ClassVar[Any] = None
     _graph: ClassVar[bool] = False   # a CUDA graph of one physics step has been captured
     _substep_override: ClassVar[int] = 0   # set by `request_substeps`; consumed by the next `step()`
+    post_step_hooks: ClassVar[list] = []   # callables run after every physics step (engine stream synced first)
     _steps: ClassVar[int] = 0
 
     # ------------------------------------------------------------------ lifecycle
@@ -63,6 +64,7 @@ class NexusManager(PhysicsManager):
         cls._finalized = False
         cls._graph = False
         cls._steps = 0
+        cls.post_step_hooks = []
         cls._scene_data = NexusSceneDataBackend()
 
     @classmethod
@@ -99,10 +101,16 @@ class NexusManager(PhysicsManager):
         if cls._graph:
             if cls._pipeline.replay_cuda_graph():
                 PhysicsManager._sim_time += cls.get_physics_dt()
+                if cls.post_step_hooks:
+                    cls.synchronize()
+                    for h in cls.post_step_hooks: h()
                 return
             cls._graph = False                                  # graph lost; fall back
         cls._pipeline.simulate_headless(cls._backend, cls._state, None)
         cls._steps += 1
+        if cls.post_step_hooks:
+            cls.synchronize()                                   # hooks touch the zero-copy buffers with torch
+            for h in cls.post_step_hooks: h()
         if cls._steps % 200 == 0 and hasattr(cls._state, "rbd_resize_stats"):
             cls._log_resize_ratchet()
         warmup = int(getattr(PhysicsManager._cfg, "cuda_graph_warmup", 0) or 0)
