@@ -21,7 +21,7 @@ else:
     xs = np.arange(-4.0, 4.0 + 1e-6, RES); nx = len(xs); X, Y = np.meshgrid(xs, xs, indexing="ij")
     V = np.stack([X.ravel(), Y.ravel(), np.zeros(X.size)], 1); a = (np.arange(nx - 1)[:, None] * nx + np.arange(nx - 1)[None, :]).ravel()
     F = np.concatenate([np.stack([a, a + 1, a + nx + 1], 1), np.stack([a, a + nx + 1, a + nx], 1)], 0)
-    if os.environ.get('FLIP', '0') == '1': F = F[:, [0, 2, 1]]                                        # normals up
+    if os.environ.get('FLIP', '1') == '1': F = F[:, [0, 2, 1]]                                        # normals up
     col = nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in V], [tuple(map(int, f)) for f in F]).friction(1.0).build(); tz = 0.0
 for e in range(N): st.insert_rigid_body_in(e, nexus3d.RigidBodyBuilder.fixed().translation(nexus3d.Vec3(0.0, 0.0, tz)).build(), col)
 backstop = nexus3d.ColliderBuilder.cuboid(4.0, 4.0, 0.5).build()                          # like terrain.py: 0.5 m below

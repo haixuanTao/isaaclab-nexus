@@ -1531,3 +1531,14 @@ mesh semantics. The trimesh pair band grows from 2 cm to 12 cm (more triangle pa
 measured). Backend: tile faces are now wound normal-up (they were normal-down; harmless before, decisive now).
 Build: `build_cubins_here.sh` (cuda-oxide shader -> opt/llc/ptxas cubin) then `maturin develop --release`
 with `CUDA_OXIDE_PTX_DIR` exported.
+
+**Validated (engine commit `3d34444` on `isaac-backend`, rebuilt cubins + `--features cuda`):**
+- Bare engine: foot spheres starting 1.5 cm or 3 cm below a flat trimesh are ejected to the surface
+  (+0.035 m, where they rest when dropped from 0.5 m); a hull and a box below it likewise (+0.024 / +0.020).
+- G1 dropped from 1.3 m onto a normal-up trimesh: lands and rests at +0.03 m in all four poses. (A mesh
+  wound normal-DOWN now pushes landing bodies through — one-sided triangles need the front face up;
+  `terrain.py` and the probes wind them that way. Contact capacity 256/512/2048 makes no difference.)
+- v16 final policy, 64 envs, feet > 2 cm / > 5 cm under the terrain: 0.1 s 8% / 0%, 0.5 s 0% / 0%,
+  1 s 5% / 2%, 4 s 6% / 6%, 8 s 14% / 9% — down from 34/12 -> 69/39 %, and below PhysX's 44/17 -> 22/2 %.
+  Bodies > 20 cm under: 0% to 2 s, 5% at 4-8 s (one env off its tile).
+**v17** launched: v16's configuration on the one-sided-contact engine (fresh datasets).

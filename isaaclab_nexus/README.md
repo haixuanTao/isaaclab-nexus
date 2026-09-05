@@ -144,3 +144,8 @@ the PD law at every physics substep (`NEXUS_PD_SUBSTEP`, `NEXUS_JOINT_VEL_CLAMP`
 **Termination deviation.** `nexusify` raises AGILE's `invalid_state.max_ang_vel` from 50 to 100 rad/s
 (`invalid_state_max_ang_vel=`; `None` keeps AGILE's value): the pelvis angular-velocity tail is ~2x heavier
 here than on PhysX under identical actions (contact coupling), and 50 sits inside it.
+
+**Engine requirement (fork `isaac-backend`, one-sided trimesh contact).** Terrain triangles are one-sided:
+a shape up to 10 cm behind a triangle's front face (CCW winding, normal up) is pushed back out through it,
+as PhysX/MuJoCo mesh contacts do. `terrain.py` winds tiles and the apron normal-up; any custom trimesh
+collider must too, or bodies landing on it are pushed through.
