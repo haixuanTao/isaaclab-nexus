@@ -1545,3 +1545,17 @@ with `CUDA_OXIDE_PTX_DIR` exported.
 - Datasets collected on the one-sided engine (v17), level-0 states, sole corner vs terrain: primary median
   -0.3 cm, 18% > 2 cm, 0% > 5 cm; secondary +0.4 cm / 16% / 1%. PhysX's cache at level 0: -2.3 cm, 55%, 2%.
   (The all-level figures quoted earlier mix in rough-terrain geometry and are not a sinking measure.)
+
+## v17 (one-sided trimesh contact) completed 10,000 iterations: the curriculum runs ~2,000 iterations earlier
+| iteration | 1000 | 2000 | 3000 | 4000 | 5000 | 6000 | 7000 | 8000 | 9000 | 10000 |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| mean reward | -111 | -58 | -59 | -52 | **-34** | -148 | -134 | -135 | -115 | -140 |
+| lift harness (x weight) | 0.41 | 0.24 | 0.16 | 0.03 | **0** | 0 | 0 | 0 | 0 | 0 |
+| height error (m) | 0.11 | 0.12 | 0.10 | 0.07 | 0.07 | 0.08 | **0.06** | 0.08 | 0.06 | 0.08 |
+| terrain level | 0 | 0 | 0 | 0 | 2.3 | **5.1** | 4.6 | 4.7 | 4.7 | 4.7 |
+| invalid_state | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
+
+Harness gone at 4400 (v16: 7000), terrain curriculum from 4500, peak level 5.8 at 5827 (v16: 5.6 at 8000),
+polish stage from ~5500. Best pre-polish reward -34 (v16: -37). 14.0 h, 5.1 s/iter average (6.6 s
+early, 3.8 s once the terrain curriculum thins the contact load). 41 checkpoints in
+`logs/2026-09-05_00-47-37_nexus/`.
