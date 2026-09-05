@@ -1,7 +1,7 @@
 Loading user config located at: '/workspace/WBC-AGILE-NEWTON/.venv/lib/python3.12/site-packages/isaacsim/kit/data/Kit/IsaacLab/3.0/user.config.json'
 WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-E0000 00:00:1788456923.866524  114831 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
-W0000 00:00:1788456923.866550  114831 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
+E0000 00:00:1788572403.847975  194523 descriptor_database.cc:633] File already exists in database: grpc/health/v1/health.proto
+W0000 00:00:1788572403.848002  194523 message.cc:301] Protobuf GeneratedMessageFactory: File is already registered: grpc/health/v1/health.proto
 Warp 1.16.0 initialized:
    CUDA Toolkit 12.9, Driver 13.0
    Devices:
@@ -13,6 +13,8 @@ Warp 1.16.0 initialized:
 [ISAACLAB] Kit version: 110.1.1+production.305458.6312fa25.gl
 [ISAACLAB] Kit kernel:  210.1.5+release.12978.b22b555f.gl
 [ISAACLAB] Kit hash:    6312fa25
+[newton] heightfield: Isaac Lab has native terrain heightfields -> using convert_to_heightfield; wrapper only keeps the terrain mesh for diagnostics
+[newton] MuJoCo warm start cleared on env reset
 [INFO]: Parsing configuration from: agile.rl_env.tasks.stand_up.g1.height_tracking_env_cfg:G1HeightTrackingEnvCfg
 [INFO]: Base environment:
 	Environment device    : cuda:0
@@ -20,24 +22,14 @@ Warp 1.16.0 initialized:
 	Physics step-size     : 0.005
 	Rendering step-size   : 0.02
 	Environment step-size : 0.02
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/default_ground_plane.usda' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Gri
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_emissive_mask.png' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_albedo.png' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/IsaacLab/Environments/Grid/Materials/Textures/default_ground_plane_emissive_color.png' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.
+[INFO] Generating terrains based on curriculum took Last: 0.394258 s
+[newton] heightfield: captured terrain mesh 'terrain' (369728 verts, 699080 faces) at /World/ground/terrain
 [INFO]: Registered backend 'newton' for factory Articulation.
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/g1.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/g1.usd'.
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_left_hand_three_finger_hand_physics_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaa
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Is
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/I
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics_simplified.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Is
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Uni
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_right_hand_three_finger_hand_physics_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Is
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_right_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_right.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/I
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_right_hand_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/g1_29dof_NVBP.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/c
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/
@@ -45,36 +37,45 @@ Warp 1.16.0 initialized:
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_sensor.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaa
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/backpack/configuration/g1_29dof_NVBP_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isa
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Uni
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_physics_simplified.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Is
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_29dof_with_hand_rev_1_0_sensor.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/U
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_left_hand_inspire_left_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/U
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unit
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Uni
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unit
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/U
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_left_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unit
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_left_hand_three_finger_hand_physics_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaa
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_base_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Is
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_finger_hand_physics_left.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/three_finger_hand/three_fingers_left_hand_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/g1_right_hand_inspire_right_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_hand.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Uni
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_robot.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Un
-[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/
 [INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_base.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Uni
+[INFO]: Loading local copy of remote asset 'https://omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/Unitree/G1/configuration/inspire_hand/inspire_right_physics.usd' from '/tmp/https/omniverse-content-staging.s3-us-west-2.amazonaws.com/Assets/Isaac/6.1/Isaac/Robots/
 [INFO]: Setting variant selection 'PhysX' for variant set 'Physics' on prim '/World/envs/env_0/Robot'.
 [INFO]: Setting variant selection 'None' for variant set 'left_hand' on prim '/World/envs/env_0/Robot'.
 [INFO]: Setting variant selection 'None' for variant set 'right_hand' on prim '/World/envs/env_0/Robot'.
 [INFO]: Registered backend 'newton' for factory ContactSensor.
 [INFO]: Registered backend 'newton' for factory RayCaster.
+[INFO]: Converted terrain collider /World/ground/terrain (699080 faces) to a 2721x2641 heightfield.
 /workspace/IsaacLab-dev/source/isaaclab_newton/isaaclab_newton/cloner/replicate.py:142: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
   replace_newton_builder_shape_colors(builder, stage)
 /workspace/IsaacLab-dev/source/isaaclab_newton/isaaclab_newton/cloner/newton_clone_utils.py:148: FutureWarning: Newton shape color replacement is enabled; this workaround will be deprecated in a future release.
   replace_newton_builder_shape_colors(builder, stage)
-[INFO]: Time taken for scene creation Last: 6.903180 s, Mean: 6.903180 s, Std: 0.000000 s, N: 1
+[INFO]: Time taken for scene creation Last: 3.489999 s, Mean: 3.489999 s, Std: 0.000000 s, N: 1
 [INFO]: Scene manager:  <class InteractiveScene>
-	Number of environments: 2048
+	Number of environments: 288
 	Environment spacing   : 2.5
 	Source prim name      : /World/envs/env_0
 	Global prim paths     : ['/World/ground']
 	Replicate physics     : True
 [INFO]: Dispatching MODEL_INIT callbacks
 [INFO]: Finalizing model on device: cuda:0
-Finalize builder took: Last: 1.086397 s, Mean: 1.086397 s, Std: 0.000000 s, N: 1
+Finalize builder took: Last: 7.038536 s, Mean: 7.038536 s, Std: 0.000000 s, N: 1
 [INFO]: Dispatching PHYSICS_READY callbacks
 [INFO]: Simulation parameters for joints in /World/envs/env_[^/]+/Robot:
 +-------------------------------------------------------------------------------------------------------------------------------------------+
@@ -113,16 +114,18 @@ Finalize builder took: Last: 1.086397 s, Mean: 1.086397 s, Std: 0.000000 s, N: 1
 |   28  | right_wrist_yaw_joint      |   20.000  |  0.200  |  0.020   |      0.010      | [-1.614, 1.614] |      22.000     |     5.000     |
 +-------+----------------------------+-----------+---------+----------+-----------------+-----------------+-----------------+---------------+
 [INFO]: Adding contact sensor for /World/envs/env_[^/]+/Robot/.* with filter all bodies/shapes
-Contact sensor construction took: Last: 0.033265 s, Mean: 0.033265 s, Std: 0.000000 s, N: 1
+Contact sensor construction took: Last: 0.009689 s, Mean: 0.009689 s, Std: 0.000000 s, N: 1
 [INFO]: Contact sensor initialized with 30 sensors.
-[INFO]: Creating buffers for contact sensor data with num_envs: 2048, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_contact_points: False, track_air_time: True, track_pose: False, device: cuda:0
-[INFO]: Creating buffers for contact sensor data with num_envs: 2048, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_contact_points: False, track_air_time: True, track_pose: False, device: cuda:0
-Initialize solver took: Last: 1.227598 s, Mean: 1.227598 s, Std: 0.000000 s, N: 1
+[INFO]: Creating buffers for contact sensor data with num_envs: 288, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_contact_points: False, track_air_time: True, track_pose: False, device: cuda:0
+[INFO]: Creating buffers for contact sensor data with num_envs: 288, num_sensors: 30, num_filter_objects: 0, history_length: 3, generate_force_matrix: False, track_contact_points: False, track_air_time: True, track_pose: False, device: cuda:0
+[newton] heightfield: restored min_z offset on 1 hfield geom(s) in all worlds (z=-0.1400; Newton's geom sync had dropped it)
+Initialize solver took: Last: 1.344399 s, Mean: 1.344399 s, Std: 0.000000 s, N: 1
 [INFO]: Newton CUDA graph captured (standard Warp mode)
-CUDA graph took: Last: 1.357281 s, Mean: 1.357281 s, Std: 0.000000 s, N: 1
-[newton] DC-motor torque-speed envelope active on 59392/71680 DOFs (2048 worlds x 30 joints) via jnt_actfrcrange + generator braking via dof_damping, velocity-limit band gain 50
-[newton] joint-limit solref set to (0.02, 1) on 59392 joints; explicit limit spring disabled
-[INFO]: Time taken for simulation start Last: 4.735628 s, Mean: 4.735628 s, Std: 0.000000 s, N: 1
+CUDA graph took: Last: 1.163605 s, Mean: 1.163605 s, Std: 0.000000 s, N: 1
+[newton] solver capacity: nworld=288 njmax=512 naconmax=27648 (~96 contacts/world)
+[newton] DC-motor torque-speed envelope active on 8352/10080 DOFs (288 worlds x 30 joints) via jnt_actfrcrange + generator braking via dof_damping, velocity-limit band gain 50
+[newton] joint-limit solref set to (0.02, 1) on 8352 joints; explicit limit spring disabled
+[INFO]: Time taken for simulation start Last: 9.886795 s, Mean: 9.886795 s, Std: 0.000000 s, N: 1
 [INFO] Command Manager:  <CommandManager> contains 1 active terms.
 +--------------------------------------+
 |         Active Command Terms         |
@@ -282,50 +285,24 @@ CUDA graph took: Last: 1.357281 s, Mean: 1.357281 s, Std: 0.000000 s, N: 1
   self.default_com = self.asset.data.body_com_pose_b.torch.clone()
 [INFO]: Completed setting up the environment...
 
-[rs] envs=2048 reset_frac=0.1 steps=1500 watchdog=None
-/workspace/bench/scripts/reset_stress_probe.py:55: DeprecationWarning: Reading the root state directly is deprecated since IsaacLab 3.0 and will be removed in a future version. Please use the default_root_pose and default_root_vel properties instead.
-  rp = tt(robot.data.default_root_state)[ids, :7].clone(); rp[:, :3] += u.scene.env_origins[ids]
-/workspace/bench/scripts/reset_stress_probe.py:58: DeprecationWarning: The function 'write_root_pose_to_sim' will be deprecated in a future release. Please use 'write_root_pose_to_sim_index' instead.
-  robot.write_root_pose_to_sim(rp, env_ids=ids)
-/workspace/bench/scripts/reset_stress_probe.py:59: DeprecationWarning: The function 'write_root_velocity_to_sim' will be deprecated in a future release. Please use 'write_root_velocity_to_sim_index' instead.
-  robot.write_root_velocity_to_sim(torch.zeros(ids.numel(), 6, device=u.device), env_ids=ids)
-/workspace/bench/scripts/reset_stress_probe.py:60: DeprecationWarning: The function 'write_joint_state_to_sim' will be deprecated in a future release. Please use 'write_joint_state_to_sim_index' instead.
-  robot.write_joint_state_to_sim(jp, jv, env_ids=ids)
-[rs] reset env 8: newton max|qd| before=17.4 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] step 0: max|joint_vel|=36.7  max|joint_pos|=0.49  resets so far=183
-[rs] reset env 0: newton max|qd| before=16.6 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 0: newton max|qd| before=19.1 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 11: newton max|qd| before=35.4 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 23: newton max|qd| before=12.2 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 17: newton max|qd| before=12.8 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] step 250: max|joint_vel|=47.5  max|joint_pos|=3.31  resets so far=51636
-[rs] reset env 5: newton max|qd| before=28.3 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 3: newton max|qd| before=24.1 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 4: newton max|qd| before=18.3 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 1: newton max|qd| before=20.5 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 2: newton max|qd| before=14.5 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] step 500: max|joint_vel|=48.0  max|joint_pos|=3.25  resets so far=102800
-[rs] reset env 2: newton max|qd| before=14.1 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 0: newton max|qd| before=16.4 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 2: newton max|qd| before=35 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 1: newton max|qd| before=32.5 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 3: newton max|qd| before=16.4 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] step 750: max|joint_vel|=44.2  max|joint_pos|=3.04  resets so far=153767
-[rs] reset env 22: newton max|qd| before=33.2 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 3: newton max|qd| before=15.9 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 11: newton max|qd| before=22.8 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 10: newton max|qd| before=26.3 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 8: newton max|qd| before=21.9 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] step 1000: max|joint_vel|=43.1  max|joint_pos|=3.25  resets so far=205201
-[rs] reset env 6: newton max|qd| before=21 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 9: newton max|qd| before=23.3 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 10: newton max|qd| before=33.9 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 23: newton max|qd| before=44 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 4: newton max|qd| before=17.5 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] step 1250: max|joint_vel|=49.5  max|joint_pos|=2.97  resets so far=256658
-[rs] reset env 17: newton max|qd| before=7.26 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 15: newton max|qd| before=17.8 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 3: newton max|qd| before=31.1 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] reset env 11: newton max|qd| before=25.7 after=0  isaac sim-bind joint_vel after=0  (state_0 id=127253573965376)
-[rs] SURVIVED 1500 steps with 307498 forced resets
+[al] heightfield shapes: [0]   robot shapes: 10368
+[al] newton hfield shape 0: nrow=2721 ncol=2641 hx=132.00 hy=136.00 min_z=-0.1400 max_z=+0.1400 data[0,1] range=[0.000,1.000] xform p=(+0.00,+0.00,+0.0000)
+[al] mujoco hfield geom 0: pos=(+0.00,+0.00,-0.1400) size(hx,hy,z_top,z_base)=(132.00,136.00,0.2800,0.0001) data range=[0.000,1.000] -> surface z in [-0.1400,+0.1400]
+[al] mjw_model.geom_pos[world0, hfield] = [ 0.          0.         -0.13999999]
+[al] terrain mesh z range: [-1.0000, +0.1400]
+[al] terrain contacts sampled: 217454  (mesh hit for 217454)
+[al] contact z - MESH height at same xy:   median=-0.0001  p90|.|=0.0021  max|.|=0.0975 m
+[al] penetration (dist) on terrain contacts: median=-0.0002  min=-1.8427   fraction deeper than 5 cm: 0.002
+[al] mesh relief in sampled area: z in [-0.020, +0.020]
+[al] per-cell stats over 8x9 cells (row=level, col=type); contacts assigned to nearest cell centre:
+[al]   cell row 0 col 8: n=22245  max|contact z - mesh z|=0.097 m  min dist=-1.613 m
+[al]   cell row 0 col 6: n=24277  max|contact z - mesh z|=0.059 m  min dist=-0.608 m
+[al]   cell row 0 col 3: n=27720  max|contact z - mesh z|=0.053 m  min dist=-0.336 m
+[al]   cell row 0 col 4: n=25765  max|contact z - mesh z|=0.053 m  min dist=-0.105 m
+[al]   cell row 0 col 1: n=23508  max|contact z - mesh z|=0.050 m  min dist=-0.891 m
+[al]   cell row 0 col 0: n=18774  max|contact z - mesh z|=0.049 m  min dist=-1.843 m
+[al]   cell row 0 col 2: n=24916  max|contact z - mesh z|=0.049 m  min dist=-0.556 m
+[al]   cell row 0 col 7: n=23520  max|contact z - mesh z|=0.035 m  min dist=-1.329 m
+[al]   perimeter: cells=9  median max-error=0.050 m  worst min dist=-1.843 m
 [INFO]: SimulationContext cleared
+EXIT=0
