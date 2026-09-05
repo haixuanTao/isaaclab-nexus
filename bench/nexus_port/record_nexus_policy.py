@@ -36,14 +36,19 @@ def _sole_clearance(robot, heights_at_fn):
     corners = bp[:, :, None, :] + _mu.quat_apply(bq[:, :, None, :].expand(N, 2, 4, 4).reshape(-1, 4), pts[None, None].expand(N, 2, 4, 3).reshape(-1, 3)).reshape(N, 2, 4, 3)
     c = corners.reshape(N, 8, 3); hz = heights_at_fn(c[..., :2]); return (c[..., 2] - 0.005 - hz).min(1).values
 
-K = 4; root_pos, root_quat, jpos, zall, ext, clear, xyall, sole = [], [], [], [], [], [], [], []
+K = 4; root_pos, root_quat, jpos, zall, ext, clear, xyall, sole, torso_up, hcmd = [], [], [], [], [], [], [], [], [], []
+TORSO = robot.find_bodies('torso_link')[0][0]
 with torch.inference_mode():
     for i in range(STEPS):
         act = policy(obs) * (0.0 if os.environ.get('NEXUS_ZERO_ACTIONS') == '1' else 1.0)
+        if os.environ.get("NEXUS_HEIGHT_CMD"):                                            # hold one commanded height for every env
+            hv = float(os.environ["NEXUS_HEIGHT_CMD"]); ht = base.command_manager.get_term("height"); ht._target_height[:] = hv; ht._current_height_cmd[:] = hv
         obs, _, _, _ = wenv.step(act)
         d = robot.data
         root_pos.append(d.root_link_pos_w.torch[:K].cpu().numpy()); root_quat.append(d.root_link_quat_w.torch[:K][:, [3, 0, 1, 2]].cpu().numpy())   # (x,y,z,w) -> MuJoCo (w,x,y,z)
         jpos.append(d.joint_pos.torch[:K].cpu().numpy()); zall.append(d.root_link_pos_w.torch[:, 2].cpu().numpy()); xyall.append(d.root_link_pos_w.torch[:, :2].cpu().numpy())
+        tq = d.body_link_quat_w.torch[:, TORSO]; up = 1.0 - 2.0 * (tq[:, 0] ** 2 + tq[:, 1] ** 2)     # torso z-axis . world up (xyzw)
+        torso_up.append(up.cpu().numpy()); hcmd.append(base.command_manager.get_command("height")[:, 0].cpu().numpy() if hasattr(base.command_manager, "get_command") else np.zeros(d.root_link_pos_w.torch.shape[0]))
         jv = d.joint_vel.torch.abs().max().item(); rv = d.root_lin_vel_w.torch.norm(dim=-1).max().item() if hasattr(d, 'root_lin_vel_w') else float('nan')
         ext.append((jv, rv))
         bp = d.body_link_pos_w.torch                                              # (N, B, 3)
@@ -62,7 +67,10 @@ print("clearance by location: on-tile samples " + f"{(~off).mean():.2f} of all |
 print("on-tile time course (frac of envs with a body < -0.05 / < -0.2 m): " + " | ".join(f"t={t}s {((cl[min(int(t/float(base.step_dt)),len(cl)-1)] < -0.05) & ~off[min(int(t/float(base.step_dt)),len(cl)-1)]).mean():.2f}/{((cl[min(int(t/float(base.step_dt)),len(cl)-1)] < -0.2) & ~off[min(int(t/float(base.step_dt)),len(cl)-1)]).mean():.2f}" for t in (0.1, 1, 2, 4, 8)))
 np.savez("/workspace/bench/video/nexus_rollout.npz", root_pos=np.stack(root_pos), root_quat=np.stack(root_quat), joint_pos=np.stack(jpos),
          joint_names=np.array(robot.joint_names), root_z_all=np.stack(zall), terrain_v=np.asarray(V, np.float32), terrain_f=np.asarray(F, np.int32), dt=float(base.step_dt), clearance=cl, root_xy_all=xy, **tile_meshes)
-za = np.stack(zall); t8 = min(int(8 / float(base.step_dt)), len(za) - 1)
+za = np.stack(zall); t8 = min(int(8 / float(base.step_dt)), len(za) - 1); TU = np.stack(torso_up); HC = np.stack(hcmd)
+print("POSTURE (fraction of envs): " + " | ".join(f"t={t}s upright(torso<30deg) {(TU[i] > 0.866).mean():.2f} sitting(z 0.25-0.55 & torso<45deg) {((za[i] > 0.25) & (za[i] < 0.55) & (TU[i] > 0.707)).mean():.2f} standing(z>0.6 & upright) {((za[i] > 0.6) & (TU[i] > 0.866)).mean():.2f} flat(torso>60deg) {(TU[i] < 0.5).mean():.2f}" for t, i in ((1, min(int(1/float(base.step_dt)), len(za)-1)), (4, min(int(4/float(base.step_dt)), len(za)-1)), (8, t8))))
+_m = HC[int(2/float(base.step_dt)):] >= 0; print(f"HEIGHT TRACKING (AGILE-style: t>2s, cmd>=0): |root z - cmd| mean {np.abs(za[int(2/float(base.step_dt)):] - HC[int(2/float(base.step_dt)):])[_m].mean():.3f} m | cmd median {np.median(HC):.2f} p10 {np.percentile(HC,10):.2f} p90 {np.percentile(HC,90):.2f}")
+
 import numpy as _np; e=_np.array(ext); print(f"EXTREMES over {len(e)} steps x {za.shape[1]} envs: max |joint_vel| {e[:,0].max():.1f} rad/s (p99 over steps {_np.percentile(e[:,0],99):.1f}) | max |root_vel| {_np.nanmax(e[:,1]):.2f} m/s | min z {za.min():.2f} max z {za.max():.2f} | solver_iters {os.environ.get('NEXUS_SOLVER_ITERS','1')}")
 print(f"ALL {za.shape[1]} envs: root z mean at t=0/2/4/8 s = " + " / ".join(f"{za[min(int(t/float(base.step_dt)),len(za)-1)].mean():.2f}" for t in (0,2,4,8))
       + f" | fraction with z>0.5 at t=8s: {(za[t8] > 0.5).mean():.2f} | max z at t=8s: {za[t8].max():.2f}")

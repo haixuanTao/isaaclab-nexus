@@ -206,11 +206,23 @@ class ArticulationData:
     def root_link_ang_vel_w(self): return _proxy(self._a._quad(self._a._lay["WS_RB_VELS"] + 1)[:, 0, :3])
     root_pos_w = root_link_pos_w; root_quat_w = root_link_quat_w; root_pose_w = root_link_pose_w
     root_vel_w = root_link_vel_w; root_lin_vel_w = root_link_lin_vel_w; root_ang_vel_w = root_link_ang_vel_w
-    root_com_pos_w = root_link_pos_w; root_com_quat_w = root_link_quat_w; root_com_pose_w = root_link_pose_w
-    root_com_vel_w = root_link_vel_w; root_com_lin_vel_w = root_link_lin_vel_w; root_com_ang_vel_w = root_link_ang_vel_w
+    # centre-of-mass views: link frame composed with the MJCF inertial offset (`body_ipos`); velocities transported
+    @property
+    def root_com_pos_w(self): return _proxy(self.body_com_pos_w.torch[:, 0])
+    @property
+    def root_com_quat_w(self): return _proxy(self.body_com_quat_w.torch[:, 0])
+    @property
+    def root_com_pose_w(self): return _proxy(torch.cat([self.root_com_pos_w.torch, self.root_com_quat_w.torch], -1))
+    @property
+    def root_com_lin_vel_w(self): return _proxy(self.body_com_lin_vel_w.torch[:, 0])
+    root_com_ang_vel_w = root_link_ang_vel_w
+    @property
+    def root_com_vel_w(self): return _proxy(torch.cat([self.root_com_lin_vel_w.torch, self.root_com_ang_vel_w.torch], -1))
     @property
     def root_state_w(self): return _proxy(torch.cat([self.root_link_pose_w.torch, self.root_link_vel_w.torch], -1))
-    root_link_state_w = root_state_w; root_com_state_w = root_state_w
+    root_link_state_w = root_state_w
+    @property
+    def root_com_state_w(self): return _proxy(torch.cat([self.root_com_pose_w.torch, self.root_com_vel_w.torch], -1))
     @property
     def root_lin_vel_b(self): return _proxy(math_utils.quat_apply_inverse(self.root_quat_w.torch, self.root_lin_vel_w.torch))
     @property
@@ -244,11 +256,24 @@ class ArticulationData:
     def body_link_ang_vel_w(self): return _proxy(self._a._quad(self._a._lay["WS_RB_VELS"] + 1)[..., :3])
     body_pos_w = body_link_pos_w; body_quat_w = body_link_quat_w; body_pose_w = body_link_pose_w
     body_vel_w = body_link_vel_w; body_lin_vel_w = body_link_lin_vel_w; body_ang_vel_w = body_link_ang_vel_w
-    body_com_pos_w = body_link_pos_w; body_com_quat_w = body_link_quat_w; body_com_pose_w = body_link_pose_w
-    body_com_vel_w = body_link_vel_w; body_com_lin_vel_w = body_link_lin_vel_w; body_com_ang_vel_w = body_link_ang_vel_w
+    def _com_offset_w(self):                      # (N, B, 3): R_link * com_pos_b
+        return _quat_apply(self.body_link_quat_w.torch, self._body_com_pose_b[..., :3])
+    @property
+    def body_com_pos_w(self): return _proxy(self.body_link_pos_w.torch + self._com_offset_w())
+    @property
+    def body_com_quat_w(self): return _proxy(math_utils.quat_mul(self.body_link_quat_w.torch, self._body_com_pose_b[..., 3:]))
+    @property
+    def body_com_pose_w(self): return _proxy(torch.cat([self.body_com_pos_w.torch, self.body_com_quat_w.torch], -1))
+    body_com_ang_vel_w = body_link_ang_vel_w
+    @property
+    def body_com_lin_vel_w(self): return _proxy(self.body_link_lin_vel_w.torch + torch.cross(self.body_link_ang_vel_w.torch, self._com_offset_w(), dim=-1))
+    @property
+    def body_com_vel_w(self): return _proxy(torch.cat([self.body_com_lin_vel_w.torch, self.body_com_ang_vel_w.torch], -1))
     @property
     def body_state_w(self): return _proxy(torch.cat([self.body_link_pose_w.torch, self.body_link_vel_w.torch], -1))
-    body_link_state_w = body_state_w; body_com_state_w = body_state_w
+    body_link_state_w = body_state_w
+    @property
+    def body_com_state_w(self): return _proxy(torch.cat([self.body_com_pose_w.torch, self.body_com_vel_w.torch], -1))
     @property
     def body_acc_w(self): return _proxy(self._a._vel(self._a._lay["WS_KIN_ACC"]))
     body_com_acc_w = body_acc_w
@@ -321,6 +346,7 @@ class Articulation(BaseArticulation):
         self._rows, self._slot, self._cols = (x[order].to(_DEV) for x in (rows, slot, cols))
         self._quad_of_slot = self._lay["WS_COORDS"] + (self._slot >= 4).long()     # coords 0-3 / 4-5
         self._col_of_slot = torch.where(self._slot >= 4, self._slot - 4, self._slot)
+        self._link_parent = stat[:, 1].tolist()                                          # > L for the root
         self._joint_links = [int(rows[order][i]) for i in range(len(order))]
         self._joint_axis = [int(slot[order][i]) for i in range(len(order))]
         self._num_joints = int(len(cols))
@@ -388,6 +414,25 @@ class Articulation(BaseArticulation):
             a = int(m.jnt_dofadr[j])
             d._joint_friction_coeff[:, i] = float(m.dof_frictionloss[a])
         d._joint_armature.copy_(self._eng_armature[self._cols].T); d._joint_damping.copy_(self._eng_damping[self._cols].T)
+        # Joint axes and anchors (child-body frame) for the joint-space projection of external body wrenches
+        # (`write_data_to_sim`): tau_j = a_j . ((p_F - p_j) x F + T) for every joint on the path root -> body.
+        J, B, L = self._num_joints, self.num_bodies, len(self._link_parent)
+        jax = torch.zeros(J, 3); jpos = torch.zeros(J, 3)
+        for i, n in enumerate(self._joint_names):
+            j = jl.get(n)
+            if j is not None:
+                jax[i] = torch.as_tensor(m.jnt_axis[j], dtype=torch.float32); jpos[i] = torch.as_tensor(m.jnt_pos[j], dtype=torch.float32)
+        self._jax_local, self._janchor_local = jax.to(_DEV), jpos.to(_DEV)
+        self._jlink = torch.tensor(self._joint_links, device=_DEV, dtype=torch.long)
+        anc = torch.zeros(J, B)
+        for b in range(B):
+            k = b
+            while 0 <= k < L:
+                for i, lk in enumerate(self._joint_links):
+                    if lk == k: anc[i, b] = 1.0
+                k = int(self._link_parent[k])
+        self._anc = anc.to(_DEV)
+        self._wrench_tau = torch.zeros(self.num_instances, J, device=_DEV)
         self._eng_friction[self._cols, :] = d._joint_friction_coeff.T
         bl = {mujoco.mj_id2name(m, mujoco.mjtObj.mjOBJ_BODY, b): b for b in range(m.nbody)}
         for i, n in enumerate(self._body_names):
@@ -475,7 +520,7 @@ class Articulation(BaseArticulation):
         tau = self._pd_kp * (self._pd_qt - q) - self._pd_kd * v + self._pd_ff
         lim = d._joint_effort_limits
         tau = torch.where(self._pd_kp > 0, torch.maximum(torch.minimum(tau, lim), -lim), d._applied_torque)
-        d._applied_torque[:] = tau; self._effort[self._cols, :] = tau.T
+        d._applied_torque[:] = tau; self._effort[self._cols, :] = (tau + self._wrench_tau).T
     def _clamp_joint_velocities(self) -> None:
         lim = self._data._joint_vel_limits                        # (NB, J), inf where unset
         if not torch.isfinite(lim).any(): return
@@ -613,9 +658,9 @@ class Articulation(BaseArticulation):
 
     def write_data_to_sim(self) -> None:
         self._apply_actuator_model()
-        self._effort[self._cols, :] = self._data._applied_torque.T       # zero-copy write into the sim
+        self._effort[self._cols, :] = (self._data._applied_torque + self._wrench_tau).T   # zero-copy write into the sim
         # body wrenches -> root free joint (base-DOF projection)
-        wr = torch.zeros(self.num_instances, 6, device=_DEV)
+        wr = torch.zeros(self.num_instances, 6, device=_DEV); Fb_tot = None
         for comp in (self.permanent_wrench_composer, self.instantaneous_wrench_composer):
             if comp.active:
                 # The composer's OUTPUT is the total wrench per body in the BODY frame (global + local
@@ -632,11 +677,23 @@ class Articulation(BaseArticulation):
                 Tw = wp.to_torch(comp.global_torque_w) + _quat_apply(q, wp.to_torch(comp.local_torque_b))
                 r = self._data.body_com_pos_w.torch - self._data.root_link_pos_w.torch[:, None, :]
                 wr[:, :3] += Fw.sum(1); wr[:, 3:] += (Tw + torch.cross(r, Fw, dim=-1)).sum(1)
+                Fb_tot = Fw if Fb_tot is None else Fb_tot + Fw; Tb_tot = Tw if Fb_tot is Fw else Tb_tot + Tw
+        # Joint-space part of the same wrenches (PhysX applies forces to the links, so they also act through every
+        # joint between the body and the root -- AGILE's lift on torso_link curls the torso up via the waist).
+        if Fb_tot is not None and getattr(self, "_anc", None) is not None:
+            ql, pl = self._data.body_link_quat_w.torch[:, self._jlink], self._data.body_link_pos_w.torch[:, self._jlink]   # (N, J, ..)
+            ax = _quat_apply(ql, self._jax_local[None].expand(ql.shape[0], -1, -1)); anchor = pl + _quat_apply(ql, self._janchor_local[None].expand(ql.shape[0], -1, -1))
+            com = self._data.body_com_pos_w.torch                                                                   # (N, B, 3)
+            mom = torch.cross(com[:, None] - anchor[:, :, None], Fb_tot[:, None], dim=-1) + Tb_tot[:, None]          # (N, J, B, 3)
+            self._wrench_tau = ((mom * ax[:, :, None]).sum(-1) * self._anc[None]).sum(-1)                             # (N, J)
+        else:
+            self._wrench_tau.zero_()
         # The engine's free-joint generalized forces are expressed in the ROOT LINK frame (measured:
         # a world +X force at a 180-degree-yawed root produced -vx). Rotate the world wrench into it.
         qr = self._data.root_link_quat_w.torch
         wr = torch.cat([math_utils.quat_apply_inverse(qr, wr[:, :3]), math_utils.quat_apply_inverse(qr, wr[:, 3:])], dim=1)
         self._effort[self._root_cols, :] = wr.T
+        self._effort[self._cols, :] = (self._data._applied_torque + self._wrench_tau).T
         self.instantaneous_wrench_composer.reset()
 
     def update(self, dt: float) -> None:

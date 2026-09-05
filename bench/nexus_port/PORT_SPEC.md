@@ -1576,3 +1576,34 @@ outside its tile rests at +0.09 m, exactly as at the tile centre (`probe_apron.p
 link-origin clearance +1.5 cm, off-tile +0.2 cm); 21/64 envs walk off their tile and stay at ground
 level (root z median +0.34 m off-tile); 27% above 0.5 m at 8 s with mixed height commands.
 Video: `nexus_g1_standup_v17_final_apronfix.mp4`.
+
+## "It can't lift its upper body" (user, 2026-09-05) — the harness never acted through the waist
+`probe_waist_response.py`: standing G1 under AGILE's PD, 150 N along +x applied at `torso_link` for 0.3 s
+through the articulation API on both backends:
+
+| | d(waist_pitch) | d(left_hip_pitch) | torso tilt (cos) | root dz |
+|---|---:|---:|---:|---:|
+| PhysX | **+0.088 rad** | -0.087 | 0.97 -> **0.31** (72 deg) | -0.31 m |
+| Nexus, root-only projection | +0.014 rad | -0.028 | 0.99 -> 0.85 (32 deg) | -0.12 m |
+
+This backend projected every external body wrench onto the root's six generalized forces only (the
+transport `tau_root = sum(tau + r x F)`), which is the correct *base* part of `J^T F` but drops the joint
+part: a force on the torso must also load the three waist joints (and a force on a hand, every joint down
+to the pelvis). AGILE's lift harness pulls on `torso_link` 0.5 m above it, so on PhysX it curls the torso
+up over the pelvis — the sit-up the policy is supposed to learn under assistance — and here it lifted the
+pelvis instead. v17's posture at 8 s (64 envs, mixed height commands): 30% torso upright, 19% sitting,
+9% standing, **50% lying flat**. Fix: `write_data_to_sim` now also computes
+`tau_j = a_j . ((p_com,b - p_j) x F_b + T_b)` for every joint j on the path root -> b (axes/anchors from the
+MJCF, ancestor matrix from the link parents) and adds it to the joint effort rows (unclipped; re-applied by
+`_pd_substep`).
+Debugging the projection exposed a second gap: `body_com_pos_w` (and every `*_com_*` view) was an alias of the
+link-frame view — the MJCF inertial offsets (`body_ipos`) were loaded but never applied. With the torso's
+COM at its link origin (= the waist anchor) a force "at the COM" had no lever arm on the waist at all, and
+the root transport used the wrong arm too. The COM views are now the link pose composed with the inertial
+offset (velocities transported with w x r); `root_com_*` follow.
+With both fixes the torso force loads the waist (27 N.m on waist_pitch, 3 on waist_yaw): d(waist_pitch)
+**+0.344 rad** (PhysX +0.088), torso tilt cos 0.99 -> 0.63 (PhysX 0.31), root dz -0.12 (PhysX -0.31). The
+response is now of the right kind and order; the split between waist bend and whole-body tip differs from
+PhysX because the assets differ (MJCF torso 9.6 kg with its COM 18 cm from the waist vs the USD's 7.8 kg
+torso with the head split out), not because of the projection. **v18** launched with both fixes (v17's
+datasets and config).
