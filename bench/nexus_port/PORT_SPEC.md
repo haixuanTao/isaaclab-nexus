@@ -1607,3 +1607,5 @@ response is now of the right kind and order; the split between waist bend and wh
 PhysX because the assets differ (MJCF torso 9.6 kg with its COM 18 cm from the waist vs the USD's 7.8 kg
 torso with the head split out), not because of the projection. **v18** launched with both fixes (v17's
 datasets and config).
+Sanity (`probe_standing_hold.py`, 64 envs, zero actions, lift active) with both fixes: 98% up at 0.5 s,
+50% at 1 s, 34-50% at 2-5 s, base 0.51-0.64 m — PhysX on the same test: 81 / 44 / 33-25%. No regression.
