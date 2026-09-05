@@ -33,6 +33,7 @@ PTS = np.array([[-0.05, 0.025, -0.03], [-0.05, -0.025, -0.03], [0.12, 0.03, -0.0
 def analyse(f, order, tag):
     D = torch.load(f, map_location="cpu", weights_only=False); sole, link = [], []
     for lv, s in D["states_by_level"].items():
+        if os.environ.get("LEVELS") and str(lv) not in os.environ["LEVELS"].split(","): continue
         rp, rq, jp, tt = s["root_pos_rel"].numpy(), s["root_quat"].numpy(), s["joint_pos"].numpy(), s["terrain_type"].numpy()
         for i in range(len(rp)):
             d.qpos[:] = 0; d.qpos[:3] = rp[i]; d.qpos[3:7] = rq[i][[3, 0, 1, 2]]

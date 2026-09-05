@@ -1542,3 +1542,6 @@ with `CUDA_OXIDE_PTX_DIR` exported.
   1 s 5% / 2%, 4 s 6% / 6%, 8 s 14% / 9% — down from 34/12 -> 69/39 %, and below PhysX's 44/17 -> 22/2 %.
   Bodies > 20 cm under: 0% to 2 s, 5% at 4-8 s (one env off its tile).
 **v17** launched: v16's configuration on the one-sided-contact engine (fresh datasets).
+- Datasets collected on the one-sided engine (v17), level-0 states, sole corner vs terrain: primary median
+  -0.3 cm, 18% > 2 cm, 0% > 5 cm; secondary +0.4 cm / 16% / 1%. PhysX's cache at level 0: -2.3 cm, 55%, 2%.
+  (The all-level figures quoted earlier mix in rough-terrain geometry and are not a sinking measure.)
