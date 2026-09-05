@@ -1559,3 +1559,15 @@ Harness gone at 4400 (v16: 7000), terrain curriculum from 4500, peak level 5.8 a
 polish stage from ~5500. Best pre-polish reward -34 (v16: -37). 14.0 h, 5.1 s/iter average (6.6 s
 early, 3.8 s once the terrain curriculum thins the contact load). 41 checkpoints in
 `logs/2026-09-05_00-47-37_nexus/`.
+
+**v17 final rollout, and why robots that leave the tile fall a metre.** Sole metric (64 envs): 3% of envs
+with a foot > 2 cm under at 0.1 s, 0% > 5 cm; 5% / 5% at 1 s; 11% / 9% at 4 s; 19% / 14% at 8 s — the
+late numbers are dominated by off-tile robots: **24 of 64 envs leave their 8x8 m tile within 8 s** with the
+polished policy (it walks; AGILE's terrain is contiguous, ours is one tile + apron), and when they cross the
+edge they drop from z ~+0.6 to ~-0.9 m within half a second. `probe_apron.py` (robot dropped 2 m outside
+the tile, zero actions): rests at -0.89 m. Cause: `tile_zmin` was taken from the raw cropped mesh, and
+Isaac's generated terrain carries a **skirt down to -1 m at tile borders** — so every tile's "lowest point"
+was -1.0 and the apron and slab sat a metre under the surface (that is also the -0.9 m of the earlier
+off-tile residual). Fixed: `tile_zmin` from the rasterized collider surface.
+Verified: with `tile_zmin` from the surface (-0.016..-0.011 m on level-0 tiles) a robot dropped 2 m or 6 m
+outside its tile rests at +0.09 m, exactly as at the tile centre (`probe_apron.py`).

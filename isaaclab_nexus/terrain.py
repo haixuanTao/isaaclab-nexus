@@ -77,7 +77,9 @@ class NexusTerrain:
                 n = np.cross(Vt_c[Ft_c[:, 1]] - Vt_c[Ft_c[:, 0]], Vt_c[Ft_c[:, 2]] - Vt_c[Ft_c[:, 0]])
                 Ft_c = np.where((n[:, 2:3] < 0), Ft_c[:, [0, 2, 1]], Ft_c)                  # face normals UP
             self.tile_vertices[(r, c)], self.tile_faces[(r, c)] = Vt_c, Ft_c
-            self.tile_zmin[(r, c)] = float(Vt[:, 2].min())                                # this tile's own lowest point
+            # this tile's lowest SURFACE point: the rasterized collider, not the raw crop -- Isaac's generated mesh
+            # carries a skirt down to -1 m at tile borders, which put the apron and slab a metre under the surface
+            self.tile_zmin[(r, c)] = float(Vt_c[:, 2].min())
             cb = nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in Vt_c], [tuple(map(int, f)) for f in Ft_c])
             # rapier's default is 0.5; Isaac terrains carry their own material (AGILE: 1.0)
             colliders.append((cb.friction(float(friction)) if friction is not None else cb).build())
