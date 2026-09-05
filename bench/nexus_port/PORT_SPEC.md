@@ -1571,3 +1571,8 @@ was -1.0 and the apron and slab sat a metre under the surface (that is also the 
 off-tile residual). Fixed: `tile_zmin` from the rasterized collider surface.
 Verified: with `tile_zmin` from the surface (-0.016..-0.011 m on level-0 tiles) a robot dropped 2 m or 6 m
 outside its tile rests at +0.09 m, exactly as at the tile centre (`probe_apron.py`).
+**v17 final rollout on the corrected terrain** (64 envs, 8 s): feet > 2 cm / > 5 cm under: 0.1 s 3% / 0%,
+0.5 s 3% / 0%, 1 s 0% / 0%, 4 s 2% / 0%, 8 s 9% / 2%; no body > 5 cm under at any time (on-tile p1 of the
+link-origin clearance +1.5 cm, off-tile +0.2 cm); 21/64 envs walk off their tile and stay at ground
+level (root z median +0.34 m off-tile); 27% above 0.5 m at 8 s with mixed height commands.
+Video: `nexus_g1_standup_v17_final_apronfix.mp4`.
