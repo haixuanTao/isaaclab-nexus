@@ -27,6 +27,23 @@ def grid(r, c):
         xs, ys, Z = _rasterize(trimesh.Trimesh(Vt, remap[Fk], process=False), sx, sy, RES, zmin, zmax)
         grids[(r, c)] = (torch.as_tensor(Z, device=base.device), float(xs[0]), float(ys[0]), torch.as_tensor(o[:2], device=base.device))
     return grids[(r, c)]
+
+_FOOT_PTS = torch.tensor([[-0.05, 0.025, -0.03], [-0.05, -0.025, -0.03], [0.12, 0.03, -0.03], [0.12, -0.03, -0.03]])
+def _sole_clearance(robot, heights_at_fn):
+    """min over both feet's 4 sole corners of (corner z - 0.005 - local terrain height), per env."""
+    import isaaclab.utils.math as _mu
+    ids = robot.find_bodies(".*_ankle_roll_link")[0]; bp = robot.data.body_link_pos_w; bq = robot.data.body_link_quat_w
+    bp = (bp.torch if hasattr(bp, "torch") else bp)[:, ids]; bq = (bq.torch if hasattr(bq, "torch") else bq)[:, ids]      # (N, 2, 3/4)
+    N = bp.shape[0]; pts = _FOOT_PTS.to(bp.device)
+    corners = bp[:, :, None, :] + _mu.quat_apply(bq[:, :, None, :].expand(N, 2, 4, 4).reshape(-1, 4), pts[None, None].expand(N, 2, 4, 3).reshape(-1, 3)).reshape(N, 2, 4, 3)
+    c = corners.reshape(N, 8, 3); hz = heights_at_fn(c[..., :2]); return (c[..., 2] - 0.005 - hz).min(1).values
+
+def _heights_world(xy):
+    N = xy.shape[0]; out = torch.empty(N, xy.shape[1], device=base.device); lv, ty = T.terrain_levels.tolist(), T.terrain_types.tolist()
+    for e in range(N):
+        Z, x0, y0, oxy = grid(int(lv[e]), int(ty[e])); q = xy[e] - oxy
+        i = ((q[:, 0] - x0) / RES).round().long().clamp(0, Z.shape[0] - 1); j = ((q[:, 1] - y0) / RES).round().long().clamp(0, Z.shape[1] - 1); out[e] = Z[i, j]
+    return out
 def clearance():
     bp = robot.data.body_link_pos_w.torch if hasattr(robot.data.body_link_pos_w, "torch") else robot.data.body_link_pos_w
     lv, ty = T.terrain_levels.tolist(), T.terrain_types.tolist(); out = torch.empty(N, device=base.device)
@@ -39,11 +56,12 @@ pre = gym.spec(TASK).kwargs.get("pre_learn_entry_point")
 if pre:
     import importlib; mod, fn = pre.split(":"); getattr(importlib.import_module(mod), fn)(base, TASK, agent_cfg); base.reset()
 wenv = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions); runner = make_rsl_rl_runner(wenv, agent_cfg, log_dir=None, device=agent_cfg.device)
-runner.load(CKPT); policy = runner.get_inference_policy(device=agent_cfg.device); obs = wenv.get_observations(); cl = []
+runner.load(CKPT); policy = runner.get_inference_policy(device=agent_cfg.device); obs = wenv.get_observations(); cl = []; SOLE = []
 with torch.inference_mode():
     for i in range(STEPS):
-        act = policy(obs) * (0.0 if os.environ.get("NEXUS_ZERO_ACTIONS") == "1" else 1.0); obs, _, _, _ = wenv.step(act); cl.append(clearance())
+        act = policy(obs) * (0.0 if os.environ.get("NEXUS_ZERO_ACTIONS") == "1" else 1.0); obs, _, _, _ = wenv.step(act); cl.append(clearance()); SOLE.append(_sole_clearance(robot, _heights_world).cpu().numpy())
 cl = np.stack(cl); dt = float(base.step_dt); f = lambda t: min(int(t / dt), len(cl) - 1)
 print(f"[PhysX, zero_actions={os.environ.get('NEXUS_ZERO_ACTIONS')=='1'}] clearance median over (t,env) {np.median(cl):+.3f} | p1 {np.percentile(cl,1):+.3f} | min {cl.min():+.3f} | frac<-0.05 {(cl<-0.05).mean():.3f} frac<-0.2 {(cl<-0.2).mean():.3f}")
+S = np.stack(SOLE); print("SOLE clearance (lowest foot corner vs terrain, m): " + " | ".join(f"t={t}s median {np.median(S[f(t)]):+.3f} p10 {np.percentile(S[f(t)],10):+.3f} frac<-0.02 {(S[f(t)]<-0.02).mean():.2f} frac<-0.05 {(S[f(t)]<-0.05).mean():.2f}" for t in (0.1, 0.5, 1, 4, 8)))
 print("time course (frac of envs with a body < -0.05 / < -0.2 m): " + " | ".join(f"t={t}s {(cl[f(t)]<-0.05).mean():.2f}/{(cl[f(t)]<-0.2).mean():.2f}" for t in (0.1, 1, 2, 4, 8)))
 env.close(); app.close()

@@ -1503,3 +1503,31 @@ many of them low). Residual in both: one env per rollout leaves its tile at ~9 m
 the surface (`min z -0.9`): a fast body crossing the thin tile/apron trimesh (4.5 cm per step against the
 2 cm contact margin) is not caught and the cuboid slab does not eject it. PhysX's terrain is continuous,
 so robots there simply land on the next tile. Video: `nexus_g1_standup_v16_final.mp4`.
+
+## "The feet are sinking" (user, 2026-09-05) — the engine's one-sided trimesh contact
+Sole-level metric (lowest of the 8 foot-sole sphere corners vs local terrain; `record_nexus_policy.py`,
+`probe_clearance_physx.py`), v16 final policy, 64 envs:
+
+| envs with a sole > 2 cm / > 5 cm under | 0.1 s | 0.5 s | 1 s | 4 s | 8 s |
+|---|---:|---:|---:|---:|---:|
+| Nexus | 0.34 / 0.12 | 0.59 / 0.19 | 0.52 / 0.22 | 0.61 / 0.28 | **0.69 / 0.39** |
+| PhysX | **0.44 / 0.17** | 0.33 / 0.16 | 0.33 / 0.16 | 0.17 / 0.03 | 0.22 / 0.02 |
+
+Both start with feet in the ground — the *datasets* put them there, and PhysX's own cache is worse
+(`probe_dataset_sole_clearance.py`: PhysX primary set median sole 6 cm under, 87% > 2 cm; Nexus set 3.5 cm,
+62%) — but PhysX ejects them and Nexus ratchets them deeper. Thicker foot colliders (2 cm boxes) change
+nothing (36% -> 70%). Bare-engine test (`probe_freebody_trimesh.py`, START_Z): a foot whose sole spheres
+start 1.5 cm below a flat trimesh gets **no contact and free-falls** (-19 m after 2 s); on a cuboid it is
+ejected to the surface immediately. The GPU trimesh narrow phase only ever reports what GJK sees: a shape
+below a triangle is either "separated" (no manifold beyond the 2 cm prediction band) or gets a back-side
+manifold whose normal points away from the face — pushing it deeper.
+
+**Engine change (fork branch `isaac-backend`, `src_rbd_shaders/broad_phase/narrow_phase.rs`):** triangles
+cut from a trimesh are one-sided (front = CCW winding). In the PFM kernel, if the manifold is empty or
+back-facing and `shape2`'s deepest support point lies below the face within `TRIMESH_BACKSIDE_DEPTH`
+(0.10 m) and over the triangle (2 cm margin), the manifold becomes one contact along the face normal with
+`dist = -depth`, so the solver's penetration recovery pushes the shape out through the face — PhysX/MuJoCo
+mesh semantics. The trimesh pair band grows from 2 cm to 12 cm (more triangle pairs per collider; cost to be
+measured). Backend: tile faces are now wound normal-up (they were normal-down; harmless before, decisive now).
+Build: `build_cubins_here.sh` (cuda-oxide shader -> opt/llc/ptxas cubin) then `maturin develop --release`
+with `CUDA_OXIDE_PTX_DIR` exported.

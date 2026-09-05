@@ -29,7 +29,7 @@ else:
     F = np.concatenate([np.stack([a, a + 1, a + nx + 1], 1), np.stack([a, a + nx + 1, a + nx], 1)], 0)[:, [0, 2, 1]]
     col = nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in V], [tuple(map(int, f)) for f in F]).build(); tz = 0.0
 for e in range(N): st.insert_rigid_body_in(e, nexus3d.RigidBodyBuilder.fixed().translation(nexus3d.Vec3(0.0, 0.0, tz)).build(), col)
-robot = Articulation(ArticulationCfg(prim_path="/World/envs/env_.*/Robot", init_state=ArticulationCfg.InitialStateCfg(pos=(0.0, 0.0, 0.5)),
+robot = Articulation(ArticulationCfg(prim_path="/World/envs/env_.*/Robot", init_state=ArticulationCfg.InitialStateCfg(pos=(0.0, 0.0, float(os.environ.get("START_Z", "0.5")))),
                                      spawn=NexusMjcfCfg(mjcf_path=path, num_envs=N, auto_floor=False), actuators={"j": ImplicitActuatorCfg(joint_names_expr=["hinge"], stiffness=0.0, damping=0.01, effort_limit=1.0)}))
 robot.reset(); NexusManager.synchronize(); zs = []
 for i in range(400):

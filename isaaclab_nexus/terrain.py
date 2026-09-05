@@ -70,10 +70,12 @@ class NexusTerrain:
                 nxc, nyc = len(cx), len(cy); CX, CY = np.meshgrid(cx, cy, indexing="ij")
                 Vc = np.stack([CX.ravel(), CY.ravel(), CZ.ravel()], 1).astype(np.float32)
                 a = (np.arange(nxc - 1)[:, None] * nyc + np.arange(nyc - 1)[None, :]).ravel()
-                Fc = np.concatenate([np.stack([a, a + 1, a + nyc + 1], 1), np.stack([a, a + nyc + 1, a + nyc], 1)], 0)
+                Fc = np.concatenate([np.stack([a, a + 1, a + nyc + 1], 1), np.stack([a, a + nyc + 1, a + nyc], 1)], 0)[:, [0, 2, 1]]   # face normals UP (one-sided contact)
                 Vt_c, Ft_c = Vc, Fc
             else:
                 Vt_c, Ft_c = Vt, Ft
+                n = np.cross(Vt_c[Ft_c[:, 1]] - Vt_c[Ft_c[:, 0]], Vt_c[Ft_c[:, 2]] - Vt_c[Ft_c[:, 0]])
+                Ft_c = np.where((n[:, 2:3] < 0), Ft_c[:, [0, 2, 1]], Ft_c)                  # face normals UP
             self.tile_vertices[(r, c)], self.tile_faces[(r, c)] = Vt_c, Ft_c
             self.tile_zmin[(r, c)] = float(Vt[:, 2].min())                                # this tile's own lowest point
             cb = nexus3d.ColliderBuilder.trimesh([tuple(map(float, v)) for v in Vt_c], [tuple(map(int, f)) for f in Ft_c])
