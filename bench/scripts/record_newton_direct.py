@@ -27,6 +27,7 @@ parser.add_argument("--out", type=str, required=True)
 parser.add_argument("--width", type=int, default=1280)
 parser.add_argument("--height", type=int, default=720)
 parser.add_argument("--cam_offset", type=str, default="2.2,-3.0,1.2")
+parser.add_argument("--terrain_level", type=int, default=None, help="place every robot on this terrain difficulty row (rough terrain only)")
 AppLauncher.add_app_launcher_args(parser)
 args_cli, hydra_args = parser.parse_known_args()
 sys.argv = [sys.argv[0]] + hydra_args
@@ -115,7 +116,19 @@ def main():
         stdin=subprocess.PIPE,
     )
 
+    terrain = unwrapped.scene.terrain
+    if args_cli.terrain_level is not None and getattr(terrain, "terrain_levels", None) is not None:
+        nlv = int(terrain.terrain_origins.shape[0])
+        terrain.terrain_levels[:] = min(max(args_cli.terrain_level, 0), nlv - 1)
+        # the terrain curriculum may re-assign levels on the reset that follows; pin it
+        try:
+            unwrapped.curriculum_manager._terms["terrain_levels"].func = lambda *a, **k: torch.mean(terrain.terrain_levels.float())
+        except Exception:
+            pass
     obs, _ = env.reset()
+    if getattr(terrain, "terrain_levels", None) is not None:
+        lv = terrain.terrain_levels
+        print(f"[rec] terrain levels after reset: min={int(lv.min())} max={int(lv.max())} (rows {int(terrain.terrain_origins.shape[0])}); robot0 origin {unwrapped.scene.env_origins[0].tolist()}", flush=True)
     print(f"[rec] obs type={type(obs).__name__} {n_steps} steps @ {fps} fps -> {args_cli.out}", flush=True)
     written = 0
     for step in range(n_steps):
