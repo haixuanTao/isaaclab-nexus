@@ -37,6 +37,10 @@ def _invalid_logged(env, asset_cfg, max_joint_vel=100.0, max_root_height=10.0, m
         for e in torch.nonzero(out).flatten().tolist()[:3]:
             if len(FIRED) < 12: FIRED.append(f"env {e}: |w| reported {wv[e].norm():.1f} (vec {wv[e].cpu().numpy().round(1)}) FD {w_fd[e]:.1f} | |v| {vv[e].norm():.1f} | max|jv| {jv[e]:.0f} | root z {rel[e,2]:.2f} lowest body z {lowest[e]:.2f}")
     PREV_Q = q.clone(); return out
+if os.environ.get("NEXUS_LIFT_PART") == "force":   # lift force only, no damping torque
+    env_cfg.actions.lift.damping_torques = 0.0; print("LIFT: FORCE ONLY")
+if os.environ.get("NEXUS_LIFT_PART") == "torque":  # damping torque only, no lift force
+    env_cfg.actions.lift.stiffness_forces = 0.0; env_cfg.actions.lift.damping_forces = 0.0; print("LIFT: DAMPING TORQUE ONLY")
 if os.environ.get("NEXUS_NO_LIFT") == "1":
     env_cfg.actions.lift.stiffness_forces = 0.0; env_cfg.actions.lift.damping_forces = 0.0; env_cfg.actions.lift.damping_torques = 0.0; print("LIFT HARNESS DISABLED")
 env_cfg.terminations.invalid_state.func = _invalid_logged                       # same logic as mdp.invalid_state, with counters

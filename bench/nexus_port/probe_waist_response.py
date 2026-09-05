@@ -22,7 +22,10 @@ with torch.no_grad():
     for _ in range(30): base.step(zero)                                   # settle standing under AGILE's PD
     tid = robot.find_bodies("torso_link")[0]; wj = robot.joint_names.index("waist_pitch_joint"); hj = robot.joint_names.index("left_hip_pitch_joint")
     q0 = T(robot.data.joint_pos).clone(); tq0 = T(robot.data.body_link_quat_w)[:, tid[0]].clone(); rz0 = T(robot.data.root_link_pos_w)[:, 2].clone()
-    F = torch.zeros(4, 1, 3, device=base.device); F[:, 0, 0] = 150.0; Tq = torch.zeros_like(F)
+    F = torch.zeros(4, 1, 3, device=base.device); Tq = torch.zeros_like(F)
+    MODE = os.environ.get('WAIST_MODE', 'force')
+    if MODE == 'force': F[:, 0, 0] = 150.0
+    else: Tq[:, 0, 1] = float(os.environ.get('WAIST_TORQUE', '250'))          # pure torque about y (waist pitch) at the torso, like AGILE's damping torque
     dt = base.physics_dt; n = int(0.3 / dt)
     for i in range(n):
         robot.set_joint_position_target(robot.data.default_joint_pos.torch if hasattr(robot.data.default_joint_pos, "torch") else robot.data.default_joint_pos)
@@ -37,5 +40,5 @@ with torch.no_grad():
         print("   [nexus] composer active:", comp.active, "| local force torso:", wp.to_torch(comp.local_force_b)[0, tid[0]].cpu().numpy().round(1), "| global:", wp.to_torch(comp.global_force_w)[0, tid[0]].cpu().numpy().round(1), "| com torso:", T(robot.data.body_com_pos_w)[0, tid[0]].cpu().numpy().round(3), "| torso link pos:", T(robot.data.body_link_pos_w)[0, tid[0]].cpu().numpy().round(3))
         print("   [nexus] ancestor joints of torso_link:", [jn[i] for i in range(len(jn)) if robot._anc[i, tid[0]] > 0], "| root effort rows:", robot._effort[robot._root_cols, 0].cpu().numpy().round(1))
     up0 = 1 - 2 * (tq0[:, 0] ** 2 + tq0[:, 1] ** 2); up1 = 1 - 2 * (tq1[:, 0] ** 2 + tq1[:, 1] ** 2)
-    print(f"[{BACKEND}] 150 N +x at torso_link for 0.3 s: d(waist_pitch) {float((q1 - q0)[:, wj].mean()):+.3f} rad | d(left_hip_pitch) {float((q1 - q0)[:, hj].mean()):+.3f} rad | torso tilt cos {float(up0.mean()):.3f} -> {float(up1.mean()):.3f} | root dz {float((rz1 - rz0).mean()):+.3f} m")
+    print(f"[{BACKEND}] {MODE} ({'150 N +x' if MODE=='force' else os.environ.get('WAIST_TORQUE','250')+' N.m about y'}) at torso_link for 0.3 s: d(waist_pitch) {float((q1 - q0)[:, wj].mean()):+.3f} rad | d(left_hip_pitch) {float((q1 - q0)[:, hj].mean()):+.3f} rad | torso tilt cos {float(up0.mean()):.3f} -> {float(up1.mean()):.3f} | root dz {float((rz1 - rz0).mean()):+.3f} m")
 env.close(); app.close()

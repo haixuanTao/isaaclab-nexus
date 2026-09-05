@@ -1609,3 +1609,36 @@ torso with the head split out), not because of the projection. **v18** launched 
 datasets and config).
 Sanity (`probe_standing_hold.py`, 64 envs, zero actions, lift active) with both fixes: 98% up at 0.5 s,
 50% at 1 s, 34-50% at 2-5 s, base 0.51-0.64 m — PhysX on the same test: 81 / 44 / 33-25%. No regression.
+
+## v18 (COM + joint-space wrench projection) was broken from iteration 1 — and why
+100% of episodes ended in `invalid_state` from the start (reward -1000, robots flung to 5 m at 20 m/s).
+`probe_invalid_state.py`, random actions, 256 envs x 200 steps: harness off -> 0 terminations (root |w|
+p99 18.7); lift **force** only -> 0 (p99 29.9); yaw **damping torque** only -> **282** (p99 86, max 261).
+AGILE's `LiftAction` damping is a world-z torque from the *root's* yaw rate applied at the *torso*; through
+the waist-yaw joint it spins the torso against the pelvis, and the pelvis reaction has the opposite sign of
+the rate being damped. PhysX survives the same torque because its joint-velocity limit is a solver
+constraint: at 32 rad/s the constraint impulse acts equally on torso and pelvis, momentum is conserved, and
+the torque then damps the body as a whole. The backend's post-step velocity clamp removed the torso's excess
+joint velocity *without* the equal-and-opposite impulse on the parent — every substep injected angular
+momentum into the base in the anti-damping direction. (The single-shot responses match PhysX: 250 N.m at
+the torso for 0.3 s -> waist +0.52 vs +0.43 rad, torso flips over on both.) Fix: the velocity limit is now
+applied as a torque saturation in `_pd_substep` — a joint at its limit receives no torque that would push it
+further (PD and external parts alike) — with the clamp kept only as a safety.
+The torque saturation alone did NOT cure it (random actions, full harness: 332 terminations, root |w| max
+308) — the positive-feedback loop (torque at the torso spins it against the pelvis, the pelvis reaction raises
+the very yaw rate being damped) operates below the velocity limit too. What PhysX effectively does with a
+world-z torque at the torso is damp the *whole* body, because its velocity constraint locks torso to pelvis
+within milliseconds. **Deviation (documented):** external *forces* act through the joints (lever arm from the
+joint anchor to the body COM — the sit-up assist stays), pure external *torques* are transported to the root
+only (`NEXUS_WRENCH_TORQUES_TO_JOINTS=1` restores full J^T). The lift force's 0.5 m offset moment is folded
+into the composer's torque buffer by Isaac Lab, so it too goes to the root; the waist still receives the
+force's moment about the torso COM (18 cm, ~56 N.m at the 311 N cap).
+Validation of the forces-only projection (random actions, full harness): **6 terminations** in 51k env-steps
+(root |w| p99 51, vs 332 with full J^T and 0 with the harness off); the waist response to a torso force is
+unchanged (+0.345 rad); the zero-action standing hold under the harness is 100% up at 0.5 s but only 3% at
+1 s / 31% at 5 s (root-only projection: 22 / 27%; full J^T: 50 / 50%; PhysX 44 / 25%) — the vertical lift
+force at the MJCF torso COM (12 cm forward of the waist pivot) now loads the waist with ~37 N.m under zero
+actions; the USD torso's COM sits differently. Torque saturation at the velocity limit made no difference
+either way (kept behind `NEXUS_VEL_TORQUE_SAT`, default off). Note the lift force and its 0.5 m offset are
+both vertical, so the composer's torque buffer holds only the yaw damper. **v19** launched with this
+configuration (v17 datasets and config).

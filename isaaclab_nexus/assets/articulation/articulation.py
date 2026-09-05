@@ -520,7 +520,17 @@ class Articulation(BaseArticulation):
         tau = self._pd_kp * (self._pd_qt - q) - self._pd_kd * v + self._pd_ff
         lim = d._joint_effort_limits
         tau = torch.where(self._pd_kp > 0, torch.maximum(torch.minimum(tau, lim), -lim), d._applied_torque)
-        d._applied_torque[:] = tau; self._effort[self._cols, :] = (tau + self._wrench_tau).T
+        d._applied_torque[:] = tau
+        # Velocity limit as a torque saturation (momentum-consistent stand-in for PhysX's joint-velocity
+        # constraint): a joint already at its velocity limit gets no torque that would push it further. The
+        # post-step velocity clamp alone removed the joint's excess velocity without the equal-and-opposite
+        # impulse on the parent, pumping angular momentum into the base -- AGILE's yaw-damping torque on the
+        # torso then anti-damped the pelvis (v18: 100% invalid_state terminations).
+        total = tau + self._wrench_tau; vl = d._joint_vel_limits
+        if os.environ.get("NEXUS_VEL_TORQUE_SAT", "0") == "1":
+            at_lim = (v.abs() >= vl) & (total * torch.sign(v) > 0)
+            total = torch.where(at_lim, torch.zeros_like(total), total)
+        self._effort[self._cols, :] = total.T
     def _clamp_joint_velocities(self) -> None:
         lim = self._data._joint_vel_limits                        # (NB, J), inf where unset
         if not torch.isfinite(lim).any(): return
@@ -684,7 +694,13 @@ class Articulation(BaseArticulation):
             ql, pl = self._data.body_link_quat_w.torch[:, self._jlink], self._data.body_link_pos_w.torch[:, self._jlink]   # (N, J, ..)
             ax = _quat_apply(ql, self._jax_local[None].expand(ql.shape[0], -1, -1)); anchor = pl + _quat_apply(ql, self._janchor_local[None].expand(ql.shape[0], -1, -1))
             com = self._data.body_com_pos_w.torch                                                                   # (N, B, 3)
-            mom = torch.cross(com[:, None] - anchor[:, :, None], Fb_tot[:, None], dim=-1) + Tb_tot[:, None]          # (N, J, B, 3)
+            # DEVIATION (documented): only FORCES act through the joints (lever arm from the joint anchor to the
+            # body COM); pure external TORQUES go to the root only. AGILE's yaw-damping torque (-c * root yaw rate,
+            # applied at the torso) spins the torso against the pelvis when routed through the waist-yaw joint and
+            # anti-damps the base; PhysX's joint-velocity constraint locks torso and pelvis within milliseconds so
+            # the torque effectively damps the whole body, which the root transport reproduces here.
+            mom = torch.cross(com[:, None] - anchor[:, :, None], Fb_tot[:, None], dim=-1)                          # (N, J, B, 3)
+            if os.environ.get("NEXUS_WRENCH_TORQUES_TO_JOINTS", "0") == "1": mom = mom + Tb_tot[:, None]
             self._wrench_tau = ((mom * ax[:, :, None]).sum(-1) * self._anc[None]).sum(-1)                             # (N, J)
         else:
             self._wrench_tau.zero_()
