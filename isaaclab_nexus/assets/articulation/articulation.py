@@ -372,11 +372,11 @@ class Articulation(BaseArticulation):
         self._pd_kp = torch.zeros(NB, self._num_joints, device=_DEV); self._pd_kd = torch.zeros_like(self._pd_kp)
         self._pd_ff = torch.zeros_like(self._pd_kp); self._pd_qt = torch.zeros_like(self._pd_kp)
         if os.environ.get("NEXUS_PD_SUBSTEP", "1") == "1":
-            NexusManager.post_step_hooks.append(self._pd_substep)
+            NexusManager.post_step_hooks.append(self._substep_hook)          # PD + velocity clamp, one hook (one sync)
         # Joint velocity limits (`velocity_limit_sim` from the actuator cfgs; PhysX applies them as a hard joint
         # drive limit inside its solver, the engine has no equivalent): clamp the generalized velocities after
         # every physics step. NEXUS_JOINT_VEL_CLAMP=0 disables (diagnostics).
-        if os.environ.get("NEXUS_JOINT_VEL_CLAMP", "1") == "1":
+        elif os.environ.get("NEXUS_JOINT_VEL_CLAMP", "1") == "1":
             NexusManager.post_step_hooks.append(self._clamp_joint_velocities)
         self._prev_v = torch.zeros(NB, self._num_joints, device=_DEV)
         self._pending = False
@@ -531,6 +531,10 @@ class Articulation(BaseArticulation):
             at_lim = (v.abs() >= vl) & (total * torch.sign(v) > 0)
             total = torch.where(at_lim, torch.zeros_like(total), total)
         self._effort[self._cols, :] = total.T
+    def _substep_hook(self) -> None:
+        if os.environ.get("NEXUS_JOINT_VEL_CLAMP", "1") == "1": self._clamp_joint_velocities()
+        self._pd_substep()
+
     def _clamp_joint_velocities(self) -> None:
         lim = self._data._joint_vel_limits                        # (NB, J), inf where unset
         if not torch.isfinite(lim).any(): return

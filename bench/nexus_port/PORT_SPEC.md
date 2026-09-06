@@ -1649,3 +1649,7 @@ Training: invalid_state 7% at iteration 50 (random policy + harness), 1.3% at 20
 commands): **16% standing** at 8 s (v17's final checkpoint: 9%), 22% torso upright, feet on the ground
 (sole > 2 cm under: 6% at 0.1 s, 0-3% after). Video `nexus_g1_standup_v19_model_500.mp4`: two of the four
 envs upright on their feet at 6 s.
+v19 at 3299 (shared GPU, 10.3 s/iter): reward -67, harness 0.10 (v17 at 3000: 0.16), height error 0.11,
+invalid 0. `model_3250` rollout: 12% standing / 31% upright / 50% flat at 8 s (model_500: 16 / 22 / 50);
+feet clean (sole > 2 cm under <= 6%). Substep hooks fused into one (one stream sync per substep) for the
+next run; the engine-side motor + velocity-limit path remains the real fix for the hook cost.
