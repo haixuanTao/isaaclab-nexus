@@ -7,7 +7,10 @@ Lifecycle mirrors the base class: ``initialize`` -> ``reset`` -> ``step``* ->
 
 from __future__ import annotations
 
+import os
 import warnings
+
+import torch
 
 from typing import TYPE_CHECKING, Any, ClassVar
 
@@ -47,6 +50,7 @@ class NexusManager(PhysicsManager):
     _terrain: ClassVar[Any] = None
     _graph: ClassVar[bool] = False   # a CUDA graph of one physics step has been captured
     _substep_override: ClassVar[int] = 0   # set by `request_substeps`; consumed by the next `step()`
+    _step_sync: ClassVar[bool] = os.environ.get("NEXUS_STEP_SYNC", "1") == "1"
     post_step_hooks: ClassVar[list] = []   # callables run after every physics step (engine stream synced first)
     _steps: ClassVar[int] = 0
 
@@ -86,6 +90,13 @@ class NexusManager(PhysicsManager):
     def step(cls) -> None:
         if not cls._finalized:
             cls.finalize()
+        # Order torch's stream before the engine's: the zero-copy inputs (external generalized forces,
+        # motor targets, state writes) are written by torch kernels on torch's stream, and the engine
+        # launches on its own stream without waiting for them. Unordered, the engine reads the previous
+        # substep's values whenever torch is behind (Isaac Lab writes the actuator torques at EVERY
+        # decimation substep): run-to-run nondeterministic dynamics, one-substep torque lag, and a
+        # visibly different trajectory between the host-PD and engine-PD paths (`PORT_SPEC.md`).
+        if cls._step_sync: torch.cuda.current_stream().synchronize()
         # One physics step as a replayed CUDA graph, once the scene has settled.
         # Capture freezes buffer addresses and the solver's coloring loop and
         # skips `auto_resize_buffers`, so it only happens after `warmup` normal

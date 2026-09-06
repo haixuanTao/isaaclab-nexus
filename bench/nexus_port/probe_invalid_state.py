@@ -16,7 +16,8 @@ env_cfg.scene.num_envs = N; env_cfg.seed = 7
 BACKEND = os.environ.get("NEXUS_BACKEND", "nexus")
 if BACKEND == "nexus": nexusify(env_cfg, os.environ.get("NEXUS_G1_MJCF", "/workspace/bench/nexus_port/g1_29dof_convex64.xml"), agent_cfg=agent_cfg)
 import agile.rl_env.mdp as _mdp
-PREV_Q = None; FIRED = []; WHIST = []; JHIST = []
+PREV_Q = None; FIRED = []; WHIST = []; JHIST = []; DUMP = []; SUB = []
+
 import isaaclab.utils.math as mu
 REASON = {"nan": 0, "joint_vel": 0, "root_height": 0, "root_xy": 0, "lin_vel": 0, "ang_vel": 0, "any": 0}
 def _invalid_logged(env, asset_cfg, max_joint_vel=100.0, max_root_height=10.0, max_root_xy_distance=200.0, max_lin_vel=50.0, max_ang_vel=100.0):
@@ -41,15 +42,22 @@ if os.environ.get("NEXUS_LIFT_PART") == "force":   # lift force only, no damping
     env_cfg.actions.lift.damping_torques = 0.0; print("LIFT: FORCE ONLY")
 if os.environ.get("NEXUS_LIFT_PART") == "torque":  # damping torque only, no lift force
     env_cfg.actions.lift.stiffness_forces = 0.0; env_cfg.actions.lift.damping_forces = 0.0; print("LIFT: DAMPING TORQUE ONLY")
+if os.environ.get("NEXUS_NO_GAIN_RAND") == "1" and hasattr(env_cfg.events, "randomize_actuator_gains"):
+    env_cfg.events.randomize_actuator_gains = None; print("GAIN RANDOMIZATION OFF")
 if os.environ.get("NEXUS_NO_LIFT") == "1":
     env_cfg.actions.lift.stiffness_forces = 0.0; env_cfg.actions.lift.damping_forces = 0.0; env_cfg.actions.lift.damping_torques = 0.0; print("LIFT HARNESS DISABLED")
 env_cfg.terminations.invalid_state.func = _invalid_logged                       # same logic as mdp.invalid_state, with counters
 env = gym.make(TASK, cfg=env_cfg); base = env.unwrapped; robot = base.scene.articulations["robot"]
+if os.environ.get("NEXUS_DUMP_SUBSTEPS"):                      # per-substep state of envs 0-7 (registered after NexusManager.initialize)
+    from isaaclab_nexus.physics.nexus_manager import NexusManager as _NM
+    def _rec():
+        if len(SUB) < 4 * 6: SUB.append(torch.cat([robot.data.joint_pos.torch[:8], robot.data.joint_vel.torch[:8], robot.data.root_ang_vel_w.torch[:8]], 1).cpu().numpy())
+    _NM.post_step_hooks.append(_rec)
 pre = gym.spec(TASK).kwargs.get("pre_learn_entry_point")
 if pre:
     import importlib; mod, fn = pre.split(":"); getattr(importlib.import_module(mod), fn)(base, TASK, agent_cfg); base.reset()
 wenv = RslRlVecEnvWrapper(env, clip_actions=agent_cfg.clip_actions); runner = make_rsl_rl_runner(wenv, agent_cfg, log_dir=None, device=agent_cfg.device)
-runner.load(CKPT); policy = runner.get_inference_policy(device=agent_cfg.device); obs = wenv.get_observations()
+runner.load(CKPT); policy = runner.get_inference_policy(device=agent_cfg.device); obs = wenv.get_observations(); torch.manual_seed(int(os.environ.get("NEXUS_PROBE_SEED", "0")))
 P = base_params = dict(env_cfg.terminations.invalid_state.params); lim = {k: P.get(k) for k in ("max_joint_vel", "max_root_height", "max_root_xy_distance", "max_lin_vel", "max_ang_vel")}
 print("invalid_state limits:", lim)
 cnt = {k: 0 for k in lim}; cnt["nan"] = 0; mx = {k: 0.0 for k in lim}; dones = 0; jmax_hist = []
@@ -68,6 +76,7 @@ with torch.inference_mode():
         for k, v in q.items():
             cnt[k] += int((v > lim[k]).sum()); mx[k] = max(mx[k], float(v.max()))
         cnt["nan"] += int(torch.isnan(d.joint_pos.torch).any(1).sum()); dones += int(done.sum()); jmax_hist.append(float(jv.max()))
+        if os.environ.get("NEXUS_DUMP_STATES"): DUMP.append(torch.cat([d.joint_pos.torch[:8], d.joint_vel.torch[:8], (d.applied_torque.torch if hasattr(d.applied_torque, "torch") else d.applied_torque)[:8], done[:8, None].float()], 1).cpu().numpy())
         tq = d.applied_torque; tq = (tq.torch if hasattr(tq, "torch") else tq).abs().max(0).values; TQMAX = torch.maximum(TQMAX, tq) if "TQMAX" in dir() else tq.clone()
         q = d.root_quat_w.torch; dq = mu.quat_mul(q, mu.quat_inv(q_prev)); ang = 2.0 * torch.atan2(dq[:, :3].norm(dim=-1), dq[:, 3].abs()); w_fd = ang / float(base.step_dt)
         keep = ~done                                              # skip envs that were just reset (quat jump)
@@ -77,6 +86,8 @@ with torch.inference_mode():
 print(f"[{BACKEND}] random_actions={os.environ.get('NEXUS_RANDOM_ACTIONS')=='1'} invalid_state fired per condition (pre-reset state):", REASON)
 _w = torch.cat(WHIST); _j = torch.cat(JHIST); _q = lambda t, p: float(t.kthvalue(max(1, int(p * t.numel()))).values)
 print(f"pre-reset root |w| over all env-steps: p50 {_q(_w,.5):.1f} p90 {_q(_w,.9):.1f} p99 {_q(_w,.99):.1f} p99.9 {_q(_w,.999):.1f} max {_w.max():.1f} | frac>25 {(_w>25).float().mean():.4f} >40 {(_w>40).float().mean():.4f} >50 {(_w>50).float().mean():.4f} | max joint |v| p50 {_q(_j,.5):.0f} p99 {_q(_j,.99):.0f}")
+if os.environ.get("NEXUS_DUMP_STATES"): np.save(os.environ["NEXUS_DUMP_STATES"], np.stack(DUMP)); print("dumped", os.environ["NEXUS_DUMP_STATES"])
+if os.environ.get("NEXUS_DUMP_SUBSTEPS"): np.save(os.environ["NEXUS_DUMP_SUBSTEPS"], np.stack(SUB)); print("dumped substeps", len(SUB))
 print("fired-env details:"); [print("   ", f) for f in FIRED]
 print(f"over {STEPS} steps x {N} envs: episodes ended {dones} | env-steps exceeding: " + ", ".join(f"{k} {v}" for k, v in cnt.items()))
 top = sorted(fd_worst, reverse=True)[:6]; print("reported root |w| vs finite-difference |w| (top envs, non-reset):", [(round(a,1), round(b,1)) for a, b in top])

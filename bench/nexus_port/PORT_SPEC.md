@@ -1653,3 +1653,86 @@ v19 at 3299 (shared GPU, 10.3 s/iter): reward -67, harness 0.10 (v17 at 3000: 0.
 invalid 0. `model_3250` rollout: 12% standing / 31% upright / 50% flat at 8 s (model_500: 16 / 22 / 50);
 feet clean (sole > 2 cm under <= 6%). Substep hooks fused into one (one stream sync per substep) for the
 next run; the engine-side motor + velocity-limit path remains the real fix for the hook cost.
+
+## Per-substep PD moved into the engine (the hook cost)
+v15 ran at 3.05 s/iter; the per-substep hooks (PD re-evaluation + velocity clamp, each with a stream sync,
+4 substeps per control step) took v16 to 6.0 s. The engine already has force-based PD motors
+(`apply_force_based_pd`: `clamp(kp (q* - q) - kd q, +-max_force)` added to the generalized forces every
+substep, in-kernel) with batched target upload (`motor_target_group` / `scatter_motor_targets`); the backend
+had them switched off (gains 0) and did the PD in Python. Now (`NEXUS_ENGINE_PD=1`, default):
+- engine commit on `isaac-backend`: a FORCE_BASED motor's unused `target_vel` carries the joint velocity
+  limit — no driving torque at the limit, full-effort braking beyond it (a torque, so the parent gets the
+  reaction; the Python clamp did not conserve momentum). `set_motor_gains(..., max_velocity=inf)`.
+- backend: at the first control step the actuator models' gains (env-uniform), `effort_limit_sim` and
+  `velocity_limit_sim` are staged per joint group; each control step the actuators' *effective* target
+  (`_pd_qt`, so delay/DC-motor models keep their semantics) is written into the target groups' CUDA views
+  and scattered; joint effort rows carry only feed-forward efforts + projected wrenches. No post-step hooks.
+Timing under the shared GPU (v19 + two AGILE trainings from the other session; 1024 envs x 40 iterations):
+engine PD 11.6 s/iter vs Python substep PD 10.6 s/iter — inconclusive: the hooks' sync bubbles are filled
+by other processes' work when the card is saturated. The idle-GPU reference remains v15 (no hooks) 3.05 s
+vs v16 (hooks) 6.0 s at 4096 envs; to be re-measured when the card is free.
+Engine-side joint velocity limit (fork): `dof_state` gained a 5th section holding a per-DOF limit (1e30 =
+none; the backend fills it from `velocity_limit_sim`); the limit is applied in-kernel on the previous
+substep's final velocities at the start of `gpu_mb_integrate_velocities` and again on the solver-corrected
+velocities in `gpu_mb_integrate` (the non-fused position integration used with `implicit_coriolis=False`),
+and the backend clamps once more in `update()` (already synced) so observations never see the last
+substep's contact impulse. A first attempt with only the pre-solver clamp let contact impulses carry joints
+to 100 rad/s. With both: joint |v| p99 37 rad/s under random actions, the PD-equivalence probe still exact,
+the standing hold unchanged. Remaining gap vs the Python-hook path: harness stability (150 vs 6
+angular-velocity terminations in 51k env-steps) — under test.
+Two engine-PD-mode traps found while chasing the residual instability (engine PD: 150 harness terminations vs
+the Python hooks' 6-8 on the random-action probe): (1) the engine's reset templates snapshot `links_static`
+— motor gains and targets included — so gains staged *after* `publish_reset_template` were reverted to zero
+for every env at its first reset (no PD at all on reset robots). Gains are now staged before the template is
+published: 150 -> 39 terminations. (2) AGILE randomizes actuator stiffness per env (x0.9-1.1) at resets while
+the engine motors hold one gain per joint: the per-env stiffness ratio is now folded into the uploaded target
+(`kp0 (qt' - q) = kp (qt - q)`; damping randomization is not reproduced — deviation of the engine-PD mode).
+Third trap, the decisive one: the per-step target upload wrote the CUDA target view from torch (default
+stream) and immediately submitted the engine's scatter kernel (engine stream) — the kernel read the
+*previous* step's targets, i.e. a built-in one-control-step (20 ms) actuator delay
+(`probe_target_lag.py`: engine trajectory shifted by exactly one step). Ordering the streams
+(`torch.cuda.current_stream().synchronize()` before the scatter, one cheap sync per control step) makes the
+engine-PD and Python-PD trajectories identical under a moving target.
+
+### Engine PD vs Python PD: the residual gap was the velocity clamp, not the PD (2026-09-06)
+After the stream fix the two paths were still 34/33 vs 4/10 invalid_state terminations (seeds 0/1, random
+actions, 200 steps x 256 envs); the velocity torque saturation was not it (42/42 with it off). A per-joint
+step probe (`probe_pd_alljoints.py`: env j steps joint j, free flight) matched to 5 decimals with no limits
+and with effort limits, and diverged only with a velocity limit engaged: the engine clamped the joint
+velocity twice per substep (before the velocity integration, section 4, and again right before the
+position integration), while the Python hook's after-substep clamp only caps the velocity carried into
+the next substep -- the motion of that substep is already integrated. The second clamp is motion-limiting
+but momentum-violating on the floating base at every substep, which is what pumped the base angular
+velocity (the v18 lesson again). The kernel now keeps the second clamp behind dof_state section 5
+(`NEXUS_ENGINE_VCLAMP_P4=1`, default off); with section 4 alone the engine PD has the Python hooks'
+velocity semantics.
+Follow-up: a single clamp before the velocity integration halved the gap (22/16) but the step probe still
+differed with a velocity limit engaged; the two remaining differences were (1) the Coriolis terms and the
+kernel PD reading the velocity BEFORE the clamp (the hook clamps first), fixed by a dedicated
+`gpu_mb_clamp_dof_velocities` kernel dispatched at the start of every step (the hook's after-step point),
+and (2) the in-kernel torque saturation at the limit, which the hooks have off. With both aligned
+(`NEXUS_ENGINE_VSAT=0`, now the default) the per-joint step probe is identical to the last digit over four
+control steps (`probe_pd_alljoints.py`, KP=300 KD=2 EFF=30 VEL=8).
+
+### Engine PD parity in the full task: three more findings (2026-09-06, afternoon)
+The bare per-joint probe matched to the last digit while the AGILE task still terminated 4x more often
+under engine PD (44/44 vs 8/9). Recording every substep inside the task (`NEXUS_DUMP_SUBSTEPS` in
+`probe_invalid_state.py`) showed the two paths identical for two substeps and diverging at the third, in
+the fast yaw joints. Three causes, in the order found:
+1. **Stream race in the task loop.** Isaac Lab calls `write_data_to_sim()` at EVERY decimation substep;
+   its torch write of the torques was unordered with the engine step launched right after (the hook sync
+   only covered the hook's own writes). `NexusManager.step()` now orders torch's stream before the engine
+   (`NEXUS_STEP_SYNC=0` disables). Both paths are run-to-run deterministic afterwards (a later residual
+   nondeterminism around the 10th substep is contact-side and identical for both).
+2. **The fold used the unclipped effort.** AGILE's DelayedDCMotor clips its torque with a velocity-dependent
+   torque-speed curve; the effective target was folded from `computed_effort` (pre-clip), so the engine
+   motors (and `_pd_substep` between folds) exceeded the DC saturation at speed. Folding `_applied_torque`
+   instead makes the clean-config substep trace identical (<=3e-4 rad/s through ten substeps).
+3. **Gain randomization folded through the actuator's gains.** With per-env randomized kp/kd, the old
+   "stiffness ratio" fold left a `(kd_env - kd0) v` mismatch; the target is now folded directly with the
+   engine's staged gains: `qt = q + (tau_applied - ff + kd0 v) / kp0`, exact at every substep whatever the
+   per-env gains (112/119 -> 14 terminations).
+Result (random actions, 200 steps x 256 envs, seed 0): engine PD 14 vs host PD 11 invalid_state
+terminations, root |w| p50 13.5 / p90 30.8 in both. The engine-PD path now equals the host path in
+dynamics; it removes the per-substep host PD kernels but keeps the per-substep actuator model and target
+upload (Isaac Lab's decimation loop), so the throughput gain is bounded by that loop.

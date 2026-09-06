@@ -371,11 +371,11 @@ class Articulation(BaseArticulation):
         self._ALL_JOINT_INDICES = torch.arange(self._num_joints, device=_DEV)
         self._pd_kp = torch.zeros(NB, self._num_joints, device=_DEV); self._pd_kd = torch.zeros_like(self._pd_kp)
         self._pd_ff = torch.zeros_like(self._pd_kp); self._pd_qt = torch.zeros_like(self._pd_kp)
-        if os.environ.get("NEXUS_PD_SUBSTEP", "1") == "1":
+        self._engine_pd = os.environ.get("NEXUS_ENGINE_PD", "1") == "1"; self._engine_pd_ready = False
+        if self._engine_pd:
+            pass                                                              # PD + velocity limit run in the engine's force-based motors
+        elif os.environ.get("NEXUS_PD_SUBSTEP", "1") == "1":
             NexusManager.post_step_hooks.append(self._substep_hook)          # PD + velocity clamp, one hook (one sync)
-        # Joint velocity limits (`velocity_limit_sim` from the actuator cfgs; PhysX applies them as a hard joint
-        # drive limit inside its solver, the engine has no equivalent): clamp the generalized velocities after
-        # every physics step. NEXUS_JOINT_VEL_CLAMP=0 disables (diagnostics).
         elif os.environ.get("NEXUS_JOINT_VEL_CLAMP", "1") == "1":
             NexusManager.post_step_hooks.append(self._clamp_joint_velocities)
         self._prev_v = torch.zeros(NB, self._num_joints, device=_DEV)
@@ -383,12 +383,19 @@ class Articulation(BaseArticulation):
 
         # ---- initial state from cfg.init_state (Isaac semantics) + placement, then template
         self._apply_init_state()
-        st.publish_reset_template(be)
-        NexusManager.synchronize()
 
         # ---- actuator models (same construction as isaaclab_physx)
         self.actuators: dict[str, Any] = {}
         self._process_actuators_cfg()
+        # Engine motors must be staged BEFORE the reset template is published: `reset_envs` restores
+        # `links_static` (motor gains and targets included) from that template for every env it resets.
+        if self._engine_pd:
+            for act in self.actuators.values():
+                j = act.joint_indices
+                self._pd_kp[:, j] = act.stiffness.to(self._pd_kp.dtype); self._pd_kd[:, j] = act.damping.to(self._pd_kd.dtype)
+            self._setup_engine_pd()
+        st.publish_reset_template(be)
+        NexusManager.synchronize()
         # ---- wrench composers
         from isaaclab.utils.wrench_composer import WrenchComposer
         self.permanent_wrench_composer = WrenchComposer(self)
@@ -531,9 +538,58 @@ class Articulation(BaseArticulation):
             at_lim = (v.abs() >= vl) & (total * torch.sign(v) > 0)
             total = torch.where(at_lim, torch.zeros_like(total), total)
         self._effort[self._cols, :] = total.T
+    def _setup_engine_pd(self) -> None:
+        """Engine force-based PD motors (in-kernel, every substep, clamped to effort_limit_sim; joint velocity
+        limit = the engine's start-of-step clamp, dof_state section 4, the Python hooks' semantics; the in-kernel
+        torque saturation at the limit is opt-in, NEXUS_ENGINE_VSAT=1): gains from the actuator models (per joint, must be env-uniform),
+        targets uploaded once per control step from the actuators' effective target (`_pd_qt`)."""
+        st, be = NexusManager.state(), NexusManager.backend(); d = self._data
+        kp, kd = self._pd_kp[0], self._pd_kd[0]; mf, vl = d._joint_effort_limits[0], d._joint_vel_limits[0]
+        if not (torch.allclose(self._pd_kp, kp.expand_as(self._pd_kp)) and torch.allclose(self._pd_kd, kd.expand_as(self._pd_kd))):
+            warnings.warn("[nexus] actuator gains differ across envs; engine PD uses env 0's gains")
+        groups = {}
+        for j in range(self._num_joints):
+            key = (self._joint_axis[j], round(float(kp[j]), 4), round(float(kd[j]), 4), round(float(mf[j]), 3), round(float(vl[j]), 3))
+            groups.setdefault(key, []).append(self._joint_links[j])
+        for (axis, k, c, f, v), links in groups.items():
+            st.set_motor_gains(be, [int(x) for x in links], int(axis), float(k), float(c), float(f) if math.isfinite(f) else 1.0e30, float(v) if (math.isfinite(v) and os.environ.get("NEXUS_ENGINE_VSAT", "0") == "1") else float("inf"))
+        self._target_groups = []
+        for axis in sorted(set(self._joint_axis)):
+            jidx = [j for j in range(self._num_joints) if self._joint_axis[j] == axis]
+            gid, view = st.motor_target_group(be, [int(self._joint_links[j]) for j in jidx], int(axis))
+            self._target_groups.append((gid, torch.as_tensor(view, device=_DEV), torch.tensor(jidx, device=_DEV)))
+        if self._dof.shape[0] >= 5:                                              # engine velocity-limit section
+            self._dof[4][:] = 1.0e30; self._dof[5][:] = 1.0e30
+            # Section 5 = a second clamp right before the position integration (motion-limiting, but a
+            # momentum-violating clamp on a floating base: 4x the invalid_state terminations under random
+            # actions). Off unless NEXUS_ENGINE_VCLAMP_P4=1; section 4 alone matches the Python hooks' clamp.
+            if os.environ.get("NEXUS_ENGINE_VCLAMP_P4", "0") == "1":
+                self._dof[5][self._cols, :] = torch.where(torch.isfinite(d._joint_vel_limits), d._joint_vel_limits, torch.full_like(d._joint_vel_limits, 1.0e30)).T
+            self._dof[4][self._cols, :] = torch.where(torch.isfinite(d._joint_vel_limits), d._joint_vel_limits, torch.full_like(d._joint_vel_limits, 1.0e30)).T
+        self._engine_kp0 = self._pd_kp[0:1].clone().expand_as(self._pd_kp).contiguous()   # gains staged in the engine
+        self._engine_kd0 = self._pd_kd[0:1].clone().expand_as(self._pd_kd).contiguous()   # gains staged in the engine
+        self._engine_pd_ready = True
+
+    def _upload_engine_targets(self) -> None:
+        # The engine motors hold env-0's gains (kp0, kd0); AGILE randomizes the actuator gains per env at resets
+        # and the DC-motor model clips the torque with a velocity-dependent curve. Fold the torque the actuator
+        # model applies THIS substep into the engine's target with the ENGINE's gains, so that
+        # kp0 (qt' - q) - kd0 v = tau_applied exactly at the fold instant (Isaac Lab calls the actuator at every
+        # decimation substep, so the fold is exact per substep whatever the per-env gains).
+        st, be = NexusManager.state(), NexusManager.backend()
+        q, v = self._q_flat(), self._v_flat(); kp0, kd0 = self._engine_kp0, self._engine_kd0
+        tau = self._data._applied_torque - self._pd_ff
+        qt = torch.where(kp0 > 0, q + (tau + kd0 * v) / torch.where(kp0 > 0, kp0, torch.ones_like(kp0)), q)
+        for gid, view, jidx in self._target_groups:
+            view[:] = qt[:, jidx].T
+        torch.cuda.current_stream().synchronize()      # the scatter kernel runs on the engine's stream: torch's writes must have landed
+        for gid, view, jidx in self._target_groups:
+            st.scatter_motor_targets(be, gid)
+
     def _substep_hook(self) -> None:
         if os.environ.get("NEXUS_JOINT_VEL_CLAMP", "1") == "1": self._clamp_joint_velocities()
         self._pd_substep()
+        # Stream ordering w.r.t. the next engine step: `NexusManager.step()`.
 
     def _clamp_joint_velocities(self) -> None:
         lim = self._data._joint_vel_limits                        # (NB, J), inf where unset
@@ -662,17 +718,27 @@ class Articulation(BaseArticulation):
             d._computed_torque[:, j] = act.computed_effort
             lim = d._joint_effort_limits[:, j]                       # effort_limit_sim: PhysX's drive clips to it; be explicit here too
             d._applied_torque[:, j] = torch.maximum(torch.minimum(act.applied_effort, lim), -lim)
-            # Effective PD target the actuator model used this control step (delay models etc. included):
-            # tau = kp (q_t - q) - kd v + ff  =>  q_t = q + (tau - ff + kd v) / kp. Re-evaluated at every physics
-            # substep by `_pd_substep` (PhysX's implicit drive acts at the physics rate; a 20 ms zero-order hold
-            # of an explicit torque with AGILE's lightly damped gains rings and whips the limbs).
+            # Effective PD target the actuator model used (delay models etc. included), folded from the torque the
+            # model actually APPLIES -- i.e. after its own clipping (the DC motor's velocity-dependent torque-speed
+            # saturation, `effort_limit`): tau = kp (q_t - q) - kd v + ff  =>  q_t = q + (tau - ff + kd v) / kp.
+            # Isaac Lab calls the actuator at every decimation substep, so the fold is exact per substep; between
+            # folds the PD (engine motors, or `_pd_substep`) re-evaluates it at the physics rate (PhysX's implicit
+            # drive acts at the physics rate; a 20 ms zero-order hold of an explicit torque with AGILE's lightly
+            # damped gains rings and whips the limbs). Folding the UNCLIPPED `computed_effort` here made the engine
+            # motors exceed the DC-motor saturation at speed (4x the invalid_state terminations of the host path).
             kp, kd = act.stiffness, act.damping; ff = d._joint_effort_target[:, j]
-            qt = torch.where(kp > 0, q[:, j] + (act.computed_effort - ff + kd * v[:, j]) / torch.where(kp > 0, kp, torch.ones_like(kp)), q[:, j])
+            qt = torch.where(kp > 0, q[:, j] + (d._applied_torque[:, j] - ff + kd * v[:, j]) / torch.where(kp > 0, kp, torch.ones_like(kp)), q[:, j])
             self._pd_kp[:, j], self._pd_kd[:, j], self._pd_ff[:, j], self._pd_qt[:, j] = kp, kd, ff, qt
 
     def write_data_to_sim(self) -> None:
         self._apply_actuator_model()
-        self._effort[self._cols, :] = (self._data._applied_torque + self._wrench_tau).T   # zero-copy write into the sim
+        if self._engine_pd:
+            if not self._engine_pd_ready: self._setup_engine_pd()
+            self._upload_engine_targets()
+            base_tau = self._pd_ff                                          # the engine motors add the PD part
+        else:
+            base_tau = self._data._applied_torque
+        self._effort[self._cols, :] = (base_tau + self._wrench_tau).T       # zero-copy write into the sim
         # body wrenches -> root free joint (base-DOF projection)
         wr = torch.zeros(self.num_instances, 6, device=_DEV); Fb_tot = None
         for comp in (self.permanent_wrench_composer, self.instantaneous_wrench_composer):
@@ -713,11 +779,15 @@ class Articulation(BaseArticulation):
         qr = self._data.root_link_quat_w.torch
         wr = torch.cat([math_utils.quat_apply_inverse(qr, wr[:, :3]), math_utils.quat_apply_inverse(qr, wr[:, 3:])], dim=1)
         self._effort[self._root_cols, :] = wr.T
-        self._effort[self._cols, :] = (self._data._applied_torque + self._wrench_tau).T
+        self._effort[self._cols, :] = (base_tau + self._wrench_tau).T
         self.instantaneous_wrench_composer.reset()
 
     def update(self, dt: float) -> None:
         NexusManager.synchronize()
+        if getattr(self, "_engine_pd_ready", False) and self._dof.shape[0] >= 5:
+            # the last substep's contact impulses land after the in-kernel clamp; clamp what observations see
+            vl = self._data._joint_vel_limits.T; v = self._dof[0][self._cols]
+            self._dof[0][self._cols] = torch.maximum(torch.minimum(v, vl), -vl)
         v = self._v_flat()
         if dt > 0:
             self._data._joint_acc.copy_((v - self._prev_v) / dt)

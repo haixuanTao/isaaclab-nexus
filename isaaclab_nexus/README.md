@@ -149,3 +149,25 @@ here than on PhysX under identical actions (contact coupling), and 50 sits insid
 a shape up to 10 cm behind a triangle's front face (CCW winding, normal up) is pushed back out through it,
 as PhysX/MuJoCo mesh contacts do. `terrain.py` winds tiles and the apron normal-up; any custom trimesh
 collider must too, or bodies landing on it are pushed through.
+
+## Engine-side PD (`NEXUS_ENGINE_PD=1`, default)
+
+The joint PD runs inside the engine's dynamics kernel (force-based motors) at every physics substep
+instead of the host-side per-substep hook (`NEXUS_ENGINE_PD=0`). Both paths produce the same dynamics:
+the per-joint step probe matches to the last digit, and inside the AGILE task the substep traces are
+identical (random actions, 200 steps x 256 envs: 14 vs 11 invalid-state terminations, same root
+angular-velocity distribution). What the backend does per decimation substep in this mode:
+
+- runs Isaac Lab's actuator model (Isaac Lab calls it at every decimation substep), and folds the torque the
+  model APPLIES (after the DC motor's torque-speed clipping) into a position target with the engine's
+  staged gains, `qt = q + (tau - ff + kd0 v) / kp0`, so per-env gain randomization is exact at every fold;
+- uploads the targets (one stream sync, then the engine's scatter kernel); the engine motors clip to
+  `effort_limit_sim`;
+- the joint velocity limit (`velocity_limit_sim`) is the engine's start-of-step clamp (dof_state section 4),
+  the same semantics as the host hook's after-step clamp. Two stricter variants exist and are OFF because
+  they pump angular momentum into the floating base: a clamp right before the position integration
+  (`NEXUS_ENGINE_VCLAMP_P4=1`) and the in-kernel torque saturation at the limit (`NEXUS_ENGINE_VSAT=1`).
+
+`NexusManager.step()` orders torch's stream before the engine's (`NEXUS_STEP_SYNC=0` disables): the
+zero-copy inputs are written by torch kernels, and without the ordering the engine reads the previous
+substep's values whenever torch is behind, which is a random one-substep actuator lag.
