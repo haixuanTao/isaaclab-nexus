@@ -1642,3 +1642,10 @@ actions; the USD torso's COM sits differently. Torque saturation at the velocity
 either way (kept behind `NEXUS_VEL_TORQUE_SAT`, default off). Note the lift force and its 0.5 m offset are
 both vertical, so the composer's torque buffer holds only the yaw damper. **v19** launched with this
 configuration (v17 datasets and config).
+
+## v19 early: standing at iteration 500
+Training: invalid_state 7% at iteration 50 (random policy + harness), 1.3% at 200, **0 from 500**; lift 0.55 at
+500 (v16 0.68, v17 0.66); height error 0.094; reward -231 (v17 -265). `model_500` rollout (64 envs, mixed
+commands): **16% standing** at 8 s (v17's final checkpoint: 9%), 22% torso upright, feet on the ground
+(sole > 2 cm under: 6% at 0.1 s, 0-3% after). Video `nexus_g1_standup_v19_model_500.mp4`: two of the four
+envs upright on their feet at 6 s.
