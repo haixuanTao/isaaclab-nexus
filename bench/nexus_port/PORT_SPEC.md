@@ -1736,3 +1736,6 @@ Result (random actions, 200 steps x 256 envs, seed 0): engine PD 14 vs host PD 1
 terminations, root |w| p50 13.5 / p90 30.8 in both. The engine-PD path now equals the host path in
 dynamics; it removes the per-substep host PD kernels but keeps the per-substep actuator model and target
 upload (Isaac Lab's decimation loop), so the throughput gain is bounded by that loop.
+Timing after parity (1024 envs x 40 iterations, GPU at 98% from the other session's PhysX/Newton
+trainings): engine PD 10.70 s/iter, host PD 10.61 s/iter -- indistinguishable under contention; the
+comparison must be redone on a free GPU (the per-substep actuator call + target upload remain in both).
